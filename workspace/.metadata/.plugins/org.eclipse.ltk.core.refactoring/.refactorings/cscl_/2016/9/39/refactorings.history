@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy element &apos;order_list.jsp&apos; to &apos;order&apos;&#x0D;&#x0A;- Original project: &apos;cscl&apos;&#x0D;&#x0A;- Destination element: &apos;order&apos;&#x0D;&#x0A;- Original element: &apos;order_list.jsp&apos;" description="Copy file" element1="WebRoot/pages/pc/order/order_list.jsp" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1474275357185" target="/cscl/WebRoot/pages/pc/order" units="0" version="1.0"/>
-</session>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring accessors="true" comment="Delete 3 elements from project &apos;cscl&apos;&#x0D;&#x0A;- Original project: &apos;cscl&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     ServerContext.java.mine&#x0D;&#x0A;     ServerContext.java.r4942&#x0D;&#x0A;     ServerContext.java.r5274" description="Delete elements" element1="src/com/pc/util/ServerContext.java.mine" element2="src/com/pc/util/ServerContext.java.r4942" element3="src/com/pc/util/ServerContext.java.r5274" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="3" stamp="1469003813706" subPackages="false" version="1.0"/>
-</session>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy element &apos;FinanceStatementDaoImpl.java&apos; to &apos;cscl/src/com.pc.dao.financeStatement.impl&apos;&#x0D;&#x0A;- Original project: &apos;cscl&apos;&#x0D;&#x0A;- Destination element: &apos;cscl/src/com.pc.dao.financeStatement.impl&apos;&#x0D;&#x0A;- Original element: &apos;com.pc.dao.financeStatement.impl.FinanceStatementDaoImpl.java&apos;" description="Copy compilation unit" destination="/src&lt;com.pc.dao.financeStatement.impl" element1="/src&lt;com.pc.dao.financeStatement.impl{FinanceStatementDaoImpl.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1504776318225" units="1" version="1.0"/>
-</session>
