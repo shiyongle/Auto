@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Finance">
+
+    <resultMap id="CL_FinanceMap" type="com.pc.model.CL_Finance">
+        <result property="fid" column="fid"/>
+        <result property="fuserId" column="fuser_id"/>
+        <result property="number" column="number"/>
+        <result property="fhandlerId" column="fhandler_id"/>
+        <result property="fcreateTime" column="fcreate_time"/>
+        <result property="famount" column="famount"/>
+        <result property="fwithdrawType" column="fwithdraw_type"/>
+        <result property="falipayId" column="falipay_id"/>
+        <result property="fbankAccount" column="fbank_account"/>
+        <result property="fbankName" column="fbank_name"/>
+        <result property="fbankAddress" column="fbank_address"/>
+        <result property="fpaymentTime" column="fpayment_time"/>
+        <result property="ftreatment" column="ftreatment"/>
+        <result property="fserialNum" column="fserial_num"/>
+        <result property="fstate" column="fstate"/>
+        <result property="frejectType" column="freject_type"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        fs.fid ,fs.fuser_id,fs.number ,fs.fhandler_id ,fs.fcreate_time ,
+        fs.famount,fs.fwithdraw_type,fs.falipay_id,fs.fbank_account,fs.fbank_name,
+        fs.fbank_address,fs.fpayment_time,fs.ftreatment,fs.fserial_num,fs.fstate,
+        fs.freject_type,user.driverName fusername,ur.vmi_user_name fhandlername
+	    ]]>
+	</sql>
+	
+	<!-- 用于select查询finance表的所有列 -->
+	<sql id="columnsall">
+	    <![CDATA[
+        fs.fid ,fs.fuser_id,fs.number ,fs.fhandler_id ,fs.fcreate_time ,
+        fs.famount,fs.fwithdraw_type,fs.falipay_id,fs.fbank_account,fs.fbank_name,
+        fs.fbank_address,fs.fpayment_time,fs.ftreatment,fs.fserial_num,fs.fstate,
+        fs.freject_type
+	    ]]>
+	</sql>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="fid"  >
+    <![CDATA[
+        INSERT INTO cl_finance (
+	        fid  ,
+	        fuser_id ,
+	        number ,
+	        fhandler_id ,
+	        fcreate_time ,
+	        famount ,
+	        fwithdraw_type,
+	        falipay_id,
+	        fbank_account,
+	        fbank_name,
+	        fbank_address,
+	        fpayment_time,
+	        ftreatment,
+	        fserial_num,
+	        fstate,
+	        freject_type
+        ) VALUES (
+        	#{fid, jdbcType=INTEGER} ,
+        	#{fuserId, jdbcType=INTEGER} ,
+        	#{number, jdbcType=VARCHAR} ,
+        	#{fhandlerId, jdbcType=VARCHAR} ,
+        	#{fcreateTime, jdbcType=TIMESTAMP} ,
+        	#{famount, jdbcType=DECIMAL} ,
+        	#{fwithdrawType, jdbcType=INTEGER} ,
+        	#{falipayId, jdbcType=VARCHAR} ,
+        	#{fbankAccount, jdbcType=VARCHAR} ,
+        	#{fbankName, jdbcType=VARCHAR} ,
+        	#{fbankAddress, jdbcType=VARCHAR} ,
+        	#{fpaymentTime, jdbcType=TIMESTAMP} ,
+        	#{ftreatment, jdbcType=VARCHAR} ,
+        	#{fserialNum, jdbcType=VARCHAR},
+        	#{fstate, jdbcType=INTEGER},
+        	#{frejectType, jdbcType=VARCHAR}
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+    	UPDATE cl_finance SET
+        	fhandler_id=#{fhandlerId, jdbcType=VARCHAR} ,
+        	fpayment_time=#{fpaymentTime, jdbcType=TIMESTAMP} ,
+        	ftreatment=#{ftreatment, jdbcType=VARCHAR} ,
+        	fserial_num=#{fserialNum, jdbcType=VARCHAR},
+        	fstate=#{fstate,jdbcType=INTEGER},
+        	freject_type=#{frejectType, jdbcType=VARCHAR}
+        WHERE 
+	        fid = #{fid} 
+    ]]>
+    </update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_finance WHERE
+        fid = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_FinanceMap">
+	    SELECT <include refid="columnsall"/>
+	    <![CDATA[
+	        FROM cl_finance fs
+	        WHERE 
+		        fs.fid = #{id} 
+	    ]]>
+    </select>
+    
+    <select id="getbyUseridAndState" resultMap="CL_FinanceMap">
+	    SELECT <include refid="columnsall"/>
+	    <![CDATA[
+	        FROM cl_finance fs
+	        WHERE 
+		        fs.fuser_id = #{userroleid} and fs.fstate in (0,1)
+	    ]]>
+    </select>
+    
+    
+    <select id="getMaxId" resultType="int">
+    	select ifnull(Max(fid),0) from cl_finance
+    </select>
+
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(number)">
+			    AND fs.number LIKE CONCAT('%',#{number},'%')
+			</if>
+			<if test="@Ognl@isNotEmpty(fstate)">
+			    AND fs.fstate=#{fstate}
+			</if>
+			<if test="@Ognl@isNotEmpty(fserialNum)">
+			    AND fs.fserial_num LIKE CONCAT('%',#{fserialNum},'%')
+			</if>
+			<if test="@Ognl@isNotEmpty(fuserId)">
+			    AND fs.fuser_id LIKE CONCAT('%',#{fuserId},'%')
+			</if>
+			<if test="@Ognl@isNotEmpty(fusername)">
+			    AND user.driverName LIKE CONCAT('%',#{fusername},'%')
+			</if>
+			<if test="@Ognl@isNotEmpty(createTimeBegin)">
+		   		AND fs.fcreate_time >= #{createTimeBegin}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeEnd)">
+		   		AND fs.fcreate_time &lt; #{createTimeEnd}
+		   	</if>
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_finance fs 
+        LEFT JOIN cl_car user on user.user_role_id = fs.fuser_id
+	    LEFT JOIN cl_user_role ur on ur.id = fs.fhandler_id
+        <include refid="findWhere"/>    
+    </select>
+    
+    <select id="findPage" resultMap="CL_FinanceMap">
+    	SELECT <include refid="columns"/> FROM cl_finance fs
+    	LEFT JOIN cl_car user on user.user_role_id = fs.fuser_id
+	    LEFT JOIN cl_user_role ur on ur.id = fs.fhandler_id
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+    
+    <select id="getByNowTime" resultMap="CL_FinanceMap">
+    	SELECT <include refid= "columnsall" />
+    	 <![CDATA[
+    	 FROM cl_finance fs INNER JOIN(
+			SELECT MAX(number) as number FROM cl_finance WHERE DATE_FORMAT(fcreate_time  ,'%Y-%m-%d')=DATE_FORMAT(#{nowTime},'%Y-%m-%d') 
+		) fs1 on fs1.number = fs.number
+		]]>
+    </select>
+	
+	<select id="find" resultMap="CL_FinanceMap">
+	    SELECT <include refid="columns"/> 
+	    FROM cl_finance fs
+	    LEFT JOIN cl_car user on user.user_role_id = fs.fuser_id
+	    LEFT JOIN cl_user_role ur on ur.id = fs.fhandler_id
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+	
+</mapper>
+

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN" 
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd" >
+<hibernate-configuration>
+	<session-factory>
+		<!-- 数据库配置 -->
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+ 		<!--<property name="hibernate.connection.url">jdbc:mysql://192.168.0.89:3306/dj151104?useOldAliasMetadataBehavior=true</property> -->
+ 		<property name="hibernate.connection.url">jdbc:mysql://192.168.1.22:3306/dj151104?useOldAliasMetadataBehavior=true</property>
+		<!--<property name="hibernate.connection.url">jdbc:mysql://192.168.0.89:3306/dj150527?useOldAliasMetadataBehavior=true</property>  -->
+		<property name="hibernate.connection.username">djvmi</property>
+		<property name="hibernate.connection.password">djvmi</property>
+		<property name="hibernate.show_sql">true</property><!-- 打印SQL语句 -->
+		<property name="hibernate.format_sql">true</property><!-- 不格式化SQL语句 -->
+		<!-- <property name="hibernate.current_session_context_class">thread</property> 为Session指定一个自定义策略 -->
+		
+		<!-- C3P0 JDBC连接池 -->
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.timeout">120</property>
+		<property name="hibernate.c3p0.max_statements">100</property>
+		<property name="hibernate.c3p0.idle_test_period">120</property>
+		<property name="hibernate.c3p0.acquire_increment">2</property>
+		<property name="hibernate.c3p0.validate">true</property>
+		
+		<!-- 映射文件 -->
+		<mapping resource="com/model/user/TSysUser.hbm.xml"/>                                                     <!--  用户信息-->
+		<mapping resource="com/model/userrole/UserRole.hbm.xml"/>                                                 <!--  用户角色信息-->
+		<mapping resource="com/model/useronline/Useronline.hbm.xml"/>                                             <!--  用户在线信息-->
+		<mapping resource="com/model/userdiary/Userdiary.hbm.xml"/>                                               <!--  用户日记表-->
+		<mapping resource="com/model/customer/Customer.hbm.xml"/>                                                 <!--  客户信息-->
+		<mapping resource="com/model/userCustomer/UserCustomer.hbm.xml"/>                                         <!--  用户客户信息-->
+		<mapping resource="com/model/supplier/Supplier.hbm.xml"/>                                                 <!--  制造商信息-->
+		<mapping resource="com/model/userSupplier/UserSupplier.hbm.xml"/>                                         <!--  用户制造商信息-->
+		<mapping resource="com/model/userpermission/Userpermission.hbm.xml"/>                                     <!--  权限表-->
+		<mapping resource="com/model/custproduct/TBdCustproduct.hbm.xml"/>                                        <!--  快速下单-->
+		<mapping resource="com/model/productdemandfile/Productdemandfile.hbm.xml"/>                               <!--  文件上传-->
+		<mapping resource="com/model/system/Simplemessagecfg.hbm.xml"/>                                           <!--  在线设计-->
+		<mapping resource="com/model/address/Address.hbm.xml"/>                                                   <!--  地址信息-->
+		<mapping resource="com/model/deliverapply/Deliverapply.hbm.xml"/>                                         <!--  要货订单-->
+		<mapping resource="com/model/mystock/Mystock.hbm.xml"/>                                                   <!--  备货订单-->
+		<mapping resource="com/model/useraddress/Useraddress.hbm.xml"/>                                           <!--  -->
+		<mapping resource="com/model/custRelationAdress/CustRelationAdress.hbm.xml"/>                             <!--  -->
+		<mapping resource="com/model/firstproductdemand/Firstproductdemand.hbm.xml"/>                             <!--  我的需求-->
+		<mapping resource="com/model/schemedesign/Schemedesign.hbm.xml"/>      
+		<mapping resource="com/model/schemedesign/SchemeDesignEntry.hbm.xml"/>                 
+		<mapping resource="com/model/schemedesign/Productstructure.hbm.xml"/>                
+		<mapping resource="com/model/productdef/Productdef.hbm.xml"/>   
+		<mapping resource="com/model/productdef/CommonMaterial.hbm.xml"/>                                         <!--  产品设计-->
+		<mapping resource="com/model/orderState/OrderState.hbm.xml"/>  										      <!--  订单状态-->
+		<mapping resource="com/model/cusprivatedelivers/CusPrivateDelivers.hbm.xml"/>  							  <!--  购物车-->
+		<mapping resource="com/model/productdef/Productrelation.hbm.xml"/>  							  		  <!--  产品与客户产品关系表-->
+		<mapping resource="com/model/productdef/Productrelationentry.hbm.xml"/>  								  <!--  产品与客户产品关系表分录-->
+		<mapping resource="com/model/productdef/ProductdefProducts.hbm.xml"/>  							  		  <!--  产品结构表-->
+		<mapping resource="com/model/productdef/Custproductproducts.hbm.xml"/>  								  <!--  客户产品结构表-->
+		<mapping resource="com/model/saledeliver/FTUSaledeliver.hbm.xml"/>  								      <!--  送货凭证-->
+		<mapping resource="com/model/saledeliverdetail/FTUSaledeliverEntry.hbm.xml"/>  							  <!--  送货凭证明细-->
+		<mapping resource="com/model/saledeliver/FtuParameter.hbm.xml"/>											<!--  送货凭证列参数配置表-->
+		<mapping resource="com/model/saledeliver/FtuTemplate.hbm.xml"/>											<!--  送货凭证模板文件表-->
+		<mapping resource="com/model/saledeliver/FTURelation.hbm.xml"/>											<!--  送货凭证司机开单员记录表-->
+		<mapping resource="com/model/produceplan/ProducePlan.hbm.xml"/>  							  			  <!--  排产计划表-->
+		<mapping resource="com/model/supplierboardplanconfig/Supplierboardplanconfig.hbm.xml"/>  				  <!--  制造商排产计划配置表-->
+		<mapping resource="com/model/productdef/MaterialLimit.hbm.xml"/>           								  <!--  纸板落料总长总高最值配置表-->
+      	<mapping resource="com/model/productdef/CustBoardFormula.hbm.xml"/>           							  <!--  纸板自定义公式值配置表-->
+		<mapping resource="com/model/productreqallocationrules/Productreqallocationrules.hbm.xml"/>                                           <!--  制造商分配规则-->
+      	<mapping resource="com/model/deliverapply/CustBoardLabel.hbm.xml"/>										  <!--  纸板订单客户标签-->
+      	<mapping resource="com/model/system/Syscfg.hbm.xml"/>										  			  <!--  系统配置-->
+      	<mapping resource="com/model/storebalance/Storebalance.hbm.xml"/>										  <!--  库存表-->
+      	<mapping resource="com/model/productplan/Productindetail.hbm.xml"/>										  <!--  入库详情-->
+      	<mapping resource="com/model/productplan/Supplierindetail.hbm.xml"/>									  <!--  接口入库详情-->
+      	<mapping resource="com/model/productplan/Outwarehouse.hbm.xml"/>								 		  <!--  出库表-->
+      	<mapping resource="com/model/productplan/ProductPlan.hbm.xml"/>								 		  		<!--  制造商订单-->
+      	<mapping resource="com/model/system/Simplemessage.hbm.xml"/>								 		  		<!--  消息-->
+      	<mapping resource="com/model/custproduct/Custrelation.hbm.xml"/>								 		  <!--  客户产品与产品关系表-->
+      	<mapping resource="com/model/custproduct/Custrelationentry.hbm.xml"/>								 	  <!--  客户产品与产品关系表-->
+		<mapping resource="com/model/schemedesign/Saleorder.hbm.xml"/>	
+		<!-- <mapping resource="com/model/menu/Menu.hbm.xml"/>      -->                                              <!--  菜单tree列表-->
+<!-- 		<mapping resource="com/model/usermenu/UserMenu.hbm.xml"/>								  菜单配置表 -->
+<!-- 		<mapping resource="com/model/certificate/DesignerCertificateInfo.hbm.xml"/>	 -->
+<!-- 		<mapping resource="com/model/designschemes/Designschemes.hbm.xml"/>	 -->
+<!-- 		<mapping resource="com/model/designschemes/Schemefiles.hbm.xml"/>									  设计服务商认证信息 -->
+<!-- 		<mapping resource="com/model/statement/Statement.hbm.xml"/> -->
+	</session-factory>
+</hibernate-configuration>

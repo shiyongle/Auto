@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<!-- 用于设置OGNL是否允许静态方法访问，默认为false -->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+	<constant name="struts.configuration.xml.reload" value="false"/>
+	<constant name="struts.multipart.maxSize" value="10485760"></constant>
+	<package name="cps-default" abstract="true" extends="struts-default">
+			<result-types>
+	            <result-type name="direct" class="cn.org.rapid_framework.struts2.dispatcher.DirectResult"/>
+	        </result-types>
+	       <interceptors>
+				<interceptor name="loginInterceptor" class="com.action.interceptor.UserLoginIframeInterceptor"/>
+				<interceptor-stack name="myDefaultInterceptor">				<!-- 定义公共的拦截器链，在action标签中只需要引用拦截器链 -->
+					<interceptor-ref name="loginInterceptor"/>
+	    			<interceptor-ref name="defaultStack"/>
+				</interceptor-stack>
+			</interceptors>
+	        <default-interceptor-ref name="myDefaultInterceptor"/>			<!-- 定义默认的拦截器栈，会自动注册到action中 -->  
+	        
+			<global-results>
+	            <result name="error">/pages/common/show_error.jsp</result>  <!-- 错误页面 -->
+	            <result name="index" type="redirectAction">index</result>   <!-- 程序主页面 -->
+	            <result name="reg">reg.jsp</result>                         <!-- 注册 -->
+	            <result name="smallreg">/pages/smallLogin/reg.jsp </result>   <!-- 新版注册 -->
+	            <result name="reg_success">reg_success.jsp</result>         <!-- 注册成功 -->
+				<result name="login" >/login.jsp</result>                    <!-- 登录-->
+				<result name="unpwd">findPassword.jsp</result>              <!-- 忘记密码-->
+				<result name="smallfidpwd">/pages/smallLogin/findPassword.jsp </result>   <!-- 新版忘记密码 -->
+				<result name="fuwu_index" >/fuwu_index.jsp</result>
+	        </global-results>
+	        
+			<global-exception-mappings>
+				<exception-mapping result="error" exception="com.util.AppException"></exception-mapping>
+			</global-exception-mappings>
+	</package>
+	
+	<!-- 重定向页面-系统切换-->
+	<package name="vdispatcher" extends="cps-default" namespace="/vdispatcher">
+		<action name="*" method="{1}" class="com.action.VmiRequestDispatcher">
+			<!-- 添加defaultStack保证不执行拦截器 -->  
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+	    </action>
+    </package>
+	
+	<!-- 同城物流接口类-->
+	<package name="CsclDispatcher" extends="cps-default" namespace="/CsclDispatcher">
+		<action name="*" method="{1}" class="com.impl.CsclRequestDispatcher">
+			<!-- 添加defaultStack保证不执行拦截器 -->  
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+	    </action>
+    </package>
+	
+	<!-- 用户-->
+	<package name="user" extends="cps-default" namespace="/">
+		<action name="user_*" method="{1}" class="com.action.user.TSysUserAction">
+			<result name="index">index.jsp</result>
+			<!-- 添加defaultStack保证不执行拦截器 -->  
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+	    </action>
+    </package>
+    
+    <!-- 用户中心，用户资料-->
+    <package name="usercenter" extends="cps-default" namespace="/usercenter">
+		<action name="*" method="{1}" class="com.action.user.TSysUserAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+    <!-- 新版树形菜单-->
+    <package name="menuTree" extends="cps-default" namespace="/menuTree">
+		<action name="*" method="{1}" class="com.action.menuTree.MenuTreeAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+    <!-- 自定义配置菜单-->
+    <package name="usermenu" extends="cps-default" namespace="/usermenu">
+		<action name="*" method="{1}" class="com.action.menuTree.UserMenuAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+    <!-- 快速下单-->
+    <package name="custproduct" extends="cps-default" namespace="/custproduct">
+		<action name="*" method="{1}" class="com.action.custproduct.TBdCustproductAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+     <!-- 在线设计-->
+    <package name="lineDesign" extends="cps-default" namespace="/lineDesign">
+		<action name="*" method="{1}" class="com.action.firstproductdemand.FirstproductdemandAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		    <!-- 添加defaultStack保证不执行拦截器 -->  
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+    </package>
+    <!--文件上传-->
+    <package name="productfile" extends="cps-default" namespace="/productfile">
+		<action name="*" method="{1}" class="com.action.productdemandfile.ProductdemandfileAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+     <!--文件上传-无拦截-->
+    <package name="productfilenol" extends="cps-default" namespace="/productfilenol">
+		<action name="*" method="{1}" class="com.action.productdemandfile.ProductdemandfileAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		     <!-- 添加defaultStack保证不执行拦截器 -->  
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+    </package>
+    <!--联系地址-->
+    <package name="address" extends="cps-default" namespace="/address">
+		<action name="*" method="{1}" class="com.action.address.AddressAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+    <!--纸箱要货-->
+    <package name="deliverapply" extends="cps-default" namespace="/deliverapply">
+		<action name="*" method="{1}" class="com.action.deliverapply.DeliverapplyAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+    <!--纸板要货，纸板订单-->
+    <package name="board" extends="cps-default" namespace="/board">
+		<action name="*" method="{1}" class="com.action.deliverapply.BoardDeliverapplyAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+    
+    <!--备货-->
+    <package name="mystock" extends="cps-default" namespace="/mystock">
+		<action name="*" method="{1}" class="com.action.mystock.MystockAction">
+		    <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+		</action>
+    </package>
+    
+    <!--导出execl-->
+    <package name="execl" extends="cps-default" namespace="/execl">
+        <action name="*" method="{1}" class="com.util.ExportExcelUtil">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+    
+    <!--我的收货情况-->
+    <package name="mydelivery" extends="cps-default" namespace="/mydelivery">
+        <action name="*" method="{1}" class="com.action.myDelivery.MyDeliveryAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+    
+     <!--客户管理-->
+    <package name="customer" extends="cps-default" namespace="/customer">
+        <action name="*" method="{1}" class="com.action.customer.CustomerAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+    
+    <!--我的需求，在线设计-->
+    <package name="firstproductdemand" extends="cps-default" namespace="/firstproductdemand">
+        <action name="*" method="{1}" class="com.action.firstproductdemand.FirstproductdemandAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+    
+    <!--在线设计，我的设计-->
+    <package name="schemedesign" extends="cps-default" namespace="/schemedesign">
+        <action name="*" method="{1}" class="com.action.schemedesign.SchemedesignAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+    
+     <!--产品档案，常用材料-->
+    <package name="productdef" extends="cps-default" namespace="/productdef">
+        <action name="*" method="{1}" class="com.action.productdef.ProductdefAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+
+    <!--购物车-->
+    <package name="cusprivatedelivers" extends="cps-default" namespace="/shopcar">
+        <action name="*" method="{1}" class="com.action.cusprivatedelivers.CusprivatedeliversAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+               <interceptor-ref name="defaultStack"></interceptor-ref>
+        </action>
+    </package>
+    
+    <!--送货凭证-->
+    <package name="saledeliver" extends="cps-default" namespace="/saledeliver">
+        <action name="*" method="{1}" class="com.action.saledeliver.SaledeliverAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+    
+      <!--纸箱接单-->
+    <package name="productplan" extends="cps-default" namespace="/productplan">
+        <action name="*" method="{1}" class="com.action.productplan.ProductplanAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+    
+    <!--excel导入分析数据-->
+    <package name="execldata" extends="cps-default" namespace="/execldata">
+        <action name="*" method="{1}" class="com.action.excel.ExcelDataAction">
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+             <interceptor-ref name="fileUpload">
+            <!--配置允许上传的文件类型-->
+             <param name="maximumSize">104857600</param>
+             <param name="allowedExtensions">xls,xlsx</param>  
+           </interceptor-ref>
+             <interceptor-ref name="defaultStack"></interceptor-ref>
+        </action>
+    </package>
+
+    
+    <!--设计师方案库-->
+    <package name="designschemes" extends="cps-default" namespace="/designschemes">
+        <action name="*" method="{1}" class="com.action.designschemes.DesignSchemeAction">
+        	<!-- 添加defaultStack保证不执行拦截器 -->  
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+            <result name="*" type="direct">通过Action直接返回，这一行无需修改</result>
+        </action>
+    </package>
+</struts>

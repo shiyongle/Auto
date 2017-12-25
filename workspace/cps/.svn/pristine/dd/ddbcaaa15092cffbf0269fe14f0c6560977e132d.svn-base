@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-12-2 10:01:20 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.model.useraddress.Useraddress" table="t_bd_useraddress" >
+        <id name="fid" type="string">
+            <column name="fid" length="45" />
+            <generator class="assigned" />
+        </id>
+        <property name="fuserid" type="string">
+            <column name="fuserid" length="45" />
+        </property>
+        <property name="faddress" type="string">
+            <column name="faddress" length="45" />
+        </property>
+        <property name="faddefault" type="java.lang.Integer">
+            <column name="fdefault" />
+        </property>
+    </class>
+</hibernate-mapping>

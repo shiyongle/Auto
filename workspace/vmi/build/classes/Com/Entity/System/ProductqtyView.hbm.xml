@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-1-29 14:10:30 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.ProductqtyView" table="productqty_view">
+        <composite-id name="id" class="ProductqtyViewId">
+            <key-property name="fproductid" type="string">
+                <column name="fproductid" length="44" />
+            </key-property>
+            <key-property name="fproductQty" type="big_decimal">
+                <column name="fproductQty" precision="32" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

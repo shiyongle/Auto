@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="CL_CarLine">
+	<resultMap id="CLCarLine" type="com.pc.model.CL_CarLine">
+		<result property="fcar_line_id" column="fcar_line_id" />
+		<result property="fdriver_id" column="fdriver_id" />
+		<result property="factory_id" column="factory_id" />
+		<result property="fstatus" column="fstatus" />
+		<result property="fsign_time" column="fsign_time" />
+		<result property="foperate_time" column="foperate_time" />
+		<result property="foperator" column="foperator" />
+		<result property="fremark" column="fremark" />
+	</resultMap>
+	
+	<sql id="columns">
+		cl.fcar_line_id,cl.fdriver_id,cl.factory_id,cl.fstatus,cl.fsign_time,cl.foperate_time,cl.foperator,cl.fremark,car.active_area activeArea,car.car_spec_id carSpec,car.carNum,car.driverName,car.carType,
+		ur.vmi_user_phone vmiUserPhone,cf.factory,ur1.vmi_user_name foperator1
+	</sql>
+	
+	<insert id="insert">
+		insert into cl_car_line(
+			fcar_line_id,
+			fdriver_id,
+			factory_id,
+			fstatus,
+			fsign_time,
+			foperate_time,
+			foperator,
+			fremark
+		) values(
+			#{fcar_line_id,jdbcType=INTEGER},
+			#{fdriver_id,jdbcType=INTEGER},
+			#{factory_id,jdbcType=INTEGER},
+			#{fstatus,jdbcType=INTEGER},
+			#{fsign_time,jdbcType=TIMESTAMP},
+			#{foperate_time,jdbcType=TIMESTAMP},
+			#{foperator,jdbcType=INTEGER},
+			#{fremark,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="update">
+		update cl_car_line set
+			fdriver_id = #{fdriver_id,jdbcType=INTEGER},
+			factory_id = #{factory_id,jdbcType=INTEGER},
+			fstatus = #{fstatus,jdbcType=INTEGER},
+			fsign_time = #{fsign_time,jdbcType=TIMESTAMP},
+			foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER},
+			fremark = #{fremark,jdbcType=VARCHAR}
+		where
+			fcar_line_id = #{fcar_line_id}
+	</update>
+	
+	<select id="getById" resultMap="CLCarLine">
+		select <include refid="columns"/> from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+			left join cl_user_role ur on ur.id = cl.fdriver_id
+			left join cl_user_role ur1 on ur1.id = cl.foperator
+			left join cl_factory cf on cf.factory_id = cl.factory_id
+		where
+			cl.fcar_line_id = #{fcar_line_id}
+	</select>
+	
+	<select id="getByUserId" resultMap="CLCarLine">
+		select <include refid="columns"/> from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+			left join cl_user_role ur on ur.id = cl.fdriver_id
+			left join cl_user_role ur1 on ur1.id = cl.foperator
+			left join cl_factory cf on cf.factory_id = cl.factory_id
+		where
+			cl.fdriver_id = #{userRoleId} and cl.fstatus = 1
+	</select>
+	
+	<select id="getByUserId2" resultMap="CLCarLine">
+		select <include refid="columns"/> from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+			left join cl_user_role ur on ur.id = cl.fdriver_id
+			left join cl_user_role ur1 on ur1.id = cl.foperator
+			left join cl_factory cf on cf.factory_id = cl.factory_id
+		where
+			cl.fdriver_id = #{userRoleId}
+		order by fsign_time desc
+	</select>
+	
+	<select id="findSort" resultType="int">
+		select fcar_line_id from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+		 where fstatus = 1 and car.active_area = #{area} and car.car_spec_id = #{specId}
+		 	order by fsign_time
+	</select>
+	
+	<select id="findPageCount" resultType="long">
+		select count(cl.fcar_line_id) from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+			left join cl_user_role ur on ur.id = cl.fdriver_id
+			left join cl_factory cf on cf.factory_id = cl.factory_id
+		<include refid="findWhere"/>
+	</select>
+	
+	<select id="findPage2Count" resultType="long">
+		select count(cl.fcar_line_id) from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+			left join cl_user_role ur on ur.id = cl.fdriver_id
+			left join cl_factory cf on cf.factory_id = cl.factory_id
+		<include refid="findWhere2"/>
+	</select>
+	
+	<select id="findPage" resultMap="CLCarLine">
+		select <include refid="columns"/> from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+			left join cl_user_role ur on ur.id = cl.fdriver_id
+			left join cl_user_role ur1 on ur1.id = cl.foperator
+			left join cl_factory cf on cf.factory_id = cl.factory_id
+		<include refid="findWhere"/>
+		order by fstatus,fsign_time
+	</select>
+	
+	<select id="findPage2" resultMap="CLCarLine">
+		select <include refid="columns"/> from cl_car_line cl
+			left join cl_car car on car.user_role_id = cl.fdriver_id
+			left join cl_user_role ur on ur.id = cl.fdriver_id
+			left join cl_user_role ur1 on ur1.id = cl.foperator
+			left join cl_factory cf on cf.factory_id = cl.factory_id
+		<include refid="findWhere2"/>
+		order by fsign_time
+	</select>
+	
+	<sql id="findWhere">
+		<where>
+			<if test="@Ognl@isNotEmpty(fstatus)">
+				and cl.fstatus = #{fstatus}
+			</if>
+			<if test="@Ognl@isNotEmpty(factory_id)">
+				and cl.factory_id = #{factory_id}
+			</if>
+			<if test="@Ognl@isNotEmpty(activeArea)">
+				and car.active_area  = #{activeArea}
+			</if>
+			<if test="@Ognl@isNotEmpty(carSpec)">
+				and car.car_spec_id = #{carSpec}
+			</if>
+			<if test="@Ognl@isNotEmpty(keyWord)">
+				and (car.driverName like concat('%',#{keyWord},'%') or car.carNum like concat('%',#{keyWord},'%'))
+			</if>
+			<if test="@Ognl@isNotEmpty(operatedTimeBegin)">
+				and date_format(cl.foperate_time,'%Y-%m-%d %H') >= date_format(#{operatedTimeBegin},'%Y-%m-%d %H')
+			</if>
+			<if test="@Ognl@isNotEmpty(operatedTimeEnd)">
+				and date_format(cl.foperate_time,'%Y-%m-%d %H') &lt; date_format(#{operatedTimeEnd},'%Y-%m-%d %H')
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="findWhere2">
+		<where>
+			<if test="@Ognl@isNotEmpty(factory_id)">
+				and cl.factory_id = #{factory_id}
+			</if>
+			<if test="@Ognl@isNotEmpty(carSpec)">
+				and car.car_spec_id = #{carSpec}
+			</if>
+			<if test="@Ognl@isNotEmpty(activeArea)">
+				and car.active_area  = #{activeArea}
+			</if>
+			<if test="@Ognl@isNotEmpty(keyWord)">
+				and  car.carNum like concat('%',#{keyWord},'%')
+			</if>
+			and cl.fstatus = 1
+		</where>
+	</sql>
+
+</mapper>

@@ -1,0 +1,280 @@
+# CRM文档  e345435345345
+
+## 代码生成器
+### 参见[doc/codemaker.md](/../blob/qsb-master/doc/codemaker.md#])
+
+## 代码
+
+### 代码说明：
+1.  CRM 接口文档 http://192.168.12.240/djcrm-api/#
+2.  组织架构 接口 http://192.168.12.246/org/
+3.  登录页面 http://192.168.10.128
+4.  测试 用户名: 1000016 密码:
+                          170服务器：dj123456
+                          本地：212739
+                          
+5.  MsgEnum 消息代码约定，每个人以固定的数字开头：
+    
+    璩诗斌：10
+    鲁大师：21
+    罗文斌：12
+    李阔：23
+    萧：14
+    郑天伟：30
+    褚长慧：36
+    陈丁：22
+    
+
+
+### 接口说明：
+#### url = http://192.168.12.240:8181/
+#### 返回的信息格式：{"code": "0表示失败，1表示成功", "msg": {"id":"消息Id", "info":"信息内容"}, "data": "具体数据"}
+
+* index.do
+
+    参数：
+    
+        oncetoken: 登录后的一次性token；字符串
+        
+    处理登录后跳转、交换oncetoken、获取菜单列表等。
+    
+------
+
+* login.do
+
+    该接口用于APP登录
+
+    参数：
+    
+        username: 用户名；字符串
+        
+        password: 加密后的密码；字符串；
+        
+    返回结果：
+    
+        {
+            "code": 0或1（0表示失败，1表示成功）,
+             "msg": {
+                "id": "消息code",
+                "info": "消息内容"
+             },
+             "data": {
+                "token": 返回 token,
+                "user": {
+                    "id": id,
+                    "username": 用户名,
+                    "email": 邮箱地址,
+                    "department": 部门，
+                    "phone": 手机号码
+                 }
+              }
+        }
+    
+------
+    
+* user/info.do
+
+    该接口用于获取用户信息
+
+    参数:
+    
+        token: 用户的token
+        
+    返回结果：
+        
+        {
+            "code": 0或1（0表示失败，1表示成功）,
+             "msg": {
+                "id": "消息code",
+                "info": "消息内容"
+             },
+             "data": {
+                "user": {
+                    "id": id,
+                    "username": 用户名,
+                    "email": 邮箱地址,
+                    "department": 部门，
+                    "phone": 手机号码
+                 }
+              }
+        }
+        
+------
+
+* menu/tree.do
+
+    该接口用于获取用户所拥有的权限
+    
+    参数：
+    
+        token: 用户的token
+        
+    返回结果：
+    
+        {
+           {
+               "code": 0或1（0表示失败，1表示成功）,
+                "msg": {
+                    "id": "消息code",
+                    "info": "消息内容"
+                 },
+                "data": {
+                   "tree": {
+                        [
+                        {
+                            "id": id,
+                            "fatherId": 父节点id，
+                            "menu": {
+                                "id": id,
+                                "fatherId": fatherid,
+                                "name": 菜单名称，
+                                "layer": 层级,
+                                "url": 链接地址
+                            },
+                            childrenNode": {
+                                [
+                                    "id": id,
+                                    "fatherId": 父节点id，
+                                    "menu": {
+                                        "id": id,
+                                        "fatherId": fatherid,
+                                        "name": 菜单名称，
+                                        "layer": 层级,
+                                        "url": 链接地址
+                                    },
+                                    childrenNode": {[]}
+                                ]
+                            }
+                        }
+                        ]
+                    }
+                 }
+           } 
+        }
+    
+* menu/first.do
+    
+    该接口用于获取用户所拥有权限的一级菜单
+    
+    参数:
+    
+        token: 用户登陆后的token
+        
+    返回结果:
+    
+        {
+            "code": 0或1（0表示失败，1表示成功）;
+            "msg": {
+               "id": "消息code",
+               "info": "消息内容"
+            },
+            "data": {[
+                {
+                    "id": 菜单Id,
+                    "fatherId": 父Id(可以不用管)
+                    "name": 菜单名称,
+                    "layer": 层级（1）,
+                    “url”: 链接地址,
+                    "icon": 图标地址
+                }
+            ]}
+            
+        }
+
+* menu/children.do
+
+    该接口用于获取二三级及以下菜单
+    
+    参数:
+    
+        token: 用户登陆后的token
+        fatherid: 父级节点menuId
+        
+     返回结果:
+     
+        {
+           {
+               "code": 0或1（0表示失败，1表示成功）;
+                "msg": {
+                   "id": "消息code",
+                   "info": "消息内容"
+                },
+                "data": {
+                   "tree": {
+                        [
+                        {
+                            "id": id,
+                            "fatherId": 父节点id，
+                            "menu": {
+                                "id": id,
+                                "fatherId": fatherid,
+                                "name": 菜单名称，
+                                "layer": 层级,
+                                "url": 链接地址
+                            },
+                            childrenNode": {
+                                [
+                                    "id": id,
+                                    "fatherId": 父节点id，
+                                    "menu": {
+                                        "id": id,
+                                        "fatherId": fatherid,
+                                        "name": 菜单名称，
+                                        "layer": 层级,
+                                        "url": 链接地址
+                                    },
+                                    childrenNode": {[]}
+                                ]
+                            }
+                        }
+                        ]
+                    }
+                 }
+           } 
+        }
+        
+* /swaptoken.do
+
+    该接口用于CRM/ERP切换到其他系统时，交换token
+
+    参数：
+        oldtoken: 用户在线token
+        sys: 系统名称（CRM、ERP、OA、BI）
+        token: 用户在线token
+        
+    返回结果:
+    
+        {
+            "code": 0或1（0表示失败，1表示成功）;
+            "msg": {
+                "id": "消息code",
+                "info": "消息内容"
+             },
+            "data": {
+                "url": 返回的跳转url
+             }
+            
+        }
+
+* /signout.do
+
+    用户登出系统
+    
+    参数：
+    
+        token： 用户的token
+        
+     返回结果:
+         
+         {
+             "code": 0或1（0表示失败，1表示成功）;
+             "msg": {
+                 "id": "消息code",
+                 "info": "消息内容"
+              },
+             "data": {
+                  "url": "跳转登录的url"
+              }
+             
+         }
+             

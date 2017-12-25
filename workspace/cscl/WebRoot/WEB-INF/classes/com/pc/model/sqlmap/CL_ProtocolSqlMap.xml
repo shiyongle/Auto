@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Protocol">
+
+    <resultMap id="CLProtocolMap" type="com.pc.model.CL_Protocol">
+		<result property="id" column="id"/>
+        <result property="fname" column="fname"/>
+        <result property="type" column="type"/>
+        <result property="carSpecId" column="car_spec_id"/>
+        <result property="startPrice" column="start_price"/>
+        <result property="timePrice" column="time_price"/>
+        <result property="status" column="status"/>
+        <result property="pubRemark" column="pub_remark"/>
+        <result property="funitId" column="funit_id"/>
+        <result property="userRoleId" column="user_role_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="startKilometre" column="start_kilometre"/>
+        <result property="outNumprice" column="out_numprice"/>
+        <result property="outKilometre" column="out_kilometre"/>
+        <result property="out5_20_kilometre" column="out5_20_kilometre"/>
+        <result property="out20_50_kilometre" column="out20_50_kilometre"/>
+        <result property="out50_kilometre" column="out50_kilometre"/>
+        <result property="startNumber" column="start_number"/>
+        <result property="fpaymethod" column="fpay_method"/>
+        <result property="fincrementServe" column="fincrement_serve"/>
+        <result property="fpurposeAmount" column="fpurpose_amount"/>
+        
+        <result property="fdiscount" column="fdiscount"/>
+        <result property="foutopint" column="fout_opint"/>
+        <result property="fopint" column="fopint"/>
+        <result property="fadd_service_1" column="fadd_service_1"/>
+        <result property="fadd_service_2" column="fadd_service_2"/>
+        <result property="fcreator" column="fcreator"/>
+        <result property="foperator" column="foperator"/>
+        <result property="foperate_time" column="foperate_time"/>
+        <result property="fdriver_type" column="fdriver_type"/>
+    </resultMap>
+   
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+	      clp.id,clp.fname,clp.type,clp.car_spec_id,   clp.fdiscount, clp.fout_opint,clp.fopint,clp.start_price,clp.time_price,clp.status,clp.fpay_method,clp.fincrement_serve,clp.fpurpose_amount,clp.pub_remark,clp.funit_id,
+	      clp.user_role_id,clp.create_time,clp.start_kilometre,clp.out_numprice,clp.out_kilometre,clp.out5_20_kilometre,clp.out20_50_kilometre,clp.out50_kilometre,clp.start_number,csp.name as carSpecName,
+	      clu.vmi_user_name as userName ,cun.name as otherTypeName,clu.vmi_user_phone as userPhone,car.driverName as driverName,clp.fadd_service_1,clp.fadd_service_2,clp.fcreator,uc.fname as cusName,clp.fdriver_type
+           ]]>
+	</sql>
+	
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO CL_protocol (
+	      id,
+	      fname,
+	      type,
+	      car_spec_id,
+	      start_price,
+	      time_price,
+	      status,
+	      pub_remark,
+	      funit_id,
+	      user_role_id,
+	      create_time,
+	      start_kilometre,
+	      out_numprice,
+	      out_kilometre,
+	      out5_20_kilometre,
+	      out20_50_kilometre,
+	      out50_kilometre,
+	      start_number,
+	      fpay_method,
+	      fincrement_serve,
+	      fpurpose_amount,
+	      fdiscount,
+          fout_opint,
+          fopint,
+          fadd_service_1,
+          fadd_service_2,
+          fcreator,
+          foperator,
+          foperate_time,
+          fdriver_type
+        ) VALUES (
+        	#{id, jdbcType=INTEGER} ,
+        	#{fname, jdbcType=VARCHAR} ,
+        	#{type, jdbcType=INTEGER} ,
+        	#{carSpecId, jdbcType=INTEGER} ,
+        	#{startPrice, jdbcType=DECIMAL} ,
+        	#{timePrice, jdbcType=DECIMAL} ,
+        	#{status, jdbcType=INTEGER} ,
+        	#{pubRemark, jdbcType=VARCHAR} ,
+        	#{funitId, jdbcType=INTEGER} ,
+        	#{userRoleId, jdbcType=INTEGER} ,
+        	#{createTime, jdbcType=TIMESTAMP} ,
+        	#{startKilometre, jdbcType=DECIMAL} ,
+        	#{outNumprice, jdbcType=DECIMAL} ,
+        	#{outKilometre, jdbcType=DECIMAL} ,
+        	#{out5_20_kilometre, jdbcType=DECIMAL} ,
+        	#{out20_50_kilometre, jdbcType=DECIMAL} ,
+        	#{out50_kilometre, jdbcType=DECIMAL} ,
+        	#{startNumber, jdbcType=DECIMAL} ,
+        	#{fpaymethod,jdbcType=INTEGER},
+        	#{fincrementServe,jdbcType=VARCHAR},
+        	#{fpurposeAmount,jdbcType=DECIMAL},
+        	#{fdiscount,jdbcType=DECIMAL},
+        	#{foutopint,jdbcType=DECIMAL},
+        	#{fopint,jdbcType=INTEGER},
+        	#{fadd_service_1,jdbcType=DECIMAL},
+        	#{fadd_service_2,jdbcType=DECIMAL},
+        	#{fcreator,jdbcType=INTEGER},
+        	#{foperator, jdbcType=INTEGER} ,
+        	#{foperate_time, jdbcType=TIMESTAMP} ,
+        	#{fdriver_type,jdbcType=INTEGER}
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+        UPDATE CL_protocol SET
+	        fname = #{fname, jdbcType=VARCHAR} ,
+	        type = #{type, jdbcType=INTEGER} ,
+	        car_spec_id  = #{carSpecId, jdbcType=INTEGER} ,
+	       start_price  = #{startPrice, jdbcType=DECIMAL} ,
+	        time_price  = #{timePrice, jdbcType=DECIMAL} ,
+	        status=#{status,jdbcType=INTEGER},
+	         pub_remark  = #{pubRemark, jdbcType=DECIMAL} ,
+	        funit_id  = #{funitId, jdbcType=DECIMAL} ,
+	        user_role_id =#{userRoleId, jdbcType=INTEGER} ,
+	        out_numprice =#{outNumprice,jdbcType=DECIMAL},
+	        out_kilometre =#{outKilometre,jdbcType=DECIMAL},
+        	create_time =#{createTime, jdbcType=TIMESTAMP},
+        	out5_20_kilometre =#{out5_20_kilometre,jdbcType=DECIMAL},
+        	out20_50_kilometre =#{out20_50_kilometre,jdbcType=DECIMAL},
+        	out50_kilometre =#{out50_kilometre,jdbcType=DECIMAL},
+        	start_kilometre=#{startKilometre,jdbcType=DECIMAL},
+        	start_number=#{startNumber,jdbcType=DECIMAL},
+        	fpay_method=#{fpaymethod,jdbcType=DECIMAL},
+	        fincrement_serve=#{fincrementServe,jdbcType=VARCHAR},
+	        fpurpose_amount=#{fpurposeAmount,jdbcType=DECIMAL},
+        	fdiscount=#{fdiscount,jdbcType=DECIMAL},
+        	fout_opint=#{foutopint,jdbcType=DECIMAL},
+        	fopint=#{fopint,jdbcType=INTEGER},
+        	fadd_service_1=#{fadd_service_1,jdbcType=DECIMAL},
+        	fadd_service_2=#{fadd_service_2,jdbcType=DECIMAL},
+        	fdriver_type=#{fdriver_type,jdbcType=INTEGER},
+        	foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    
+    <update id="updateDayRule" >
+    <![CDATA[
+        UPDATE CL_protocol SET
+              car_spec_id = #{carSpecId, jdbcType=INTEGER} ,
+              time_price  = #{timePrice, jdbcType=DECIMAL} ,
+              user_role_id =#{userRoleId, jdbcType=INTEGER} ,
+             foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+        
+    <update id="updateCarRule" >
+    <![CDATA[
+        UPDATE CL_protocol SET
+	        car_spec_id  = #{carSpecId, jdbcType=INTEGER} ,
+	        start_price  = #{startPrice, jdbcType=DECIMAL} ,
+	         pub_remark  = #{pubRemark, jdbcType=DECIMAL} ,
+	        user_role_id =#{userRoleId, jdbcType=INTEGER},
+        	out_kilometre =#{outKilometre,jdbcType=DECIMAL},
+        	out5_20_kilometre =#{out5_20_kilometre,jdbcType=DECIMAL},
+        	out20_50_kilometre =#{out20_50_kilometre,jdbcType=DECIMAL},
+        	out50_kilometre =#{out50_kilometre,jdbcType=DECIMAL},
+        	start_kilometre=#{startKilometre,jdbcType=DECIMAL},
+        	fdiscount=#{fdiscount,jdbcType=DECIMAL},
+        	fout_opint=#{foutopint,jdbcType=DECIMAL},
+        	fopint=#{fopint,jdbcType=INTEGER},
+        	fcreator=#{fcreator,jdbcType=INTEGER},
+        	fadd_service_1=#{fadd_service_1,jdbcType=DECIMAL},
+        	fadd_service_2=#{fadd_service_2,jdbcType=DECIMAL},
+        	foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    
+    <update id="updateLessRule" >
+    <![CDATA[
+        UPDATE CL_protocol SET
+	         start_price  = #{startPrice, jdbcType=DECIMAL} ,
+	         pub_remark  = #{pubRemark, jdbcType=DECIMAL} ,
+	         funit_id  = #{funitId, jdbcType=DECIMAL} ,
+	         user_role_id =#{userRoleId, jdbcType=INTEGER} ,
+	         out_numprice =#{outNumprice,jdbcType=DECIMAL},
+	         out_kilometre =#{outKilometre,jdbcType=DECIMAL},
+        	out5_20_kilometre =#{out5_20_kilometre,jdbcType=DECIMAL},
+        	out20_50_kilometre =#{out20_50_kilometre,jdbcType=DECIMAL},
+        	out50_kilometre =#{out50_kilometre,jdbcType=DECIMAL},
+        	start_kilometre=#{startKilometre,jdbcType=DECIMAL},
+        	start_number=#{startNumber,jdbcType=DECIMAL},
+        	fdiscount=#{fdiscount,jdbcType=DECIMAL},
+        	fout_opint=#{foutopint,jdbcType=DECIMAL},
+        	fopint=#{fopint,jdbcType=INTEGER},
+        	fcreator=#{fcreator,jdbcType=INTEGER},
+        	fadd_service_1=#{fadd_service_1,jdbcType=DECIMAL},
+        	fadd_service_2=#{fadd_service_2,jdbcType=DECIMAL},
+        	foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    <!-- ???? -->
+   <update id="status">
+            <![CDATA[
+        UPDATE CL_protocol SET
+	         status=#{status,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+   </update>
+    
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM CL_protocol WHERE id = #{id} 
+    ]]>
+    </delete>
+    
+   <select id="getBySpecAndType" resultMap="CLProtocolMap">
+       SELECT <include refid="columns"/>  FROM CL_protocol clp
+    	 LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id 
+    	 LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	 left join cl_car car on car.user_role_id = clp.user_role_id 
+    	 left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+    	 where 
+    	 <![CDATA[    
+    	 clp.car_spec_id=#{carSpecId} and clp.user_role_id=#{userRoleId} and clp.type=#{type} and clp.status=1 and isnull(clp.fdriver_type)
+    	 ]]>
+   </select>
+   
+   <select id="getBySpecAndTypeAndDriver" resultMap="CLProtocolMap">
+       SELECT <include refid="columns"/>  FROM CL_protocol clp
+    	 LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id 
+    	 LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	 left join cl_car car on car.user_role_id = clp.user_role_id 
+    	 left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+    	 where   clp.car_spec_id=#{carSpecId} and clp.user_role_id=#{userRoleId} and clp.type=#{type} and clp.status=1 and clp.fdriver_type=#{fdriver_type}
+   </select>
+       
+   <select id="getById" resultMap="CLProtocolMap">
+       SELECT <include refid="columns"/>  FROM CL_protocol clp
+    	 LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id 
+    	 LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	  left join cl_car car on car.user_role_id = clp.user_role_id 
+    	  left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+    	 where clp.id=#{id}
+   </select>
+   <select id="getByUserId" resultMap="CLProtocolMap">
+       SELECT <include refid="columns"/>  FROM CL_protocol clp
+    	 LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id 
+    	 LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	  left join cl_car car on car.user_role_id = clp.user_role_id 
+    	  left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+    	 where clp.user_role_id=#{userRoleId} AND clp.status=1 and clp.type in(1,2,3) 
+   </select>
+   <!--用于查询司机协议 -->
+    <select id="getByUserId2" resultMap="CLProtocolMap">
+       SELECT <include refid="columns"/>  FROM CL_protocol clp
+    	 LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id 
+    	 LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	  left join cl_car car on car.user_role_id = clp.user_role_id 
+    	  left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+    	 where clp.user_role_id=#{userRoleId} AND clp.status=1 and clp.type=4
+   </select>
+   
+    <select id="findByfunitId" resultMap="CLProtocolMap">
+      SELECT   id, fname,type, car_spec_id,start_price,time_price,status,pub_remark,user_role_id,create_time,start_kilometre,
+	      out_numprice,out_kilometre,start_number from    CL_protocol
+	      where funit_id=#{funitId} and  user_role_id=#{userRoleId} and type=2;
+    </select>
+     
+	<sql id="findWhere">
+	    <where>
+	        <if test="@Ognl@isNotEmpty(type)">
+			    AND  clp.type = #{type}
+		    </if>
+		    
+		    <if test="@Ognl@isNotEmpty(carSpecId)">
+			    AND  clp.car_spec_id = #{carSpecId}
+		    </if>
+              <if test="@Ognl@isNotEmpty(searchKey)">
+			    AND (
+			          clu.vmi_user_name LIKE CONCAT('%',#{searchKey},'%') 
+			    )
+			</if>
+              <if test="@Ognl@isNotEmpty(driverName)">
+			    AND (
+			          car.driverName LIKE CONCAT('%',#{driverName},'%') 
+			    )
+			</if>
+			 <if test="@Ognl@isNotEmpty(cusName)">
+			    AND (
+			          uc.fname LIKE CONCAT('%',#{cusName},'%') 
+			    )
+			</if>
+			<if test="@Ognl@isNotEmpty(sortColumns)">
+				and ${sortColumns}
+			</if>
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+       SELECT count(*) FROM CL_protocol clp
+    	 LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id
+    	LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	 left join cl_car car on car.user_role_id = clp.user_role_id 
+    	 left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+		<include refid="findWhere"/>    
+    </select>
+    
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CLProtocolMap">
+    	SELECT <include refid="columns"/> 
+    	FROM CL_protocol clp
+    	 LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id 
+    	 LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	  left join cl_car car on car.user_role_id = clp.user_role_id 
+    	  left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+		<include refid="findWhere"/> 
+		ORDER BY clu.vmi_user_name DESC
+    </select>
+    
+   
+	
+	<select id="find" resultMap="CLProtocolMap">
+	    SELECT <include refid="columns"/> 
+	    FROM CL_protocol clp
+    	  LEFT JOIN cl_car_spec csp on csp.id=clp.car_spec_id
+    	 LEFT JOIN cl_user_role clu on clu.id=clp.user_role_id 
+    	 LEFT JOIN cl_unit cun on cun.id=clp.funit_id
+    	  left join cl_car car on car.user_role_id = clp.user_role_id 
+    	  left join cl_user_customer uc on uc.fuser_role_id = clp.user_role_id
+		<include refid="findWhere"/>
+    </select>
+    
+</mapper>
+

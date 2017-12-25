@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-9-2 16:53:24 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.model.schemedesign.Schemedesign" table="t_ord_schemedesign" >
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fcreatorid" type="string">
+            <column name="fcreatorid" length="44" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+        <property name="fname" type="string">
+            <column name="fname" length="44" />
+        </property>
+        <property name="fnumber" type="string">
+            <column name="fnumber" length="44" />
+        </property>
+        <property name="fdescription" type="string">
+            <column name="fdescription" />
+        </property>
+        <property name="ffirstproductid" type="string">
+            <column name="ffirstproductid" length="44" />
+        </property>
+        <property name="fcustomerid" type="string">
+            <column name="fcustomerid" length="44" />
+        </property>
+        <property name="fsupplierid" type="string">
+            <column name="fsupplierid" length="44" />
+        </property>
+        <property name="fconfirmed" type="java.lang.Integer">
+            <column name="fconfirmed" />
+        </property>
+        <property name="fconfirmer" type="string">
+            <column name="fconfirmer" length="44" />
+        </property>
+        <property name="fconfirmtime" type="timestamp">
+            <column name="fconfirmtime" length="0" />
+        </property>
+        <property name="foverdate" type="timestamp">
+            <column name="foverdate" length="0" />
+        </property>
+        <property name="fboxlength" type="java.lang.Long">
+            <column name="fboxlength" precision="10" scale="0" />
+        </property>
+        <property name="fboxwidth" type="java.lang.Long">
+            <column name="fboxwidth" precision="10" scale="0" />
+        </property>
+        <property name="fboxheight" type="java.lang.Long">
+            <column name="fboxheight" precision="10" scale="0" />
+        </property>
+        <property name="fmaterial" type="string">
+            <column name="fmaterial" length="80" />
+        </property>
+        <property name="ftilemodel" type="string">
+            <column name="ftilemodel" length="80" />
+        </property>
+        <property name="famount" type="java.lang.Integer">
+            <column name="famount" />
+        </property>
+        <property name="fordered" type="java.lang.Integer">
+            <column name="fordered" />
+        </property>
+        <property name="forderperson" type="string">
+            <column name="forderperson" length="44" />
+        </property>
+        <property name="fordertime" type="timestamp">
+            <column name="fordertime" length="0" />
+        </property>
+        <property name="ftemplateproduct" type="string">
+            <column name="ftemplateproduct" length="60" />
+        </property>
+        <property name="ftemplatenumber" type="string">
+            <column name="ftemplatenumber" length="40" />
+        </property>
+         <property name="fgroupid" type="string">
+            <column name="fgroupid" length="36" />
+        </property>
+        <property name="faudited" type="java.lang.Integer">
+            <column name="faudited" />
+        </property>
+         <property name="fauditorid" type="string">
+            <column name="fauditorid" length="44" />
+        </property>
+        <property name="faudittime" type="timestamp">
+            <column name="faudittime" length="0" />
+        </property>
+    </class>
+</hibernate-mapping>

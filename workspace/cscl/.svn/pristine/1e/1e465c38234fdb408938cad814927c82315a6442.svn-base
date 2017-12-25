@@ -1,0 +1,55 @@
+@charset "utf-8";
+.main{
+	background: #ffffff !important;
+	overflow: hidden;
+	margin-top: 15px;
+}
+.main p{
+	font-size:14px;
+}
+.main p:first-child{
+	padding-left:20px;
+}
+
+/*提醒*/
+.remind{
+	background-color:#E4F4FE;
+	padding:15px 20px;
+	margin-top:15px;
+}
+/*输入信息界面样式*/
+.accountIformation > div{
+	margin-top:20px;
+}
+/*不同屏幕时调整样式*/
+@media only screen and (min-width: 768px) {
+	.user_name{margin-left:14px;}
+	button{margin-left:62px;}
+
+}
+@media only screen and (max-width: 768px) {
+	.accountIformation > div{margin-top:10px;}
+}
+
+/*验证表单*/
+.myform{
+	position:relative;
+}
+#user_name_err{
+	position:absolute;
+	left:50px;
+	top:16px;
+}
+#phone_number_err,#phone_number_err2{
+	position:absolute;
+	left:63px;
+	top:16px;
+}
+#pass_err{
+	position:absolute;
+	left:63px;
+	top:16px;
+}
+@media only screen and (max-width:768px){
+	#user_name_err,#phone_number_err{left:0px;top:36px;}
+}

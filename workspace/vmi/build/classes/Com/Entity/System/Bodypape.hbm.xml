@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-1-30 10:43:34 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.Bodypape" table="t_sys_bodypape">
+        <id name="fid" type="string">
+            <column name="fid" length="45" />
+            <generator class="assigned" />
+        </id>
+        <property name="fname" type="string">
+            <column name="fname" not-null="true">
+                <comment>&#195;&#251;&#179;&#198;</comment>
+            </column>
+        </property>
+        <property name="fmanufacturer" type="string">
+            <column name="fmanufacturer" not-null="true">
+                <comment>&#201;&#250;&#178;&#250;&#179;&#167;&#188;&#210;</comment>
+            </column>
+        </property>
+        <property name="fgramweight" type="double">
+            <column name="fgramweight" precision="22" scale="0" not-null="true">
+                <comment>&#191;&#203;&#214;&#216;</comment>
+            </column>
+        </property>
+        <property name="ferror" type="java.lang.Double">
+            <column name="ferror" precision="22" scale="0">
+                <comment>&#206;&#243;&#178;&#238;</comment>
+            </column>
+        </property>
+        <property name="fpopstrength" type="java.lang.Double">
+            <column name="fpopstrength" precision="22" scale="0">
+                <comment>&#196;&#205;&#198;&#198;</comment>
+            </column>
+        </property>
+        <property name="fhardfold" type="java.lang.Double">
+            <column name="fhardfold" precision="22" scale="0">
+                <comment>&#196;&#205;&#213;&#219;</comment>
+            </column>
+        </property>
+        <property name="fwaterabsorption" type="java.lang.Double">
+            <column name="fwaterabsorption" precision="22" scale="0">
+                <comment>&#206;&#252;&#203;&#174;</comment>
+            </column>
+        </property>
+        <property name="fbasepapercategory" type="string">
+            <column name="fbasepapercategory">
+                <comment>&#212;&#173;&#214;&#189;&#192;&#224;&#177;&#240;</comment>
+            </column>
+        </property>
+        <property name="fusecategory" type="java.lang.Byte">
+            <column name="fusecategory">
+                <comment>1&#195;&#230;&#214;&#189;&#161;&#162;2&#192;&#239;&#214;&#189;&#161;&#162;3&#205;&#223;&#214;&#189;&#161;&#162;4&#208;&#190;&#214;&#189;
+                &#202;&#185;&#211;&#195;&#192;&#224;&#177;&#240;</comment>
+            </column>
+        </property>
+        <property name="fremark" type="string">
+            <column name="fremark">
+                <comment>&#177;&#184;&#215;&#162;</comment>
+            </column>
+        </property>
+        <property name="fenable" type="java.lang.Byte">
+            <column name="fenable" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+        <property name="fupdatetime" type="timestamp">
+            <column name="fupdatetime" length="0" />
+        </property>
+    </class>
+</hibernate-mapping>

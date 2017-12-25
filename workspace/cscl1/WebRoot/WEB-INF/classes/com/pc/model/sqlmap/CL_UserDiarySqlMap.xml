@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="CL_UserDiary">
+    	<resultMap type="com.pc.model.CL_UserDiary" id="CLUserDiaryMap">
+    		<result property="fid" column="fid"/>
+    		<result property="fuserId" column="fuserId"/>
+    		<result property="floginTime" column="floginTime"/>
+    		<result property="flastOperateTime" column="flastOperateTime"/>
+    		<result property="fuserName" column="fuserName"/>
+    		<result property="fsessionId" column="fsessionId"/>
+    		<result property="fip" column="fip"/>
+    		<result property="fbrowser" column="fbrowser"/>
+    		<result property="fsystem" column="fsystem"/>
+    		<result property="fremark" column="fremark"/>
+    	</resultMap>
+    	
+    	<sql id="columns">
+    		ud.fid,ud.fuserId,ud.floginTime,ud.flastOperateTime,ud.fuserName,ud.fsessionId,ud.fip,ud.fbrowser,ud.fsystem,ud.fremark,ifnull(uc.fname,car.driverName) as userName
+    	</sql>
+    	
+    	<insert id="insert">
+    		insert into cl_userDiary(
+    			fuserId,
+    			floginTime,
+    			flastOperateTime,
+    			fuserName,
+    			fsessionId,
+    			fip,
+    			fbrowser,
+    			fsystem,
+    			fremark
+    		)
+    		values(
+    			#{fuserId,jdbcType=INTEGER},
+    			#{floginTime,jdbcType=TIMESTAMP},
+    			#{flastOperateTime,jdbcType=TIMESTAMP},
+    			#{fuserName,jdbcType=VARCHAR},
+    			#{fsessionId,jdbcType=VARCHAR},
+    			#{fip,jdbcType=VARCHAR},
+    			#{fbrowser,jdbcType=VARCHAR},
+    			#{fsystem,jdbcType=VARCHAR},
+    			#{fremark,jdbcType=VARCHAR}
+    		)
+    	</insert>
+    
+    	<select id="findPage" resultMap="CLUserDiaryMap">
+    		select <include refid="columns"/> from cl_userDiary ud
+    		left join cl_user_customer uc on uc.fuser_role_id = ud.fuserId
+    		left join cl_car car on car.user_role_id = ud.fuserId
+    		left join cl_user_role ur on ur.id = ud.fuserId
+    	</select>
+    	
+    	<select id="findPageCount" resultType="long">
+    		select count(fid) from cl_userDiary ud order by floginTime desc
+    	</select>
+    
+    
+    
+    </mapper>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

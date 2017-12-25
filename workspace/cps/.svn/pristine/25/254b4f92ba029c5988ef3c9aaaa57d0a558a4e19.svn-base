@@ -1,0 +1,133 @@
+@CHARSET "UTF-8";
+*{
+	padding:0px;
+	margin:0px;
+	font-family:宋体;
+	font-size:12px;
+}
+#myReceipt{
+	width:1070px;
+	heigh:auto;
+}
+.topDiv{
+	width:1060px;
+	padding-top:10px;
+	padding-left:10px;
+	padding-right:10px;
+	background-color:#F1F1F1;
+}
+div a{
+	text-decoration:none;
+	font-family:宋体;
+	font-size:12px;
+	color:#545454;
+}
+.refreshButton{
+	width:65px;
+	height:22px;
+	color:#fff;
+	background-color:#D80C18;
+	border:none;
+	margin-top:10px;
+	cursor: pointer;
+	outline:none;
+}
+#queryParam{
+	margin-left:10px;
+	margin-top:25px;
+	margin-bottom:5px;
+}
+.queryField{
+	width:200px;
+	height:26px;
+	line-height:26px;
+	padding-left:5px;
+	float:left;
+	margin-left:162px;
+	border: 1px solid lightgray;
+}
+.querytime{
+	width:234px;
+	height:26px;
+	line-height:26px;
+	padding-left:5px;
+	margin-left:10px;
+	float:left;
+	border: 1px solid lightgray;
+}
+._submit{
+    border: 1px solid lightgray;
+    border-left:none;
+	cursor: pointer;
+    width: 30px;
+    height: 26px;
+    line-height: 26px;
+	background:url(images/fdj1.png) white 5px 5px no-repeat;
+}
+#content table{
+	margin:10px;
+	text-align:center;
+}
+#tableTitle{
+	height:32px;
+	background-color:#F0F0F0;
+}
+.tdBorder{
+	border-left:1px solid lightgray;
+	border-right:1px solid lightgray;
+}
+.supplierTr{
+	text-align:left;
+	background-color:#F0F0F0;
+	height:31px;
+	/* color:#959595; */
+	text-indent: 1em;
+	border:1px solid #bfbfbf;
+}
+.contentTr{
+	height:64px;
+	border:1px solid #bfbfbf;
+}
+/*分页层*/
+#kkpager{
+	height:160px;
+	width:1040px;
+	line-height:100px;
+	text-align:right;
+	}
+.select-down {
+    position: absolute;
+    top: 11px;
+    right: 0px;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    font-size: 0;
+    border-color: #333 transparent transparent transparent;
+    border-style: solid;
+    border-width: 6px;
+    cursor: pointer;
+}
+.disabled {
+ color: #cccccc;
+}
+#kkpager_btn_go_input {
+    width: 42px;
+    height: 16px;
+    text-align: center;
+    border: 0px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    outline: none;
+    line-height: 16px;
+   	font-family:宋体;
+	font-size:10px;
+}
+#kkpager{
+	font-size:14px;
+}
+#kkpager_btn_go {
+	width:42px;
+	height:18px;
+}

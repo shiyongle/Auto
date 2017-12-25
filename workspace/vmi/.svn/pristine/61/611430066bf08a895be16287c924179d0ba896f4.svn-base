@@ -1,0 +1,823 @@
+package Com.Controller.mobile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import sun.misc.BASE64Decoder;
+import Com.Base.Util.DJException;
+import Com.Base.Util.DataUtil;
+import Com.Base.Util.JsonUtil;
+import Com.Base.Util.ListResult;
+import Com.Base.Util.ServerContext;
+import Com.Base.Util.UploadFile;
+import Com.Base.Util.mySimpleUtil.MySimpleToolsZ;
+import Com.Base.data.LogAction;
+import Com.Controller.System.SysUserController;
+import Com.Dao.System.IBaseSysDao;
+import Com.Dao.System.ICertificateDao;
+import Com.Dao.System.ISysUserDao;
+import Com.Dao.mobile.IMobileSDKDao;
+import Com.Dao.order.IAppraiseDao;
+import Com.Dao.quickOrder.IQuickOrderDao;
+import Com.Entity.System.Address;
+import Com.Entity.System.Certificate;
+import Com.Entity.System.Customer;
+import Com.Entity.System.Custproduct;
+import Com.Entity.System.Productreqallocationrules;
+import Com.Entity.System.SysUser;
+import Com.Entity.System.Syscfg;
+import Com.Entity.System.Userdiary;
+import Com.Entity.System.Useronline;
+import Com.Entity.order.Appraise;
+import Com.Entity.order.CusPrivateDelivers;
+import Com.Entity.order.Deliverapply;
+
+@Controller
+public class MobileSDKController {
+	Logger log = LoggerFactory.getLogger(MobileSDKController.class);
+	@Resource
+	private ISysUserDao SysUserDao;
+	
+	@Resource
+	private IBaseSysDao BaseSysDao;
+	
+	@Resource
+	private IQuickOrderDao QuickOrderDao;
+	
+	
+	@Resource
+	private IMobileSDKDao  mobileSDKDao;
+	/**
+	 * APP登陆口
+	 * @param request
+	 * @param reponse
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("/loginActionAPP")
+	public String loginActionAPP(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException { // , Mainmenuitem
+		String result = "";
+		//关于用户的系统日志，
+		Userdiary userdiaryinfo=new Userdiary();
+		try {
+			// 核对用户名和密码
+			SysUser userinfo = SysUserDao.ExecCheckLogin(request);
+			userdiaryinfo.setFid(SysUserDao.CreateUUid());
+			userdiaryinfo.setFusername(request.getParameter("username")==null?"空用户名":request.getParameter("username"));
+			userdiaryinfo.setFip(request.getRemoteAddr());
+			if (userinfo != null) {
+				userdiaryinfo.setFuserid(userinfo.getFid()); 
+				// 生成用户在线信息
+				Useronline info = new Useronline();
+				info.setFid(SysUserDao.CreateUUid());
+				info.setFuserid(userinfo.getFid());
+				info.setFlogintime(new Date());
+				info.setFlastoperatetime(new Date());
+				info.setFusername(userinfo.getFname());
+				String sessionid = request.getSession().getId();
+				info.setFsessionid(sessionid);
+				info.setFip(request.getRemoteAddr());
+				String headinfo = request.getHeader("User-Agent").toUpperCase();
+				//苹果系统没有带括号，兼容苹果系统修改     BY CC  2015-05-08 start
+				if(headinfo.indexOf("(")>=0)
+				{
+					String[] strInfo = headinfo.substring(
+							headinfo.indexOf("(") + 1, headinfo.indexOf(")") - 1)
+							.split(";");
+					if ((headinfo.indexOf("MSIE")) > -1) {
+						info.setFbrowser(strInfo[1].trim());
+						info.setFsystem(strInfo[2].trim());
+					} else {
+						String[] str = headinfo.split(" ");
+						if (headinfo.indexOf("NAVIGATOR") < 0
+								&& headinfo.indexOf("FIREFOX") > -1) {
+							info.setFbrowser(str[str.length - 1].trim());
+							info.setFsystem(strInfo[0].trim());
+						} else if ((headinfo.indexOf("OPERA")) > -1) {
+							info.setFbrowser(str[0].trim());
+							info.setFsystem(strInfo[0].trim());
+						} else if (headinfo.indexOf("CHROME") < 0
+								&& headinfo.indexOf("SAFARI") > -1) {
+							info.setFbrowser(str[str.length - 1].trim());
+							info.setFsystem(strInfo[0].trim());
+						} else if (headinfo.indexOf("CHROME") > -1) {
+							info.setFbrowser(str[str.length - 2].trim());
+							info.setFsystem(strInfo[0].trim());
+						} else if (headinfo.indexOf("NAVIGATOR") > -1) {
+							info.setFbrowser(str[str.length - 1].trim());
+							info.setFsystem(strInfo[0].trim());
+						} else {
+							info.setFbrowser("Unknown Browser");
+							info.setFsystem("Unknown OS");
+						}
+					}
+				}
+				else
+				{
+					//没有括号的是IOS系统，直接赋值    BY   CC 2015-05-08
+					info.setFbrowser("IOS Browser");
+					info.setFsystem("IOS");
+				}
+				//加入到用户缓存
+				SysUserDao.saveOrUpdate(info);
+				//移动端检验是否是纸箱、纸板用户
+				int usertype=0;
+				if(request.getParameter("version")==null) throw new DJException("非手机端登陆");
+				ServerContext.setUseronline(sessionid, info);
+				usertype=SysUserDao.getUserTypeInfo(info.getFuserid());
+				result = JsonUtil.result(true, "", "", "{\"username\":\""
+						+ info.getFusername() + "\",\"sessionid\":\""
+						+ request.getSession().getId() + "\",\"usertype\":\""+usertype+"\"}");
+				request.getSession().setAttribute("Useronline", info);
+				userdiaryinfo.setFremark("登录成功");	
+			} else {
+				userdiaryinfo.setFremark("登录失败:用户名或密码错误");
+				result = "{\"success\":false,\"msg\":\"用户名或密码错误！\"}";
+			}
+
+		} catch (Exception e) {
+			userdiaryinfo.setFremark("登录失败:"+e.getMessage());
+			result = "{\"success\":false,\"msg\":'"+ e.getMessage() + "'}";
+		}
+		String sql = "update t_sys_user set fstate=0 where fname='"+request.getParameter("username")+"'";
+		SysUserDao.ExecBySql(sql);
+		
+		userdiaryinfo.setFsessionid(request.getSession().getId());
+		userdiaryinfo.setFlogintime(new Date());
+		userdiaryinfo.setFlastoperatetime(new Date());
+		SysUserDao.saveOrUpdate(userdiaryinfo);
+		reponse.getWriter().write(result);
+		return null;
+	}
+	
+	/**
+	 * APP首页图片
+	 * @param request
+	 * @param reponse
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("/gainIndexPageImg")
+	public String gainIndexPageImg(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException { // , Mainmenuitem
+		int limit=request.getParameter("limit")==null?8:new Integer(request.getParameter("limit"));
+		String prefixurl=request.getServletContext().getContextPath();
+		String sql=" SELECT top.fpath url  FROM t_sys_news tsn left join t_ord_productdemandfile top on tsn.fimgid = top.fid  where tsn.fimgid <>'-1' order by tsn.fcreatetime desc limit %d";
+		String path="";
+		try {
+			List<HashMap<String, Object>> result = SysUserDao.QueryBySql(String.format(sql,limit));
+
+			for(HashMap<String, Object> item:result ){
+				path=(String) item.get("url");
+				path="/news/img/"+path.substring(path.lastIndexOf("/")+1);
+				item.put("url", request.getServletContext().getContextPath() + path);
+			}
+			HashMap map=new HashMap();
+			map.put("url", request.getServletContext().getContextPath()+"/images/defaultNewsBg.jpg");
+			for(int i=0;i<limit-result.size();)
+			{
+				result.add(map);
+			}
+			reponse.getWriter().write(JsonUtil.result(true, "", result.size()+"",result));
+		} catch (Exception e) {
+			reponse.getWriter().write(
+					JsonUtil.result(false, e.getMessage(), "", ""));
+		}
+		return null;
+	}
+	/**
+	 * 今日、累计接单数量，出库金额
+	 * @param request
+	 * @param reponse
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping("/getOrderFtuInfo")
+	public String getOrderFtuInfo(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException { // , Mainmenuitem
+		try {
+			String fsupplierid=SysUserDao.QueryFilterByUser(request,null,"fsupplierid");
+			String sql = "SELECT IFNULL(SUM(CAST(sd.fprice AS SIGNED)),0)  fprice FROM t_ftu_saledeliver sa LEFT JOIN t_ftu_saledeliverentry sd ON sa.fid=sd.fparentid where sa.fstate<>1 "+fsupplierid;
+			List<HashMap<String,Object>> monthList = SysUserDao.QueryBySql(sql+"and DATE_FORMAT(sa.fcreatetime,'%Y-%m')=DATE_FORMAT(now(),'%Y-%m')");//查询一个月的总金额
+			List<HashMap<String,Object>> nowList = SysUserDao.QueryBySql(sql +"and DATE_FORMAT(sa.fcreatetime,'%Y-%m-%d')=DATE_FORMAT(now(),'%Y-%m-%d')");//查询今天的统计数据			
+			sql = "SELECT ifnull(SUM(famount),0)  totalfamount FROM t_ord_productplan WHERE  1=1 "+fsupplierid;
+			List<HashMap<String,Object>> ordermonth = SysUserDao.QueryBySql(sql+"and  DATE_FORMAT(fcreatetime, '%Y%m') = DATE_FORMAT(CURDATE() , '%Y%m')");//查询一个月的总金额
+			List<HashMap<String,Object>> ordernow = SysUserDao.QueryBySql(sql +"and TO_DAYS(fcreatetime) = TO_DAYS(NOW()) ");//查询今天的统计数据	
+			reponse.getWriter().write("{\"success\":" + true+ ",\"data\":[{\"monthPrices\":\""+monthList.get(0).get("fprice")+"\",\"nowPrices\":\""+nowList.get(0).get("fprice")+"\",\"nowfamount\":\""+ordernow.get(0).get("totalfamount")+"\",\"monthfamount\":\""+ordermonth.get(0).get("totalfamount")+"\"}]}");
+		} catch (DJException e) {
+			// TODO: handle exception
+			reponse.getWriter().write(JsonUtil.result(false, e.getMessage(), "",""));
+		}
+		return null;
+	}
+	
+	/*
+	 * 成品箱数据统计;APP 我的业务数据
+	 * 送货情况在ftuSDKController中FTUdetail.do
+	 */
+	@RequestMapping(value = "/getStatisticsOfProductplan")
+	public void getStatisticsOfProductplan(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException{
+		try {
+			String fsupplierid=SysUserDao.QueryFilterByUser(request,null,"fsupplierid");
+			String sql = "SELECT COUNT(DISTINCT fcustomerid) fcustomercount,COUNT(fid) ordercount, ifnull(SUM(famount),0)  totalfamount,1 datetype FROM t_ord_productplan WHERE   TO_DAYS(fcreatetime) = TO_DAYS(NOW()) "+fsupplierid
+					+" UNION SELECT COUNT(DISTINCT fcustomerid) fcustomercount,COUNT(fid) ordercount, ifnull(SUM(famount),0)  totalfamount,2 datetype FROM t_ord_productplan WHERE TO_DAYS(NOW())-TO_DAYS(fcreatetime) = 1  "+fsupplierid
+					+" UNION SELECT COUNT(DISTINCT fcustomerid) fcustomercount,COUNT(fid) ordercount, ifnull(SUM(famount),0)  totalfamount,3 datetype FROM t_ord_productplan WHERE DATE_FORMAT(fcreatetime, '%Y%m') = DATE_FORMAT(CURDATE() , '%Y%m')"+fsupplierid;
+			List result=SysUserDao.QueryBySql(sql);
+			reponse.getWriter().write(JsonUtil.result(true, "",result.size()+"" ,result));
+		} catch (DJException e) {
+			// TODO Auto-generated catch block
+			reponse.getWriter().write(
+					JsonUtil.result(false, e.getMessage(), "", ""));
+		}
+	}
+	
+	
+	
+	/**
+	 * 加入购物车(要货)
+	 * @param request 			CusPrivateDelivers:{"faddress":"地址id","fid":"有传值则根据则是订单修改加入购物车","fcusproduct":"产品id","fsupplierid":"制造商id","fnumber":"采购订单号","famount":"数量","farrivetime":"2015-11-14 14:00:00","fdescription":"备注","ftype":"0","fcustomerid":"客户产品"}
+	 * @param reponse  
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/saveCusprivatedelivers")
+	public void saveCusprivatedelivers(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException{
+		try {
+			DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+			Deliverapply apply=null;
+			String userid = ((Useronline)request.getSession().getAttribute("Useronline")).getFuserid();
+			CusPrivateDelivers c=(CusPrivateDelivers)request.getAttribute("CusPrivateDelivers");
+			if(!StringUtils.isEmpty(c.getFid())){
+				 apply =(Deliverapply)SysUserDao.Query(Deliverapply.class, c.getFid());
+				 if(apply!=null&&apply.getFiscreate()==1)
+				 {
+					 throw new DJException("该订单已经生成订单，不能添加到购物车");
+				 }
+			}
+			if(StringUtils.isEmpty(c.getFcusproduct())) throw new DJException("请选择产品");
+			if(StringUtils.isEmpty(c.getFaddress())) throw new DJException("请选择地址");
+			//if(!DataUtil.positiveIntegerCheck(c.getFamount()+""))throw new DJException("数量大于0");
+			if(!DataUtil.dateFormatCheck(f.format(c.getFarrivetime()), true,0))throw new DJException("送达日期格式错误或小于当前时间！");
+			if(StringUtils.isEmpty(c.getFsupplierid()))throw new DJException("请选择制造商");
+			if(StringUtils.isEmpty(c.getFcustomerid())){//没有客户fid时，查询赋值
+				c.setFcustomerid(BaseSysDao.GetIsSingleSupplier(userid, c.getFsupplierid()));
+			}
+			c.setFtype(0);
+			c.setFid(SysUserDao.CreateUUid());
+			c.setFcreatetime(new Date());
+			c.setFcreatorid(userid);
+			c.setFordertype(0);
+			mobileSDKDao.SaveCusprivate(c, apply);	
+			reponse.getWriter().write(JsonUtil.result(true,"加入购物车成功!", "", ""));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			reponse.getWriter().write(
+					JsonUtil.result(false, e.getMessage(), "", ""));
+		}
+	}
+	
+	
+	/**
+	 * 获取纸板订单、纸箱订单、购物车纸板、纸箱列表数据 
+	 * @param request 		
+	 * 以下为必传参数		
+			mode	String	模式(0-纸板订单 1-纸箱订单 2-纸板购物车订单 3-纸箱购物车订单)
+			limit	String	请求个数
+			start	String	从那个开始
+			query	String	搜索内容
+		以下为可选参数		mode=(0,1) 有以下属性
+			fstate	String	订单状态(0-全部 1-已下单,未接收 2-已接收,已接收 3-已入库 4-已发货 5-发错差数 6-报废)
+			fcreatetime1	String	条件创建时间起始(标准日期格式字符串)
+			fcreatetime2	String	条件创建时间结束(标准日期格式字符串)
+			farrivetime1	String	条件配送时间起始(标准日期格式字符串)
+			farrivetime2	String	条件配送时间结束(标准日期格式字符串)	
+	 * @param reponse 
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/selectDeliverapplyCustsAPP")//获取纸板订单、纸箱订单、购物车纸板、纸箱列表数据
+	public void selectDeliverapplyCustsAPP(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException{
+		try {
+			int mode=StringUtils.isEmpty(request.getParameter("mode"))?99:new Integer(request.getParameter("mode"));
+			if(mode==0)//纸板订单 查询条件 材料名称、制造商名称、特殊要求、客户标签、编码、数量、规格
+			{
+				request.getRequestDispatcher( "/gainBoardApplylistApp.do").forward( request, reponse);
+			}else if(mode==1)//纸箱订单列表数据   查询条件 产品名称、制造商名称、数量、规格、单号
+			{
+				request.getRequestDispatcher( "/gainCustDelApplylistApp.do").forward( request, reponse);
+			}else if(mode==2||mode==3)//暂不支持查询
+			{
+				request.getRequestDispatcher( "/getShopCarInfos.do").forward( request, reponse);
+			}
+			else
+			{
+				throw new DJException("mode请求参数有误");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			reponse.getWriter().write(
+					JsonUtil.result(false, e.getMessage(), "", ""));
+		}
+	}
+	
+	/*** 通过客户产品主键获取图片路径*/
+	private String getPicture(String fid) throws Exception{
+		String path = UploadFile.getFilePathByfparentid(fid);
+			if(!StringUtils.isEmpty(path)){
+				path=path.replace("vmifile", "smallvmifile");
+			}else{
+				path = "/vmifile/defaultpic.png";
+			}
+		return path;
+	}
+	
+
+	/**
+	 * 购物车下单
+	 * @param request 			Deliverapply:[{"fid":"","famount":"数量"},{"fid":"","famount":"数量"}], ftype:类型  1纸板 0纸箱
+	 * @param reponse 
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/SaveShopDeliverapply")
+	public void SaveShopDeliverapply(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException{
+		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			String userid = ((Useronline)request.getSession().getAttribute("Useronline")).getFuserid();
+			  List<Deliverapply> list=(ArrayList<Deliverapply>)request.getAttribute("Deliverapply");
+			int ftype=StringUtils.isEmpty(request.getParameter("ftype"))?0:new Integer(request.getParameter("ftype"));
+			if(list==null||list.size()==0) throw new DJException("请选择记录下单");
+			if(ftype==0){//纸箱下单
+			HashMap<String,Integer> map=new HashMap<String,Integer>();
+			  CusPrivateDelivers cinfo=null;
+			  Address addinfo=null;
+			 for(Deliverapply deliverapply:list)
+			  {
+				  if(!DataUtil.positiveIntegerCheck(deliverapply.getFamount().toString())){
+						throw new DJException("配送数量不能小于1！");
+				  }
+				  cinfo=(CusPrivateDelivers)SysUserDao.Query(CusPrivateDelivers.class,deliverapply.getFid());
+				  if(cinfo==null||StringUtils.isEmpty(cinfo.getFaddress())) throw new DJException("数据有误");
+				  addinfo=(Address)SysUserDao.Query(Address.class,cinfo.getFaddress());
+				  if(addinfo==null)throw new DJException("地址不正确！");
+				  deliverapply.setFaddress(addinfo.getFdetailaddress());
+				  deliverapply.setFlinkman(addinfo.getFlinkman());
+				  deliverapply.setFlinkphone(addinfo.getFphone());
+				  deliverapply.setFaddressid(cinfo.getFaddress());
+				  deliverapply.setFordernumber(cinfo.getFnumber());//采购订单号
+				  deliverapply.setFcustomerid(cinfo.getFcustomerid());
+				  deliverapply.setFcusproductid(cinfo.getFcusproduct());
+				  deliverapply.setFsupplierid(cinfo.getFsupplierid());
+				  deliverapply.setFdescription(cinfo.getFdescription());
+				  deliverapply.setFarrivetime(cinfo.getFarrivetime());
+				  //制造商非东经走快速下单，东经按配置走
+				  Custproduct cpinfo=(Custproduct)QuickOrderDao.Query(Custproduct.class,deliverapply.getFcusproductid());
+				  deliverapply.setFmaterialfid(cpinfo.getFproductid());
+				  
+				  if("39gW7X9mRcWoSwsNJhU12TfGffw=".equals(deliverapply.getFsupplierid()))
+				  {
+					  if(!map.containsKey(deliverapply.getFsupplierid()+deliverapply.getFcustomerid()))
+					  {
+						  List<Productreqallocationrules> rule=QuickOrderDao.QueryByHql(String.format(" from Productreqallocationrules where fsupplierid='%s' and fcustomerid='%s'",deliverapply.getFsupplierid(),deliverapply.getFcustomerid()));
+						  map.put(deliverapply.getFsupplierid()+deliverapply.getFcustomerid(),rule.size()>0?rule.get(0).getFbacthstock():0);
+					  }  
+					  if(map.get(deliverapply.getFsupplierid()+deliverapply.getFcustomerid())==0){	
+						  deliverapply.setFmaterialfid(null);
+					  }
+				  }
+				 if(!DataUtil.dateFormatCheck(f.format(deliverapply.getFarrivetime()), true,0))throw new DJException("配送日期小于当前时间！");
+				  deliverapply.setFnumber(ServerContext.getNumberHelper().getNumber("t_ord_deliverapply", "Y", 4, false));
+				  deliverapply.setFcreatorid(userid);
+				  deliverapply.setFcreatetime(new Date());
+				  deliverapply.setFiscreate(0);
+				  deliverapply.setFupdatetime(new Date());
+				  deliverapply.setFupdateuserid(userid);
+				  deliverapply.setFboxtype(0);
+				  deliverapply.setFtype("0");
+				  deliverapply.setFstate(0);	
+			  }
+				QuickOrderDao.ExecSaveDeliverapplyOrCusdelivers(list,null,null,userid);
+			}else//纸板暂存下单
+			{
+				
+				mobileSDKDao.ExecUpdateBoardState(list);
+			}
+				reponse.getWriter().write(JsonUtil.result(true, "保存成功！", "", ""));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			reponse.getWriter().write(
+					JsonUtil.result(false, e.getMessage(), "", ""));
+		}
+	}
+	
+
+	
+	/**
+	 * 删除购物车记录
+	 * @param request fid 多个用，隔开 ftype:类型  1纸板 0纸箱
+	 * @param response
+	 */
+	@RequestMapping("/deleteShopCarRecords")
+	public String DeleteCusPrivateDelivers(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException {
+		String result = "";
+		String fid = request.getParameter("fid");
+		int ftype=StringUtils.isEmpty(request.getParameter("ftype"))?0:new Integer(request.getParameter("ftype"));
+//		String condition = BaseSysDao.getCondition(fid);
+		try {
+			if(ftype==1){
+				request.getRequestDispatcher( "/DelBoardDeliverapplyList.do?fidcls="+fid).forward( request, reponse);
+				//DelBoardShopRecord(request,condition);//删除暂存纸板记录
+			}else{
+				request.getRequestDispatcher( "/deleteCusPrivateDelivers.do").forward( request, reponse);
+			// QuickOrderDao.ExecBySql("delete from t_ord_cusprivatedelivers where fid"+condition);//删除纸箱购物车信息
+			}
+//			result = JsonUtil.result(true,"删除成功", "", "");
+		} catch (Exception e) {
+			result = JsonUtil.result(false,e.getMessage(), "", "");
+			reponse.getWriter().write(result);
+		}
+		//reponse.getWriter().write(result);
+
+		return null;
+
+	}	
+	
+	/**
+	 * 更新纸箱购物车数量        fboxtype 纸箱0 纸板1
+	 * @param request Deliverapply:[{"fid":"","famount":"数量",fboxtype:"0"},{"fid":"","famount":"数量",fboxtype:"1"}]
+	 * @param response
+	 */
+	@RequestMapping("/updateShopFamount")
+	public String updateShopFamount(HttpServletRequest request,
+			HttpServletResponse reponse) throws IOException {
+		List<Deliverapply> list=(ArrayList<Deliverapply>)request.getAttribute("Deliverapply");
+		String result = "";
+		try {
+			if(list==null||list.size()==0) throw new DJException("请选择记录操作");
+			mobileSDKDao.ExecUpdateShopFamont(list);
+			result = JsonUtil.result(true,"修改成功", "", "");
+		} catch (Exception e) {
+			result = JsonUtil.result(false,e.getMessage(), "", "");
+		}
+		reponse.getWriter().write(result);
+
+		return null;
+
+	}	
+	
+	
+//
+//	/**
+//	 *  删除纸板订单
+//	 * @param request
+//	 * @param reponse
+//	 * @return
+//	 * @throws Exception 
+//	 */
+//	public void DelBoardShopRecord(HttpServletRequest request,String fidcls) throws Exception {
+//		
+//			if(mobileSDKDao.QueryExistsBySql("select fid from t_ord_deliverapply where fstate<>0 and fstate<>7 and fboxtype=1 and fid"+fidcls))
+//			{
+//				throw new DJException("已生成订单，不允许删除");
+//			}
+//			//2015-09-29 by 记录纸板删除日志
+//			List<Deliverapply> dalists = mobileSDKDao.QueryByHql(" from Deliverapply where fid"+fidcls);
+//			if(dalists.size()>0){
+//				String logData = "";
+//				for ( Deliverapply dainfo : dalists){
+//					Customer custInfo = (Customer)mobileSDKDao.Query(Customer.class, dainfo.getFcustomerid());
+//					String desc = ";产品规格："+(dainfo.getFstavetype().equals("不压线") ?  dainfo.getFmateriallength()+"X"+dainfo.getFmaterialwidth() : dainfo.getFboxlength()+"X"+dainfo.getFboxwidth()+"X"+dainfo.getFboxheight());
+//					logData += custInfo.getFname()+desc+";片数"+dainfo.getFamount();
+//				}
+//				request.setAttribute("logData", logData);
+//			}
+//			//2015-09-29 by 记录纸板删除日志
+//			mobileSDKDao.ExecDeleteBoardShopRecord(fidcls);
+//	}
+//	
+	
+	/**
+	 * 获取纸箱订单信息列表数据
+	 * @param request
+	 * 	query	String	搜索内容
+			fstate	String	订单状态(0-全部 1-未接收 2-已接收 )
+			fcreatetime1	String	条件创建时间起始(标准日期格式字符串)
+			fcreatetime2	String	条件创建时间结束(标准日期格式字符串)
+			farrivetime1	String	条件配送时间起始(标准日期格式字符串)
+			farrivetime2	String	条件配送时间结束(标准日期格式字符串)	
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+		@RequestMapping("/gainCustDelApplylistApp")
+		public String gainCustDelApplylistApp(HttpServletRequest request,
+				HttpServletResponse response) throws IOException {
+			
+			ListResult result;
+			try {
+				String query = request.getParameter("query");
+				String[] fstateValue=new String[]{"","=0",">0"};//全部，未接收 ，已接收
+				int fstate=StringUtils.isEmpty(request.getParameter("fstate"))||!NumberUtils.isDigits(request.getParameter("fstate"))?0:new Integer(request.getParameter("fstate"));
+				String fcreatetime1=request.getParameter("fcreatetime1");
+				String fcreatetime2=request.getParameter("fcreatetime2");
+				String farrivetime1=request.getParameter("farrivetime1");
+				String farrivetime2=request.getParameter("farrivetime2");
+				
+				String userid = ((Useronline)request.getSession().getAttribute("Useronline")).getFuserid();
+				String sql = "select mv.fid fid,mv.fcusproductid,mv._custpdtname fpdtname,mv._spec fpdtspec,mv.famount famount,mv.farrivetime,mv.faddress,mv.flinkphone,  mv.fsupplierid, mv.faddressid, mv.fcustomerid,IFNULL(c.fiscommon,0) fiscommon, ";
+				sql += "mv._suppliername fsupplier,mv.fnumber,date_format(mv.fcreatetime,'%Y-%m-%d %H:%i') fcreatetime,mv.fstate,mv.fdescription from  t_ord_deliverapply_card_mv mv     LEFT JOIN t_bd_custproduct c ON mv.fcusproductid=c.fid where 1 = 1";		
+				if(mobileSDKDao.QueryExistsBySql("select 1 from t_bd_userrelationcustp where fuserid='"+userid+"'")){
+					sql += " and mv.fcusproductid IN (SELECT fcustproductid FROM t_bd_userrelationcustp WHERE fuserid = '"+userid+"')";
+				}
+				sql += mobileSDKDao.QueryFilterByUserofuser(request,"mv.fcreatorid","and")+ mobileSDKDao.QueryFilterByUser(request, "mv.fcustomerid", null);
+				if(!StringUtils.isEmpty(query)){
+					query = JsonUtil.decodeUnicode(query);
+						sql += " and (_custpdtname like '%"+query+"%' or _suppliername like '%"+query+"%'  or mv.fnumber like '%"+query+"%'";
+						if(NumberUtils.isDigits(query)){
+							sql += " or famount="+query;
+						}
+						query = query.replaceAll("\\*|X|x","_");
+						sql+=" or mv._spec like '%"+query+"%'";
+						sql += ")";
+				}
+				if(fstate>0)//未接受 1 已接收 2至6
+				{
+					sql+=" and mv.fstate"+fstateValue[fstate];
+				}
+				if(DataUtil.dateFormatCheck(fcreatetime1)&&DataUtil.dateFormatCheck(fcreatetime2))
+				{
+						sql+= " and  mv.fcreatetime between '"+fcreatetime1+"' and '"+fcreatetime2+"'";	
+				}
+				
+				if(DataUtil.dateFormatCheck(farrivetime1)&&DataUtil.dateFormatCheck(farrivetime2))
+				{
+					sql+= " and mv.farrivetime between '"+farrivetime1+"' and '"+farrivetime2+"'";
+				}
+				
+				request.setAttribute("djsort","mv.fcreatetime desc");
+				result = mobileSDKDao.QueryFilterList(sql, request);
+				response.getWriter().write(JsonUtil.result(true,"",result));
+				
+			} catch (DJException e) {
+				response.getWriter().write(JsonUtil.result(false,e.getMessage(),"","")); 
+			}
+		
+			return null;
+		}
+	
+		
+		
+		/**
+		 * 获取纸板订单信息列表数据
+		 * @param request
+		 * 	query	String	搜索内容
+			以下为可选参数		mode=(0,1) 有以下属性
+			fstate	String	订单状态(0-全部 1-已下单 2-已接收 3-已入库 4-已发货 5-发错差数 6-报废)
+			fcreatetime1	String	条件创建时间起始(标准日期格式字符串)
+			fcreatetime2	String	条件创建时间结束(标准日期格式字符串)
+			farrivetime1	String	条件配送时间起始(标准日期格式字符串)
+			farrivetime2	String	条件配送时间结束(标准日期格式字符串)	
+		 * @param response
+		 * @return
+		 * @throws IOException
+		 */
+			@RequestMapping("/gainBoardApplylistApp")
+			public String gainBoardApplylistApp(HttpServletRequest request,
+					HttpServletResponse response) throws IOException {
+				
+				ListResult result;
+				try {
+					String query = request.getParameter("query");
+					//0 已下单； 2，3已接收； 4 已入库； 5，6 已发货； 5发货差数； 8 报废
+					String[] fstateValue=new String[]{"","0","2,3","4","5,6","5","8"};
+					int fstate=StringUtils.isEmpty(request.getParameter("fstate"))||!NumberUtils.isDigits(request.getParameter("fstate"))?0:new Integer(request.getParameter("fstate"));
+					String fcreatetime1=request.getParameter("fcreatetime1");
+					String fcreatetime2=request.getParameter("fcreatetime2");
+					String farrivetime1=request.getParameter("farrivetime1");
+					String farrivetime2=request.getParameter("farrivetime2");
+					String sql = "select  _materialname fmaterialname,_suppliername fsuppliername,fid,famount,fstate,fboxlength,fboxwidth,fboxheight,fmateriallength,fmaterialwidth,famountpiece,flinkman,flinkphone,date_format(farrivetime,'%Y-%m-%d') farrivetime from t_ord_deliverapply_board_mv where fstate!=7 ";
+					sql += mobileSDKDao.QueryFilterByUserofuser(request,"fcreatorid","and") + mobileSDKDao.QueryFilterByUser(request, "fcustomerid", null);
+					if(!StringUtils.isEmpty(query)){
+						query = JsonUtil.decodeUnicode(query);
+							sql += " and (_materialname like '%"+query+"%' or _suppliername like '%"+query+"%' or fdescription like '%"+query+"%' or flabel like '%"+query+"%' or fnumber like '%"+query+"%'";
+							if(NumberUtils.isDigits(query)){
+								sql += " or famount="+query;
+							}
+							if(query.matches("^\\d\\.?\\d*((\\*|X|x)?(\\d+\\.?\\d*)?){0,2}$")){
+							query = query.replaceAll("X|x","*");
+							sql += " or concat(fboxlength,'*',fboxwidth,'*',fboxheight) like '%"+query+"%' or concat(fmateriallength,'*',fmaterialwidth) like '%"+query+"%'";
+							}
+							sql += ")";
+						
+					}
+					
+					if(fstate>0)//未接受 1 已接收 2至6
+					{
+						sql+=" and fstate in ("+fstateValue[fstate]+")";
+					}
+					 if(DataUtil.dateFormatCheck(fcreatetime1)&&DataUtil.dateFormatCheck(fcreatetime2))
+					{
+						sql+= " and fcreatetime between '"+fcreatetime1+"' and '"+fcreatetime2+"'";	
+					}
+					
+					 if(DataUtil.dateFormatCheck(farrivetime1)&&DataUtil.dateFormatCheck(farrivetime2))
+					{
+						sql+= " and farrivetime between '"+farrivetime1+"' and '"+farrivetime2+"'";
+					}
+					request.setAttribute("djsort","fcreatetime desc");
+					result = mobileSDKDao.QueryFilterList(sql, request);
+					response.getWriter().write(JsonUtil.result(true,"",result));
+					
+				} catch (DJException e) {
+					response.getWriter().write(JsonUtil.result(false,e.getMessage(),"","")); 
+				}
+			
+				return null;
+			}
+		
+		/**
+		 * 获取购物车信息
+		 * @param request 			
+		 * @param reponse 
+		 * @throws IOException
+		 */
+		@RequestMapping(value = "/getShopCarInfos")
+		public void getShopCarInfos(HttpServletRequest request,
+				HttpServletResponse reponse) throws IOException{
+			try {
+				String userid = ((Useronline)request.getSession().getAttribute("Useronline")).getFuserid();
+				if(StringUtils.isEmpty(request.getParameter("mode")))
+				{
+					throw new DJException("请求参数不正确");
+				}
+				int model=new Integer(request.getParameter("mode"));
+				String sql="";
+				if(model==3){//纸箱购物车
+					sql="select  c.fid,s.fname as fsuppliername, p.fname as cutpdtname, c.fcusproduct ,p.fspec as fspec, ifnull(c.famount,0)  as famount"
+							+"  FROM t_ord_cusprivatedelivers c " 
+							+"  LEFT JOIN t_sys_supplier s  ON c.fsupplierid = s.fid  "
+							+"  LEFT JOIN t_bd_custproduct p    ON p.fid = c.fcusproduct"
+							+" where c.ftype=0 and c.fcreatorid='%s' order by s.fname asc, c.fcreatetime desc ";
+					sql=String.format(sql, userid);
+				}
+				else if(model==2)//纸板购物车
+				{
+				  sql = "select flabel, _materialname fmaterialname,_suppliername fsuppliername,fdescription,fid ,date_format(farrivetime,'%Y-%m-%d') farrivetime,fmateriallength ,fmaterialwidth,faddress,famount,fboxlength,fboxwidth,fboxheight,fstavetype,fvline,fhline,famountpiece,fseries,fcreatetime from t_ord_deliverapply_board_mv where fstate=7 ";
+					sql += SysUserDao.QueryFilterByUserofuser(request,"fcreatorid","and") + SysUserDao.QueryFilterByUser(request, "fcustomerid", null);
+					sql+=" order by fcreatetime desc";
+					//sql+=request.setAttribute("djsort","fcreatetime");
+				}
+				List<HashMap<String,Object>> list = SysUserDao.QueryBySql(sql);
+				if(model==3){
+				for(HashMap<String,Object> item :list){
+					item.put("img", getPicture((String)item.get("fcusproduct")));
+				}
+				}
+				reponse.getWriter().write(JsonUtil.result(true,"",list.size()+"",list));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				reponse.getWriter().write(
+						JsonUtil.result(false, e.getMessage(), "", ""));
+			}
+		}
+		
+		
+		@RequestMapping("getDeSituationDetailed")
+		public void getDeSituationDetailed(HttpServletRequest request,
+				HttpServletResponse response) throws IOException{
+			try {
+				String userid = ((Useronline)request.getSession().getAttribute("Useronline")).getFuserid();
+				String query = request.getParameter("query");//搜索内容(客户名称/申请单号/包装物名称／包装物编号)
+				String fcreatetime1=request.getParameter("fcreatetime1");
+				String fcreatetime2=request.getParameter("fcreatetime2");
+		
+				String sql ="SELECT c.fname fcustomer,sa.fid,sa.`fnumber`,p.`fname`,p.`fspec`,p.`funit`,sd.`famount`,sd.`fprice` fprices FROM `t_ftu_saledeliver` sa " +
+						"LEFT JOIN `t_ftu_saledeliverentry` sd ON sd.`fparentid`=sa.fid " +
+						"LEFT JOIN t_bd_custproduct p ON sd.`fftuproductid` = p.`fid` " +
+						"left join t_bd_customer c on sa.fcustomer=c.fid " +
+						"where 1=1 and sa.fstate<>1"+SysUserDao.QueryFilterByUser(request, null,"sa.fsupplierid");
+				if(!StringUtils.isEmpty(query)){
+					query = JsonUtil.decodeUnicode(query);
+						sql += " and (c.fnumber like'%"+query+"%' or sa.fnumber like '%"+query+"%' or p.fname like '%"+query+"%' or p.fspec like '%"+query+"%'";
+						sql += ")";
+				}
+	
+				if(DataUtil.dateFormatCheck(fcreatetime1)&&DataUtil.dateFormatCheck(fcreatetime2))
+				{
+						sql+= " and  sa.fcreatetime between '"+fcreatetime1+"' and '"+fcreatetime2+"'";	
+				}
+				
+				
+				request.setAttribute("djsort", "sa.fnumber desc,sd.fsequence");
+				ListResult list = SysUserDao.QueryFilterList(sql, request);
+				response.getWriter().write(JsonUtil.result(true, "",list));
+			} catch (DJException e) {
+				response.getWriter().write(JsonUtil.result(false, e.getMessage(),"", ""));
+			}
+		}
+	
+		@RequestMapping("getAppPath")
+		public void getAppPath(HttpServletRequest request,HttpServletResponse response) throws IOException{
+			try {
+				String realPath = "";
+				String forUrl=request.getParameter("forUrl");
+				//通过修改属性文件  临时设置不排产日
+				Properties prop = new Properties();
+				InputStream in = this.getClass().getResourceAsStream("/mobileparams.properties");
+				//加载属性列表
+				prop.load(in);
+				Iterator<String> it=prop.stringPropertyNames().iterator();
+				while (it.hasNext()) {
+					String key = it.next();
+					if(key.equals(forUrl)){
+						realPath = prop.getProperty(key);
+						break;
+					}
+				}
+				in.close();
+				String result = "{\"success\":\"true\",\"data\": [{\"url\":\""+realPath+"\"}]}";
+				response.getWriter().write(result);
+			} catch (DJException e) {
+				response.getWriter().write("{\"success\": \"true\",\"data\":\""+e.getMessage()+"\"}");
+			}
+		}
+		
+		//2015-12-16  app删除地址，此处只删除对应关系
+		@RequestMapping("/DelMyAddress")
+		public String DelMyAddress(HttpServletRequest request,
+				HttpServletResponse reponse) throws IOException {
+			String result = "";
+			String cdid = request.getParameter("cdid");
+			try {
+				String sql = "Delete from t_bd_custrelationadress where fid = '"+cdid+"'";
+				mobileSDKDao.ExecBySql(sql);
+				sql = "Delete from t_bd_useraddress where fid = '"+cdid+"'";
+				mobileSDKDao.ExecBySql(sql);
+				result = JsonUtil.result(true, "删除成功!", "", "");
+				reponse.setCharacterEncoding("utf-8");
+			} catch (Exception e) {
+				result = JsonUtil.result(false, e.getMessage(), "", "");
+				log.error("DelUserList error", e);
+			}
+			reponse.getWriter().write(result);
+			return null;
+		}
+		
+		//2015-12-17  app删除地址，此处只删除对应关系
+		@RequestMapping("/updtMyAddress")
+		public String updtMyAddress(HttpServletRequest request,
+				HttpServletResponse reponse) throws IOException {
+			String result = "";
+			Address addinfo=null;
+			String fid = request.getParameter("fid");
+			try {
+				addinfo=(Address)BaseSysDao.Query(Address.class,fid);
+				if(addinfo !=null){
+					addinfo.setFlinkman(request.getParameter("flinkman"));
+					addinfo.setFphone(request.getParameter("fphone"));
+					addinfo.setFdetailaddress(request.getParameter("fdetailaddress"));
+					addinfo.setFcontrolunitid("手机端修改地址");
+					BaseSysDao.Update(addinfo);
+					result = JsonUtil.result(true, "删除成功!", "", "");
+				}
+				else{
+					result = JsonUtil.result(true, "请确认地址是否存在!", "", "");
+				}
+				reponse.setCharacterEncoding("utf-8");
+			} catch (Exception e) {
+				result = JsonUtil.result(false, e.getMessage(), "", "");
+			}
+			reponse.getWriter().write(result);
+			return null;
+		}
+		
+}

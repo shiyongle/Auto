@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-4-18 9:15:42 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.SysUser" table="t_sys_user">
+        <id name="fid" type="string">
+            <column name="FID" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fname" type="string">
+            <column name="FNAME" length="80" not-null="true" />
+        </property>
+        <property name="fpassword" type="string" update="false">
+            <column name="FPASSWORD" length="80" not-null="true" />
+        </property>
+        <property name="feffect" type="int">
+            <column name="FEFFECT" not-null="true" />
+        </property>
+        <property name="fcustomername" type="string">
+            <column name="FCUSTOMERNAME" length="80" not-null="true" />
+        </property>
+        <property name="femail" type="string">
+            <column name="FEMAIL" length="80" not-null="true" />
+        </property>
+        <property name="ftel" type="string">
+            <column name="FTEL" length="20" not-null="true" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="FCREATETIME" length="0" not-null="true" />
+        </property>
+           <property name="fcustomerid" type="string">
+            <column name="FCUSTOMERID" length="36"  />
+        </property>
+        <property name="fsupplierid" type="string">
+            <column name="FSUPPLIERID" length="36"  />
+        </property>
+          <property name="fisfilter" type="int">
+            <column name="FISFILTER"  />
+        </property>
+         <property name="ftype" type="int">
+            <column name="FTYPE"  />
+        </property>
+         <property name="fisreadonly" type="int">
+            <column name="FISREADONLY"  />
+        </property>
+        <property name="fimid" type="int">
+            <column name="fimid"  />
+        </property>
+        <property name="fphone" type="string">
+            <column name="fphone" />
+        </property>
+        <property name="ffax" type="string">
+            <column name="ffax" />
+        </property>
+        <property name="fstate" type="int">
+            <column name="fstate" />
+        </property>
+        <property name="fqq" type="string">
+            <column name="fqq" />
+        </property>
+    </class>
+</hibernate-mapping>

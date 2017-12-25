@@ -1,0 +1,37 @@
+*{ margin:0; padding:0}
+body{font-family:"ËÎÌו",Arial,Lucida,Verdana,Helvetica,sans-serif; font-size:13px;color:#666666; background:#f0efed;}
+img{border:0px;}
+a{ cursor:pointer;}
+a:link {text-decoration: none;color: #666666;}
+a:visited {text-decoration: none;color: #666666;}
+a:hover {text-decoration: none;color: #84252b;}
+a:active {text-decoration: none;color: #84252b;}
+.clear{ clear:both;}
+ul li{ list-style:none;}
+
+
+.pro_top{ width:1080px; height:100px; background:#fff; margin:20px auto;}
+.pro_autor_img{ width:60px; height:60px; float:left;  margin-left:10px;}
+.red{color:#cc0000;}
+.pro_autor_img,.pro_tit{ float:left;margin-top:20px; margin-left:20px;}
+.pro_tit .pro_tit01{ font-size:18px; font-weight:bold;}
+.pro_tit .pro_tit02{ margin-top:20px; font-size:14px;}
+.return_back{ float:right;}
+.return_back a.require{ width:80px; height:40px; display:block; background:#cc0000; font-size:18px; line-height:40px; color:#fff; text-align:center; border-radius:4px; float:right; margin-top:22px; margin-right:10px;}
+.return_back a.require:hover{ color:#fff; background:#cc2222;}
+
+.pro_main{width:1080px; overflow:hidden;margin:0 auto;}
+.pro_left{ width:800px; overflow:hidden; float:left;background:#fff; }
+.pro_right{ width:260px; overflow:hidden; float:right;background:#fff; }
+.ewm{ width:220px;overflow:hidden; margin:0 auto; text-align:center; font-size:13px; line-height:25px;}
+.ewm img{ width:215px; height:215px; margin-top:10px;}
+.pro_ps{ min-height:80px; padding:10px; border-bottom:1px solid #ccc; overflow:hidden;}
+.pro_psTxt{ font-size:16px; line-height:32px; width:620px; float:left; margin-top:10px;}
+.pro_ps a.require{ width:110px; height:40px; display:block; background:#cc0000; font-size:18px; line-height:40px; color:#fff; text-align:center; border-radius:4px; float:right; margin-top:22px; margin-right:10px;}
+.pro_ps a.require:hover{ color:#fff; background:#cc2222;}
+.pro_content{ overflow:hidden;min-height:323px;}
+.pro_contentImg{ overflow:hidden; text-align:center; border-bottom:1px solid #ccc; padding:20px 0px;}
+.pro_contentImg img{max-width:700px;}
+.main_require{width:800px; overflow:hidden; margin:50px auto;}
+.main_require a.main_requireA{float:left;width:180px; height:40px; display:block; background:#cc0000; font-size:18px; line-height:40px; color:#fff; text-align:center; border-radius:4px;margin:0 30px;}
+.main_require a.main_requireA:hover{color:#fff; background:#cc2222;}

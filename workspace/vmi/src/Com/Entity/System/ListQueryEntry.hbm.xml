@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-8-23 11:17:18 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.ListQueryEntry" table="t_sys_listqueryentry">
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="FPARENTID" type="string">
+            <column name="FPARENTID" length="44" />
+        </property>
+                <property name="FSEQ" type="java.lang.Integer">
+            <column name="FSEQ" />
+        </property>
+        <property name="FLEFT" type="string">
+            <column name="FLEFT" length="45" />
+        </property>
+        <property name="FMYFILTERFIELD" type="string">
+            <column name="FMYFILTERFIELD" length="200" />
+        </property>
+        <property name="FCOMPARETYPE" type="string">
+            <column name="FCOMPARETYPE" length="45" />
+        </property>
+        <property name="FVALUE" type="string">
+            <column name="FVALUE" length="200" />
+        </property>
+        <property name="FMERGE" type="string">
+            <column name="FMERGE" length="45" />
+        </property>
+        <property name="FRIGHT" type="string">
+            <column name="FRIGHT" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

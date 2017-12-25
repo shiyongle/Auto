@@ -1,0 +1,157 @@
+@charset "utf-8";
+/*订单详情*/
+.main_top{
+	position:relative;
+	border-bottom:2px solid #B3B3B3;
+	background-color:#F2F3F6;
+	padding-top:20px;
+	padding-bottom:40px;
+}
+
+/*订单详情内容*/
+.main_top ul li{
+	list-style-type:none;
+}
+.row > div:nth-child(2){
+	margin-top:10px;
+}
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+	.row > div:nth-child(2){margin-left:-45px;}
+}
+@media only screen and (max-width: 768px) {
+	.row > div:nth-child(2){margin-left:-40px;}
+}
+/*应付金额*/
+.amount_payable{
+	position:absolute;
+	right:20px;
+	top:20px;
+}
+.amount_payable span{
+	color:#E33431;
+	font-size:22px;
+}
+/*订单详情标签*/
+.order_details{
+	position:absolute;
+	bottom:0;
+	right:20px;
+	width:100px;
+	background-color:#B2B2B2;
+	text-align:center;
+	line-height:34px;
+	color:#ffffff;
+	font-weight:bold;
+}
+
+
+
+/*选择支付方式*/
+/*边框*/
+.main_bottom > div:nth-child(1){
+	border:3px solid #E33431;
+	padding:20px;
+	position:relative;
+}
+/*应付金额*/
+.amount_payable2{
+	position:absolute;
+	right:10px;
+	line-height:15px;
+}
+.amount_payable2 span{
+	color:#E5494E;
+	font-size:25px;
+}
+/*其他付款与添加支付*/
+.main_bottom a:link,.main_bottom a:visited{
+	color:#E33431 !important;
+	display: inline-block;
+}
+.main_bottom a:hover{
+	text-decoration: none;
+}
+.main_bottom a:nth-child(2){
+	border:1px solid #CFCFCF;
+	padding:7px 20px;
+}
+.main_bottom a:nth-child(3){
+	border:1px dashed #CFCFCF;
+	padding:7px 7px;
+	margin-left:10px;
+	margin-bottom:10px;
+}
+@media only screen and (max-width: 480px) {
+	.main{font-size:12px;}
+	.row > div:nth-child(1) img{height:85px;}
+}
+
+/*输入银行卡号*/
+.import{
+	width: 780px;
+	height: 200px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	background: url(images/wallet/del_bg.png);
+	z-index:999;
+}
+.import_in{
+	width: 98%;
+	height: 90%;
+	margin: 0.1% auto;
+	background: #fff;
+}
+.reson{
+	padding: 20px;
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+}
+#card_number{
+	border-left:none;
+	width:250px;
+}
+/*合作银行/机构*/
+.reson p{
+	margin-bottom: 20px;
+}
+/*按卡种选择*/
+.reson form a{
+	color:#E33431;
+}
+.reson form a:hover{
+	text-decoration:none;
+}
+/*下一步*/
+.reson > div a{
+	margin-top: 20px;
+}
+/*不同屏幕调整*/
+@media only screen and (max-width:480px ) {
+	.import{width: 300px;}
+	.reson{padding: 10px;}
+	#card_number{width:220px;}
+	.cardNumber_text{padding-left:5px;;width:45px;}
+	.import_in{height: 96%;}
+}
+@media only screen and (min-width: 480px) and (max-width: 640px) {
+	.import{width: 400px;}
+	.import_in{height: 94%;}
+}
+@media only screen and (min-width: 640px) and (max-width: 992px) {
+	.import{width: 500px;}
+	.import_in{height: 93%;}
+}
+
+/*验证信息提示*/
+#cardNumber_err{
+	position: relative;
+	left:-260px;
+	top:21px;
+}
+@media only screen and (max-width:480px){
+	#cardNumber_err{left:-220px;top:21px;}
+}

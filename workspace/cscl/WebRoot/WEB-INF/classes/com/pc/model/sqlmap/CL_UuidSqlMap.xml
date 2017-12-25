@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Uuid">
+<resultMap type="com.pc.model.CL_Uuid" id="CL_UuidMap">
+	<result column="fid" property="fid"/>
+	<result column="uuid" property="uuid"/>
+	<result column="fname" property="fname"/>
+	<result column="fpassword" property="fpassword"/>
+</resultMap>
+
+<insert id="insert"  useGeneratedKeys="true" keyProperty="fid">
+	insert into cl_uuid(
+		fid,
+		uuid,
+		fname,
+		fpassword
+	)values(
+		#{fid,jdbcType=INTEGER},
+		#{uuid,jdbcType=VARCHAR},
+		#{fname,jdbcType=VARCHAR},
+		#{fpassword,jdbcType=VARCHAR}
+	)
+</insert>
+
+<update id="update">
+	update cl_uuid set 
+		uuid=#{uuid,jdbcType=VARCHAR},
+		fname=#{fname,jdbcType=VARCHAR},
+		fpassword=#{fpassword,jdbcType=VARCHAR}
+	where 
+		fid=#{fid,jdbcType=INTEGER}
+</update>
+
+<delete id="delete">
+	delete from cl_uuid where fid=#{fid} 
+</delete>
+
+<select id="getByUUID" resultMap="CL_UuidMap">
+	select * from cl_uuid where uuid=#{uuid} limit 1
+</select>
+
+
+<select id="getByUUIDAndFid" resultMap="CL_UuidMap">
+	select * from cl_uuid where uuid=#{UUID} and fid=#{fid} limit 1
+</select>
+
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

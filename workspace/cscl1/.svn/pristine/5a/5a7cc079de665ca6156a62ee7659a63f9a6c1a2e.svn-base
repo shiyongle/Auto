@@ -1,0 +1,478 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="/pages/pc/common/taglibs.jsp"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>新增好运劵优惠活动</title>
+<script>
+        $(function(){
+            // 表单控制
+            $('#useEnabledDateText').numberbox({
+                required:true,
+                missingMessage:'有效期多少天必须填写!' ,
+                validType:['greaterZero','lessOneMillon'],
+                precision:0
+            }).numberbox('disable').numberbox('disableValidation');
+
+            $('#useEnabledTimeText2,#useEnabledTimeText1').validatebox({
+                required:true,
+                missingMessage:'使用有效期必须填写！'
+            });
+
+            $('#orderMoneyText').numberbox({
+                required:true,
+                missingMessage:'订单金额满多少元必须填写！',
+                validType:['greatZero','lessOneMillon']
+            });/* .numberbox('disable').numberbox('disableValidation'); */
+
+            $('#grantPeople').validatebox({
+            });
+           
+            //业务类型
+            $('#fbusinessType').combobox({
+                required : true,
+                missingMessage : "请选择业务类型",
+                validType : "comboRequired",
+                invalidMessage : "请选择业务类型",
+                width:145,
+                editable : false
+            });
+            //方案选择
+            var n = 0;
+            var same = false;
+          	//方案选择 数组
+            var comboboxArray = [];
+            // 输入正确的值并锁定
+            function inputSelect(val,id){
+            	$.ajax({
+            		url : "${ctx}/select/getAllCoupons.do",
+            		type:'post',
+            		success:function(res){
+            			res = JSON.parse(res);
+            			for(var i=0; i<res.length; i++){
+            				if(res[i].optionName == val){
+            					 $(id).combobox('select',res[i].optionId);
+            					 break;
+            				}
+            			}
+            		}
+            	});
+            }
+            $('#schemeSelect0').combobox({
+            	required : true,
+    			url : "${ctx}/select/getAllCoupons.do",
+    			missingMessage : "请选择方案选择",
+    			validType :["comboxValidate['schemeSelect0']",'comboRequired'],
+    			width:145,
+    			editable : true,
+    			filter:searchItem,
+    			valueField: 'optionId',
+    			textField: 'optionName',
+    			panelHeight:200,
+                onSelect:function(rec){
+                	 comboboxArray[0]=null;
+                     for(var i=0; i<comboboxArray.length; i++){
+                         if(rec.optionId == comboboxArray[i]){
+                             $.messager.alert('提示','不能选择相同方案！','info');
+                             comboboxArray[0]=rec.optionId;
+                             same = true;
+                             return;
+                         }
+                     }
+                     comboboxArray[0]=rec.optionId;
+                     same = false;
+                },
+                onChange:function(val){
+                	inputSelect(val,'#schemeSelect0');
+                }
+            });
+            // 继续添加按钮
+            $('#addSchemeBtn').click(function(){
+                if(same){
+                    $.messager.alert('提示','不能选择相同法案！','info');
+                    return;
+                }
+                if($('#schemeSelect'+n).combobox('isValid') == false){
+                	$.messager.alert('提示','请选择方案选择！','info');
+                	return;
+                }
+                n++;
+                var newElement = $('<tr id="schemeSelectRow'+n+'" class="schemeSelectRow">\
+                                    <td></td>\
+                                    <td>\
+                                        <select class="easyui-combobox" name="ids" id="schemeSelect'+n+'" selectIndex="'+n+'">\
+                                            <option value="-1">请选择</option>\
+                                        </select>\
+                                    </td>\
+                                    <td>\
+                                    </td>\
+                                </tr>');
+                var count = n-1;
+                $('#schemeSelectRow'+count).after(newElement);
+                $('#schemeSelect'+n).combobox({
+                	required : true,
+        			url : "${ctx}/select/getAllCoupons.do",
+        			missingMessage : "请选择方案选择",
+        			validType :['comboboxValidate','comboRequired'],
+        			width:145,
+        			editable : true,
+        			filter:searchItem,
+        			valueField: 'optionId',
+        			textField: 'optionName',
+        			panelHeight:200,
+                    onSelect:function(rec){
+                        comboboxArray[$(this).attr('selectIndex')]=null;
+                        for(var i=0; i<comboboxArray.length; i++){
+                            if(rec.optionId == comboboxArray[i]){
+                                $.messager.alert('提示','不能选择相同方案！','info');
+                                comboboxArray[$(this).attr('selectIndex')]=rec.optionId;
+                                same = true;
+                                return;
+                            }
+                        }
+                        comboboxArray[$(this).attr('selectIndex')]=rec.optionId;
+                        same = false;
+                    },
+                    onChange:function(val){
+                    	inputSelect(val,'#schemeSelect'+n);
+                    }
+                });
+                //动态加载dom的时候需要重新解析
+                $.parser.parse(newElement);
+            });
+
+            // 上传按钮
+            $('#Upload').click(function(){
+            	$('#UploadFile').val('').click();
+            });
+
+            //订单金额限制
+            /* $('#orderMoneyRadio').click(function(){
+                if($(this).is(':checked')){
+                     $('#orderMoneyText').numberbox('enable').numberbox('enableValidation');
+                }else{
+                    $('#orderMoneyText').numberbox('disable').numberbox('disableValidation').numberbox('clear');
+                }
+            }); */
+
+            // 车型
+            $.ajax({
+				url:'${ctx}/select/getAllCarType.do',
+				type:'post',
+				success:function(rec){
+					var html = '';
+					rec = JSON.parse(rec);
+					for(var i=0; i<rec.length; i++){
+						if(rec[i].optionId == -1){
+							continue;
+						}
+						html+= '<input type="checkbox" class="carType"  data-value="'+rec[i].optionId+'">'+rec[i].optionName;
+					}
+					$('#carTypeBox').append(html);
+					var carTypeCount = 0;
+		            $('#allCarType').click(function(){
+		                if($(this).is(':checked')){
+		                    $('.carType').prop('checked',true);
+		                    carTypeCount = $('.carType').length;
+		                }else{
+		                    $('.carType').prop('checked',false);
+		                    carTypeCount=0;
+		                }
+		            });
+		            $('.carType').click(function(){
+		                if($(this).is(':checked')){
+		                    carTypeCount++;
+		                }else{
+		                    carTypeCount--;
+		                }
+		                if(carTypeCount == $('.carType').length){
+		                    $('#allCarType').prop('checked',true);
+		                }else{
+		                    $('#allCarType').prop('checked',false);
+		                }
+		            });
+				}
+			});
+            
+
+            //区域
+            var areaCount = 0;
+            $('#allArea').click(function(){
+                if($(this).is(':checked')){
+                    $('.area').prop('checked',true);
+                    areaCount = $('.area').length;
+                }else{
+                    $('.area').prop('checked',false);
+                    areaCount=0;
+                }
+            });
+            $('.area').click(function(){
+                if($(this).is(':checked')){
+                    areaCount++;
+                }else{
+                    areaCount--;
+                }
+                if(areaCount == $('.area').length){
+                    $('#allArea	').prop('checked',true);
+                }else{
+                    $('#allArea').prop('checked',false);
+                }
+            });
+            //file变化
+            $('#UploadFile').change(function(){
+            	$('#grantPeople').val('');
+            	$('#issueUser').val(''); 
+                var fileName = $('#UploadFile')[0].files[0].name;
+                var fileNameArray = fileName.split('.');
+                if(fileNameArray[fileNameArray.length - 1]!='xlsx' && fileNameArray[fileNameArray.length - 1]!='xls'){
+                    $.messager.alert('提示','请选择正确的文件格式！','info');
+                    return;
+                 }
+                 $('#UploadFileValue').val($('#UploadFile').val());
+                 var data=new FormData;
+                 data.append("file",$('#UploadFile')[0].files[0]);
+                 $.ajax({
+                     url:'${ctx}/couponsActivity/readExecl.do',
+                     type:'post',
+                     dataType:'json',
+                     data:data,
+                     contentType: false,
+                     processData: false,
+                     success:function(res){
+                        if(res.success == "true"){
+                        	$('#grantPeople').val(fileName);
+                            var phoneArr = res.data.map(function(item){
+                                return item.vmiUserPhone;
+                            });
+                            if(phoneArr.length==1){
+                              	$('#issueUser').val(phoneArr[0]);
+                            }else{
+                              	$('#issueUser').val(phoneArr.join(','));
+                            }
+                        }else{
+                        	$('#grantPeople').val('重新上传！');
+                            $.messager.alert('提示',res.msg,'info');
+                        }
+                     }
+                 });
+            });
+            //	生效时间 和有效时间
+            for(var i = 0; i < $('.validCheck').size(); i++){  
+                $('.validCheck').get(i).onclick = function(){  
+                    for (var j = 0; j < $('.validCheck').size(); j++ ){  
+                        if ($(this).val() != $('.validCheck').eq(j).val() && $('.validCheck').eq(j).prop('checked') == true){  
+                            $('.validCheck').eq(j).prop('checked',false);  
+                        }  
+                    }  
+                    if($('#tomorrowCheck').prop('checked') == true || $('#todayCheck').prop('checked') == true){
+                        $('#useEnabledDateText').numberbox('enable').numberbox('enableValidation');
+                        $('#useEnabledTimeText2,#useEnabledTimeText1').prop('disabled',true).validatebox('disableValidation').val('');
+                    }else{
+                        $('#useEnabledDateText').numberbox('disable').numberbox('disableValidation').numberbox('clear');
+                        $('#useEnabledTimeText2,#useEnabledTimeText1').prop('disabled',false).validatebox('enableValidation');
+                    }
+                };
+            }
+
+
+            // 提交按钮
+            $('#sumbit').click(function(){
+            	if($('#issueUser').val() == ''){
+            		$.messager.alert('提示','请上传excel!','info');
+            		return;
+            	}
+            	//车型按后端需要格式化 
+                var fcarSpecIdString='';
+                $('.carType:checked').each(function(index,el){
+                	if(index == $('.carType:checked').length-1){
+                		fcarSpecIdString+=$(el).data('value');
+                	}else{
+                		fcarSpecIdString+=$(el).data('value')+',';
+                	}
+                });
+                //地区按后端需要格式化 
+                var fareaString='';
+                $('.area:checked').each(function(index,el){
+                	if(index == $('.area:checked').length-1){
+                		fareaString+=$(el).data('value');
+                	}else{
+                		fareaString+=$(el).data('value')+',';
+                	}
+                });
+                if(fcarSpecIdString == ''){
+                	$.messager.alert('提示', "车型必须选择！");
+                	return;
+                }
+                if(fareaString == ''){
+                	$.messager.alert('提示', "地区必须选择！");
+                	return;
+                }
+                if(same){
+                	$.messager.alert('提示', "不能选择相同的方案！");
+                	return;
+                }
+                var params = decodeURIComponent($("#luckActivityForm").serialize(), true);
+                if($('#luckActivityForm').form('validate')){
+                	$.messager.confirm('提示', '确定要提交吗？', function(r){
+                		if(r){
+		                    $.ajax({
+		                        type:'POST',
+		                        url:'${ctx}/couponsActivity/save.do',
+		                        dataType:'json',
+		                        data:params+'&farea='+fareaString+'&fcarSpecId='+fcarSpecIdString,
+		                        success:function(res){
+		                            if(res.success == 'success'){
+		                               	$.messager.alert('提示','添加成功','info',function(){
+			                            	$("#createWindow").window('close');
+										    $("#luckTicketServerTable").datagrid('reload');
+		                            	});
+		                            }else{
+		                                $.messager.alert('提示', res.msg,'info');
+		                            }
+		                        }
+		                    });
+                		}
+                	});
+                }
+            });
+
+            // 取消按钮
+            $('#cancel').click(function(){
+                $('#createWindow').window('close');
+            });
+            // 新增下拉款验证
+            $.extend($.fn.validatebox.defaults.rules, {
+            	comboboxValidate: {
+        			validator: function(value, param) {
+        	            var bFlag = false;
+        				$.ajax({
+                    		url : "${ctx}/select/getAllCoupons.do",
+                    		type:'post',
+                    		async: false,
+                    		success:function(res){
+                    			data = JSON.parse(res);
+                    			for (var i = 0; i < data.length; i++) {
+                	                if (data[i].optionName == value) {
+                	                    bFlag = true;
+                	                    break;
+                	                }
+                	            }
+                    		}
+                    	});
+        	            return bFlag;
+        	        },
+        	        message: "输入正确的值"
+        	    }
+            });
+        })
+    </script>
+</head>
+    <div style="width:590px; overflow-y:scroll; height:400px; padding:10px;" >
+        <form id="luckActivityForm">
+            <fieldset>
+                <legend><span style="font-size:16px;font-weight:bold;">优惠券活动</span><span style="color:red;">(以下允许选择多个方法)</span></legend>
+                <table style="padding:10px;">
+                    <tr>
+                        <td style="font-size:14px;font-weight:bold;">业务类型:</td>
+                        <td>
+                            <select name="fbusinessType" id="fbusinessType">
+                                <option value="-1">请选择</option>
+                                <option value="一路好运">一路好运</option>
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr id="schemeSelectRow0">
+                        <td style="font-size:14px;font-weight:bold;">方案选择:</td>
+                        <td>
+                            <select id="schemeSelect0" name="ids">
+                            	<option value="-1">请选择</option>
+                            </select>
+                        </td>
+                        <td> <a href="javascript:;" class="easyui-linkbutton" id="addSchemeBtn" >继续添加</a></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:14px;font-weight:bold;">活动日期:</td>
+                        <td><input type="text" id="factivityStartTime" class="easyui-validatebox datePicker MtimeInput" name="activityStartTime" data-options="required:true,missingMessage:'活动日期必须填写！'" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',maxDate:'#F{$dp.$D(\'factivityEndTime\')}'})"style="width:140px;"></td>
+						<td>至<input type="text" class="easyui-validatebox MtimeInput" id="factivityEndTime" name="activityEndTime" data-options="required:true,missingMessage:'活动日期必须填写！'" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',minDate:'#F{$dp.$D(\'factivityStartTime\')}'})" style="width:140px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:14px;font-weight:bold;">发放人群:</td>
+                        <td><input type="text" id="grantPeople" style="width:140px;" readonly name="fexcelName"></td>
+                        <td>
+                        	<input type="hidden" id="issueUser" name="fissueUser"/><input type="file" style="display:none;" id="UploadFile"><input type="hidden" id="UploadFileValue" ><a href="javascript:;" class="easyui-linkbutton" id="Upload">上传excel</a>
+                        	<a href="${ctx}/pages/pc/couponsActivity/couponsActivity_create.xlsx" download="发放人群模板.xlsx">
+								下载发放人群模板
+							</a>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset>
+                <legend><span style="font-size:16px;font-weight:bold;">使用条件</span><span style="color:red;">(以下允许选择多个方案)</span></legend>
+                <table style="padding:10px;">
+                    <tr>
+                        <td style="font-size:14px;font-weight:bold;">使用时间</td>
+                        <td style="font-size:14px;">生效时间:</td>
+                        <td>
+                            <input type="checkbox" class="validCheck" id="tomorrowCheck" value="1"  name="fgetType">领取后次日生效
+                            <input type="checkbox" class="validCheck" id="todayCheck" value="2" name="fgetType">领取后即时生效&nbsp;&nbsp;
+                            有效期<input type="text" style="width:50px;" id="useEnabledDateText" name="fuseTime">天
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="font-size:14px;">生效时间:</td>
+                        <td>
+                            <span style="font-family:'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>使用有效期
+                            <input type="text" class="easyui-validatebox datePicker MtimeInput"  style="width:100px;" id="useEnabledTimeText1" name="useStartTime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:ss',maxDate:'#F{$dp.$D(\'useEnabledTimeText2\')}'})">
+                            至<input type="text"  class="easyui-validatebox MtimeInput"  id="useEnabledTimeText2" style="width:100px;" name="useEndTime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',minDate:'#F{$dp.$D(\'useEnabledTimeText1\')}'})">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:14px;font-weight:bold;">订单条件</td>
+                        <td style="font-size:14px;">订单金额:</td>
+                        <td>
+                            <!-- <input type="checkbox" id="orderMoneyRadio"> -->订单金额满
+                            <input type="text" id="orderMoneyText" name="fdollars"> 元
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="font-size:14px;">车<span style="font-family:'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>型:</td>
+                        <td id="carTypeBox">
+                            <input type="checkbox" id="allCarType"><span style="font-weight:bold;">全车型</span>
+                            <!-- <input type="checkbox" class="carType" name="fcarSpecId">5.2米
+                            <input type="checkbox" class="carType" name="fcarSpecId">7.7米
+                            <input type="checkbox" class="carType" name="fcarSpecId">4.2米货车
+                            <input type="checkbox" class="carType" name="fcarSpecId">6.8米货车 -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="font-size:14px;">区<span style="font-family:'Times New Roman';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>域:</td>
+                        <td>
+                            <input type="checkbox" id="allArea"><span style="font-weight:bold;">全区域</span>
+                            <input type="checkbox" class="area"  data-value="鹿城区">鹿城区
+                            <input type="checkbox" class="area"  data-value="龙湾区">龙湾区
+                            <input type="checkbox" class="area"  data-value="瓯海区">瓯海区
+                            <input type="checkbox" class="area"  data-value="洞头区">洞头区
+                            <input type="checkbox" class="area"  data-value="永嘉县">永嘉县<br>
+                            <input type="checkbox" class="area"  data-value="平阳县">平阳县
+                            <input type="checkbox" class="area"  data-value="苍南县">苍南县
+                            <input type="checkbox" class="area"  data-value="文成县">文成县
+                            <input type="checkbox" class="area"  data-value="泰顺县">泰顺县
+                            <input type="checkbox" class="area"  data-value="瑞安市">瑞安市
+                            <input type="checkbox" class="area"  data-value="乐清市">乐清市
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </form>
+        <div style="overflow:hidden; width:160px; margin:10px auto 0;">
+            <div  class="Mbutton25 createButton" style="float:left;" id="cancel">取消</div>
+            <div  class="Mbutton25 createButton" style="float:right;" id="sumbit">提交</div>
+        </div>
+    </div>
+</html>

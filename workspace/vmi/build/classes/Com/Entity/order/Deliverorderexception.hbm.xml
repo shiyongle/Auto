@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-3-18 15:01:54 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.order.Deliverorderexception" table="t_ord_deliverorderexception">
+        <id name="fid" type="string">
+            <column name="fid" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fdeliverorderId" type="string">
+            <column name="fdeliverorderId" length="36" />
+        </property>
+        <property name="fremark" type="string">
+            <column name="fremark" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

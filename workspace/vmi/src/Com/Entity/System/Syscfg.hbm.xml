@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-7-15 13:41:40 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.Syscfg" table="t_sys_syscfg">
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fkey" type="string">
+            <column name="fkey" length="45" unique="true" />
+        </property>
+        <property name="fvalue" type="string">
+            <column name="fvalue" />
+        </property>
+        <property name="fuser" type="string">
+            <column name="fuser" length="44" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,184 @@
+@CHARSET "UTF-8";
+*{
+	margin:0px;
+	padding:0px;
+	height:auto;
+}
+
+.disable
+{
+	visibility: hidden;
+}
+
+
+.unselect {
+    -webkit-user-select: none; 
+    -moz-user-select: none;    
+    -khtml-user-select: none;  
+    -ms-user-select: none;    
+
+    /* 以下两个属性目前并未支持，写在这里为了减少风险 */
+    -o-user-select: none;
+    user-select: none;  
+}
+.title{
+	font: 12px 宋体;
+    height: 35px;
+    line-height: 35px;
+    background-color: #f1f1f1;
+    padding-left:10px;
+}
+.button a{
+	font: 12px 宋体;
+    display: inline-table;
+    float: left;
+    width: 78px;
+    height: 21px;
+    line-height:21px;
+    border: 1px solid #999;
+    margin-right: 5px!important;
+    cursor: pointer;
+    background-color: #fff;
+/*     color: #545454; */
+    text-align:center;
+}
+.button{
+	padding-top:15px;
+}
+
+ .black
+ {
+ 	color:#ccc;
+ }
+.button a.link:hover{
+	background-color:red;
+	color:#fff;
+}
+
+
+
+#fcustomer{
+	margin-left:5px;
+}
+.filter{
+    width: 135px;
+    height: 21px;
+    line-height: 21px;
+    float: left;
+    padding-left: 5px;
+    border: 1px solid lightgray;
+    font: 12px 宋体;
+    outline: none;
+    border-right: none;
+}
+._submit {
+    border: 1px solid lightgray;
+    border-left: none;
+    cursor: pointer;
+    width: 25px;
+    height: 23px;
+    line-height: 25px;
+    background: url(../../../css/images/fdj1.png) white 3px 1px no-repeat;
+    outline: none;
+}
+.productdemandTable,.schemeDesignTable{
+	margin-top:20px;
+	margin-left:10px;
+	height:600px;
+}
+.productdemandTable table,.schemeDesign table{
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 14px;
+    table-layout: fixed;
+    font-family: 宋体;
+}
+.titleTr{
+	height:32px;
+	background-color:#dfdfdf;
+    border: 1px solid lightgray;
+}
+.titleTr td{
+	width:96px;
+}
+.tdTitle {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+.data{
+	height:52px;
+	border: 1px solid lightgray;
+}
+.description{
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+}
+.data td a{
+    cursor: pointer;
+}
+.expandTop{
+	height:20px;
+	background: url(../../../css/images/expandTop.png) white -125px -1px no-repeat;
+    cursor: n-resize;
+}
+.top{
+    float: left;
+    margin-left: 512px;
+    cursor: pointer;
+    height:22px;
+}
+#ftype{
+	float:left;
+	margin-left:5px;
+	margin-right:5px;
+}
+#kkpager,#kkpager2{
+	float:right;
+	margin-right:25px;
+}
+.jqx-combobox-state-normal{
+	float:left;
+}
+.schemeDesign{
+    z-index: 9999;
+    position: absolute;
+    background: #fff;
+}
+/* #schemetable tr:nth-child(odd),#demandtable tr:nth-child(odd){
+	background-color:#f2f2f2;
+} */
+.selectRow{
+	background-color:#F7B8B8 !important;
+}
+.focusRow{
+	background-color:#efefef !important;cursor: pointer
+}
+
+/*2016年3月18日09:30:38 HT*/
+#require{width:1055px; margin:0 auto;margin-top:10px;}
+#tbl1{
+ font-size:12px;
+ text-align:center;
+ border-collapse:collapse;
+ clear:both;
+ }
+a{
+ text-decoration: none;
+}
+#fstate1{
+ float: left;
+ }
+#fstate1 a{
+ float: left;
+ padding: 4px 10px;
+ color: #3a3a3a;
+ border-radius: 2px 2px 0 0;
+ font-size: 17px;
+ font-family:'Microsoft Yahei';
+}
+#fstate1 .active{
+ color: #fff;
+ background: #f76350; 
+}
+/*2016年3月18日09:30:38 HT*/

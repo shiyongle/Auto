@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_MenuItem">
+
+    <resultMap id="CL_MenuItemMap" type="com.pc.model.CL_MenuItem">
+        <result property="fid" column="fid"/>
+        <result property="fisleaf" column="fisleaf"/>
+        <result property="fname" column="fname"/>
+        <result property="furl" column="furl"/>
+        <result property="fparentid" column="fparentid"/>  
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        fid,fisleaf,fname,furl,fparentid
+	    ]]>
+	</sql>
+	
+	<sql id="columns2">
+	    <![CDATA[
+        mi.fid,mi.fname,mi.furl,mi.fparentid,ur.vmi_user_name fuserName
+	    ]]>
+	</sql>
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_sys_menuitem(
+			fid,
+			fisleaf,
+			fname,
+			furl,
+			fparentid
+        ) VALUES (
+        	#{fid, jdbcType=INTEGER} ,
+        	#{fisleaf, jdbcType=BIT},
+        	#{fname, jdbcType=VARCHAR},
+        	#{furl, jdbcType=VARCHAR},
+        	#{fparentid, jdbcType=INTEGER}
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+         UPDATE cl_sys_menuitem SET
+        	fid = #{fid, jdbcType=INTEGER} ,
+        	fisleaf = #{fisleaf, jdbcType=BIT},
+        	fname = #{fname, jdbcType=VARCHAR},      
+        	furl = #{furl, jdbcType=VARCHAR},
+        	fparentid = #{fparentid, jdbcType=INTEGER}
+        WHERE 
+	        fid = #{fid} 
+    ]]>
+    </update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_sys_menuitem WHERE
+        fid = #{fid} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_MenuItemMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_sys_menuitem 
+	        WHERE 
+		        fid = #{fid} 
+	    ]]>
+    </select>
+    
+    <select id="getListbyParentid" resultMap="CL_MenuItemMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_sys_menuitem 
+	        WHERE 
+		        fparentid = #{fid} 
+	    ]]>
+    </select>
+    
+    <!-- 获得全部一级菜单 -->
+    <select id="getAllParentMenus" resultMap="CL_MenuItemMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_sys_menuitem 
+	        WHERE 
+		        fparentid = -1 order by forder
+	    ]]>
+    </select>
+    
+    <!-- 当前用户已有菜单权限 -->
+    <select id="getAllotPerssion" resultMap="CL_MenuItemMap">
+	    SELECT <include refid="columns2"/>
+	    <![CDATA[
+			FROM cl_sys_menupermission mp 
+			JOIN cl_user_role ur ON ur.id = mp.fuser_role_id
+			JOIN cl_sys_menuitem mi ON mp.fmenuitem_id = mi.fid
+			WHERE mp.fuser_role_id = #{urid}
+	    ]]>
+    </select>
+    
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(searchKey)">
+		   	  searchKey LIKE CONCAT('%',#{searchKey},'%')
+			</if>
+	    </where>
+	</sql>
+
+	<select id="findAll" resultMap="CL_MenuItemMap">
+	    SELECT <include refid="columns"/> FROM cl_sys_menuitem ORDER BY forder
+    </select>	
+    
+	<select id="find" resultMap="CL_MenuItemMap">
+	    SELECT <include refid="columns"/> FROM cl_sys_menuitem 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_sys_menuitem 
+        <include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CL_MenuItemMap">
+    	SELECT <include refid="columns"/> FROM cl_sys_menuitem 
+		<include refid="findWhere"/>
+<!-- 		<if test="@Ognl@isNotEmpty(sortColumns)"> -->
+<!-- 			ORDER BY ${sortColumns} -->
+<!-- 		</if>	 -->
+    </select>
+    
+</mapper>
+

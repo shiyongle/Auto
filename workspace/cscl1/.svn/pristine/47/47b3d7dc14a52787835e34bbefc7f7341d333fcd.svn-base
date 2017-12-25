@@ -1,0 +1,86 @@
+.jumbotron{
+	background-color:transparent !important; 
+}
+
+
+.row{
+	margin:30px 0px ;
+}
+.person,.company{
+	height: 65px;
+	line-height: 65px;
+	font-size: 16px;
+}
+
+@media  screen and (min-width: 100px) and (max-width: 640px) {
+.person,.company{
+	height: 40px;
+	line-height: 40px;
+	font-size: 15px;
+}
+}
+
+.person a,.company a{
+	height: 100%;
+	width: 100%;
+	display: block;
+	text-decoration: none;
+}
+.company a{
+	color: #fff !important;
+}
+.company a:hover{
+	color: #fff;
+	text-decoration: none;
+}
+.person a:hover{
+	color: #333333 !important;
+	text-decoration: none;
+}
+
+
+/*表单*/
+.main{
+	background: #ffffff !important;
+	overflow: hidden;
+}
+
+.com_img{background:url(images/register_iden/company.png) no-repeat 2px}
+.iden_img{background:url(images/register_iden/iden.png) no-repeat 2px}
+#iden{cursor: pointer;}
+/*验证提示样式*/
+.form_warp{position: relative;}
+#comName_err{
+	position: absolute;
+	top:30px;
+	left: 50px;
+	
+}
+
+/*图片缩略图*/
+#img1,#img2{
+	width:210px;
+	height:140px;
+}
+
+/*按钮*/
+.btn_ignore,.btn_next{
+	color: #fff !important;
+	border: 1px;
+	border-color: #ddd;
+	width: 100%;
+	height: 30px;
+	line-height: 18px;
+}
+@media only screen and (min-width: 768px) {
+	.btn_ignore,.btn_next{height: 50px; line-height: 40px;}
+	.btn_ignore{float: left;}
+	.btn_next{float: right;}
+}
+.btn_ignore,.btn_ignore:hover{
+	color: #fff !important;
+	background: #8C8C8C;
+}
+.btn_next:hover{
+	color: #fff !important;
+}

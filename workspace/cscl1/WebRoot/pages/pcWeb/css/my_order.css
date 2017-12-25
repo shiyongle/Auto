@@ -1,0 +1,57 @@
+.main{
+	background: #ffffff !important;
+	overflow: hidden;
+	margin-top: 15px;
+}
+
+#time1,#time2{
+	height: 30px;
+}
+.time_recent div{
+	float: left;
+}
+
+.time_recent_check a{
+	display: block;
+	float: left;
+	margin-right: 20px;
+	width: 60px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	text-decoration: none;
+}
+
+.time_recent_check a.active{
+	background: #e6454a;
+	border-radius: 3px;
+	color: #fff !important;
+	text-decoration: none;
+}
+
+.row{
+	margin: 30px auto;
+	padding: 0 10px;
+}
+
+
+/*搜索表单*/
+#search{
+	background:url(images/individual_user/glass.png) no-repeat;
+	background-position: 8px;
+	padding-left:30px ;
+}
+
+
+/*我的订单列表*/
+.table_head{
+	background: #f0f2f5;
+}
+
+table tr td{
+	text-align: center;
+}
+
+#my_order_table tr{
+	cursor:pointer;
+}

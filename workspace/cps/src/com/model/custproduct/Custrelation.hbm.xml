@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-10-24 17:13:36 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.model.custproduct.Custrelation" table="t_pdt_custrelation" >
+        <id name="fid" type="string">
+            <column name="FID" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fcustomerid" type="string">
+            <column name="FCUSTOMERID" length="44" not-null="true" />
+        </property>
+        <property name="fcustproductid" type="string">
+            <column name="FCUSTPRODUCTID" length="44" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

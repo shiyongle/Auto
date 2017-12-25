@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_MenuPermission">
+    <resultMap id="CL_MenuPermissionMap" type="com.pc.model.CL_MenuPermission">
+        <result property="fid" column="fid"/>
+        <result property="fmenuitemId" column="fmenuitem_id"/>
+        <result property="fuserRoleId" column="fuser_role_id"/>
+        <result property="fremark" column="fremark"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+	        fid,fmenuitem_id,fuser_role_id,fremark
+	    ]]>
+	</sql>
+	
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_sys_menupermission(
+			fid,
+			fmenuitem_id,
+			fuser_role_id,
+			fremark
+        ) VALUES (
+        	#{fid, jdbcType=INTEGER} ,
+        	#{fmenuitemId, jdbcType=INTEGER},
+        	#{fuserRoleId, jdbcType=INTEGER},
+        	#{fremark, jdbcType=VARCHAR}
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+         UPDATE cl_sys_menupermission SET
+        	fid = #{fid, jdbcType=INTEGER} ,
+        	fmenuitem_id = #{fmenuitemId, jdbcType=INTEGER},
+        	fuser_role_id = #{fuserRoleId, jdbcType=INTEGER},
+        	fremark = #{fremark, jdbcType=VARCHAR}
+        WHERE 
+	        fid = #{fid} 
+    ]]>
+    </update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_sys_menupermission WHERE
+        fid = #{fid} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_MenuPermissionMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_sys_menupermission 
+	        WHERE 
+		        fid = #{fid} 
+	    ]]>
+    </select>
+    
+    
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(searchKey)">
+		   	  AND searchKey LIKE CONCAT('%',#{searchKey},'%')
+			</if>
+			<if test="@Ognl@isNotEmpty(fmenuitemId)">
+		   	  AND fmenuitem_id = ${fmenuitemId}
+			</if>
+			<if test="@Ognl@isNotEmpty(fuserRoleId)">
+		   	  AND fuser_role_id = ${fuserRoleId}
+			</if>
+	    </where>
+	</sql>
+
+	<select id="find" resultMap="CL_MenuPermissionMap">
+	    SELECT <include refid="columns"/> FROM cl_sys_menupermission 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>	
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_sys_menupermission 
+        <include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CL_MenuPermissionMap">
+    	SELECT <include refid="columns"/> FROM cl_sys_menupermission 
+		<include refid="findWhere"/>
+    </select>
+    
+</mapper>
+

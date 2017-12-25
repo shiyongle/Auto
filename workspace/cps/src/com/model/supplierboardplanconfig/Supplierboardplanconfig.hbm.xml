@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-11-4 13:23:21 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="com.model.supplierboardplanconfig.Supplierboardplanconfig" table="t_sys_supplierboardplanconfig">
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fsupplierid" type="string">
+            <column name="fsupplierid" length="44" />
+        </property>
+        <property name="forderlasttime" type="time">
+            <column name="forderlasttime" length="0" />
+        </property>
+   
+    </class>
+</hibernate-mapping>

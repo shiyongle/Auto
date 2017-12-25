@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="CL_PayLogs">
+    	<resultMap type="com.pc.model.CL_PayLogs" id="CLPayLogsMap">
+    		
+    		<result property="fid" column="fid"/>
+    		<result property="fcreatorID" column="fcreatorID"/>
+    		<result property="fcreator" column="fcreator"/>
+    		<result property="fcreationTime" column="fcreationTime"/>
+    		<result property="fpayUrl" column="fpayUrl"/>
+    		<result property="fpayData" column="fpayData"/>
+    		<result property="frespone" column="frespone"/>
+    		<result property="ffinanceNum" column="ffinanceNum"/>
+    		<result property="flevel" column="flevel"/>
+    	</resultMap>
+    	
+    	<sql id="columns">
+    		pl.fid,pl.fcreatorID,pl.fcreator,pl.fcreationTime,pl.fpayUrl,pl.fpayData,pl.frespone,pl.ffinanceNum,pl.flevel
+    	</sql>
+    	
+    	<insert id="insert">
+    		insert into cl_paylogs(
+    			fcreatorID,
+    			fcreator,
+    			fcreationTime,
+    			fpayUrl,
+    			fpayData,
+    			frespone,
+    			ffinanceNum,
+    			flevel
+    		)
+    		values(
+    			#{fcreatorID,jdbcType=INTEGER},
+    			#{fcreator,jdbcType=VARCHAR},
+    			#{fcreationTime,jdbcType=TIMESTAMP},
+    			#{fpayUrl,jdbcType=VARCHAR},
+    			#{fpayData,jdbcType=VARCHAR},
+    			#{frespone,jdbcType=VARCHAR},
+    			#{ffinanceNum,jdbcType=VARCHAR},
+    			#{flevel,jdbcType=INTEGER}
+    		)
+    	</insert>
+    
+    	<select id="findPage" resultMap="CLPayLogsMap">
+    		select <include refid="columns"/> from cl_paylogs pl
+    	</select>
+    	
+    	<select id="findPageCount" resultType="long">
+    		select count(fid) from cl_paylogs pl order by fcreationTime desc
+    	</select>
+    
+    
+    
+    </mapper>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

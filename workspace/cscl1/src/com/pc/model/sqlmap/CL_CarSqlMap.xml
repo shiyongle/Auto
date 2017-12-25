@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Car">
+
+    <resultMap id="CLCarMap" type="com.pc.model.CL_Car">
+        <result property="id" column="id"/>
+        <result property="carNum" column="carNum"/>
+        <result property="driverName" column="driverName"/>
+        <result property="carType" column="carType"/>
+        <result property="driverCode" column="driverCode"/>
+        <result property="userRoleId" column="user_role_id"/>
+        <result property="carSpecId" column="car_spec_id"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="licenseType" column="license_type"/>
+        <result property="weight" column="weight"/>
+        <result property="fprovince" column="fprovince"/>
+        <result property="fcity" column="fcity"/>
+        <result property="activeArea" column="active_area"/>
+        <result property="fluckDriver" column="fluckDriver"/>
+        <result property="driverPhone" column="driverPhone"/> 
+        <result property="fposition_time" column="fposition_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+	    car.id ,car.carNum ,car.driverName,car.carType,car.driverCode ,car.fluckDriver,
+	    car.user_role_id,urole.vmi_user_name as userName,car.car_spec_id,cr.name as roleName,cct.name as carTypeName,
+	    ccs.name as carSpecName,car.longitude,car.latitude,car.fposition_time,urole.vmi_user_phone carFtel,car.license_type,car.weight,
+	    car.active_area activeArea,car.fprovince fprovince_id,car.fcity fcity_id,cp.fprovince,cc.fcity,ca.farea area
+	    ]]>
+	</sql>
+	
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_car (
+        	id ,carNum,driverName,carType,driverCode,user_role_id,car_spec_id,longitude,latitude,fluckDriver,license_type,active_area,fposition_time,fprovince,fcity
+        )VALUES(
+        	#{id, jdbcType=INTEGER} ,
+        	#{carNum, jdbcType=INTEGER} ,
+        	#{driverName, jdbcType=VARCHAR},
+        	#{carType, jdbcType=INTEGER} ,
+        	#{driverCode, jdbcType=VARCHAR} ,
+        	#{userRoleId, jdbcType=INTEGER} ,
+        	#{carSpecId, jdbcType=INTEGER} ,
+        	#{longitude, jdbcType=DECIMAL} ,
+        	#{latitude, jdbcType=DECIMAL} ,
+        	#{fluckDriver, jdbcType=INTEGER}, 
+        	#{licenseType,jdbcType=INTEGER},
+        	#{activeArea,jdbcType=INTEGER},
+        	#{fposition_time,jdbcType=TIMESTAMP},
+        	#{fprovince,jdbcType=INTEGER},
+        	#{fcity,jdbcType=INTEGER}
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+        UPDATE cl_car SET
+	        carNum = #{carNum, jdbcType=INTEGER} ,
+	        driverName = #{driverName, jdbcType=VARCHAR} ,
+	        carType = #{carType, jdbcType=INTEGER} ,
+	        driverCode = #{driverCode, jdbcType=VARCHAR} ,
+	        user_role_id = #{userRoleId, jdbcType=INTEGER},
+	        car_spec_id=#{carSpecId,jdbcType=INTEGER},
+	        license_type=#{licenseType,jdbcType=INTEGER},
+	        weight=#{weight,jdbcType=VARCHAR},
+	        active_area=#{activeArea,jdbcType=VARCHAR},
+	        longitude = #{longitude, jdbcType=DECIMAL} ,
+        	latitude = #{latitude, jdbcType=DECIMAL} ,
+        	fluckDriver = #{fluckDriver, jdbcType=INTEGER} ,
+        	fprovince = #{fprovince_id, jdbcType=INTEGER} ,
+        	fcity = #{fcity_id, jdbcType=INTEGER} ,
+        	active_area = #{activeArea,jdbcType=INTEGER},
+        	fposition_time = #{fposition_time,jdbcType=TIMESTAMP}
+        WHERE 
+	        id = #{id,jdbcType=INTEGER} 
+    ]]>
+    </update>
+
+      <update id="updateLuckDr">
+         UPDATE  cl_car set
+            fluckDriver=#{fluckDriver, jdbcType=INTEGER}
+        where
+             id=#{id,jdbcType=INTEGER}
+      </update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_car WHERE  id = #{id} 
+    ]]>
+    </delete>
+     
+    <select id="getById" resultMap="CLCarMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_car car
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+        WHERE   car.id = #{id} 
+	    ]]>
+    </select>
+    
+ 
+    
+    
+    <select id="getByCarSpecId" resultMap="CLCarMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_car car
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+        WHERE   ccs.id = #{carSpecId} 
+	    ]]>
+    </select>
+    
+    <select id="getByCarSpecIdAndTypeId" resultMap="CLCarMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_car car
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+        WHERE   ccs.id = #{carSpecId} AND cct.id = #{carTypeId}
+	    ]]>
+    </select>
+    
+    <select id="getUrIdByCarType" resultMap="CLCarMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_car car
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+        WHERE   car.carType = #{id} 
+	    ]]>
+    </select>
+    
+     <select id="getByUserRoleId" resultMap="CLCarMap">
+	    SELECT  <include refid="columns"/> 
+	     <![CDATA[
+	   FROM cl_car  car
+	    left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+        WHERE   car.user_role_id = #{id} 
+	    ]]>
+    </select>
+    
+    <select id="getCarTypeByUserRoleId" resultMap="CLCarMap">
+	    SELECT  car.id ,car.car_spec_id, car.driverName, car.fluckDriver,ur.vmi_user_phone driverPhone
+	     <![CDATA[
+	   FROM cl_car  car
+	    join cl_user_role ur on car.user_role_id=ur.id 
+	    join cl_role r on ur.role_id=r.id 
+	    WHERE r.id=2 
+	    AND ur.id = #{UserRoleId}
+	    ]]>
+    </select>
+    
+    <sql id="findWhere">
+	    <where>
+	    	<if test="licenseType!=null and licenseType!=-1">
+	    		AND car.license_type=#{licenseType}
+	    	</if>
+	    	<if test="carSpecId!=null and carSpecId!=-1">
+	    		AND car.car_spec_id=#{carSpecId}
+	    	</if>
+	    	<if test="carType!=null and carType!=-1">
+	    		AND car.carType=#{carType}
+	    	</if>
+			<if test="@Ognl@isNotEmpty(searchKey)">
+				<if test="@Ognl@isNotEmpty(keyType)">
+					<if test="keyType==-1">
+						AND (
+							 car.carNum       LIKE CONCAT('%',#{searchKey},'%') OR
+							 car.driverName   LIKE CONCAT('%',#{searchKey},'%') 
+							 )
+					</if>
+					<if test="keyType==1">
+						AND car.carNum     LIKE CONCAT('%',#{searchKey},'%')
+					</if>
+					<if test="keyType==2">
+						AND car.driverName LIKE CONCAT('%',#{searchKey},'%')
+					</if>
+				</if>
+			</if>
+		    <if test="@Ognl@isNotEmpty(fluckDriver)">
+		          AND car.fluckDriver=#{fluckDriver}
+		    </if>
+		     <if test="@Ognl@isNotEmpty(ids)">
+   		     	AND car.id IN <foreach item="item" collection="ids" open="(" separator="," close=")">#{item}</foreach>
+   			</if>
+	    </where>
+	</sql>
+    
+    <!-- 求满足条件的记录数 --> 
+   	<select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_car car
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        <include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CLCarMap">
+    	SELECT <include refid="columns"/> FROM cl_car car
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+
+	<!-- 查询记录树 -->
+	<select id="find" resultMap="CLCarMap">
+	    SELECT <include refid="columns"/> FROM cl_car car
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+    
+    <!-- 获取所有车辆信息 -->
+	<select id="getAllCar" resultMap="CLCarMap">
+	    SELECT <include refid="columns"/> FROM cl_car car
+        left join cl_user_role urole on car.user_role_id = urole.id
+        left join cl_role cr on cr.id = urole.role_id
+        left join cl_car_type cct on cct.id=car.carType
+        left join cl_car_spec ccs on ccs.id=car.car_spec_id
+        left join cl_province cp on cp.fprovince_id = car.fprovince
+        left join cl_city cc on cc.fcity_id = car.fcity
+        left join cl_activeArea ca on ca.farea_id = car.active_area
+    </select>
+    
+</mapper>
+

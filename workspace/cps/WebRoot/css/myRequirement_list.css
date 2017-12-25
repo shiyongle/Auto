@@ -1,0 +1,258 @@
+@charset "utf-8";
+*{
+	margin:0px auto;
+	padding:0px;
+	}
+#nav{
+	width:1280px;
+	}
+#container{
+	width:1260px;
+	height:auto;
+	}
+.instruct{
+	width:1260px;
+	height:50px;
+	font-family:"微软雅黑";
+	font-size:16px;
+	color:#666;
+	}
+.instruct p{
+	height:50px;
+	line-height:50px;
+	}
+/*菜单选项*/
+.menu{
+	height:53px;
+	width:1260px;
+	line-height:50px;
+	}
+.menu ul li{
+	float:left;
+	list-style:none;
+	width:105px;
+	text-align:center;
+	font-family:"微软雅黑";
+	font-size:18px;
+	cursor:pointer;
+	}
+.menu ul a{
+	text-decoration:none;
+	color:#666;
+	}
+.menu ul li a:hover{
+	color:red;
+	}
+.menu .current{
+	border-left:1px solid lightgray;
+	border-right:1px solid lightgray;
+	background-color:#fff;
+	border-top:4px solid #C00;
+	}
+.menu .current a{
+	color:#C00;
+	}
+/*条件选项*/
+.condition{
+	width:1250px;
+	height:65px;
+	padding-left:5px;
+	padding-right:5px;
+	line-height:65px;
+	font-family:"微软雅黑";
+	font-size:14px;
+	color:#666;
+	border:1px solid lightgray;
+	border-bottom:none;
+	border-left:none;
+	border-right:none;
+	}
+.condition form{
+	text-align:right;
+	height:65px;
+	}
+.condition ._add{
+	cursor:pointer;
+	width:93px;
+	height:32px;
+	border:none;
+	background-color:#C00;
+	color:white;
+	font-family:"微软雅黑";
+	font-size:16px;
+	text-align:center;
+	float:left;
+	margin-top:18px;
+	+margin-top:9px;
+	}
+.condition .keyWord{
+	float:right;
+	height:23px;
+	line-height:23px;
+	width:196px;
+	border:1px solid #999;
+	border-right:none;
+	margin-top:18px;
+	+margin-top:9px;
+	}
+.condition ._submit{
+	cursor:pointer;
+	float:right;
+	width:48px;
+	height:25px;
+	background-color:#eeeeee;
+	border:1px solid #999;
+	font-family:"微软雅黑";
+	font-size:15px;
+	text-align:center;
+	margin-top:18px;
+	+margin-top:9px;
+	}
+.condition ._del{
+	cursor:pointer;
+	width:93px;
+	height:32px;
+	border:none;
+	background-color:#C00;
+	color:white;
+	font-family:"微软雅黑";
+	font-size:16px;
+	text-align:center;
+	float:left;
+	margin-top:18px;
+	+margin-top:9px;
+	margin-left:5px;
+	+margin-left:2px;
+	}
+.condition ._excel{
+	cursor:pointer;
+	width:93px;
+	height:32px;
+	border:none;
+	background-color:#C00;
+	color:white;
+	font-family:"微软雅黑";
+	font-size:16px;
+	text-align:center;
+	+margin-right:px;
+	float:left;
+	margin-top:18px;
+	+margin-top:9px;
+	margin-left:5px;
+	+margin-left:2px;
+	}
+/*表格样式*/
+#container table{
+	font-family:"微软雅黑";
+	font-size:15px;
+	border-collapse:collapse;
+	text-align:center;
+	}
+#container .firstTr{
+	height:40px;
+	line-height:40px;
+	color:#666;
+	background-color:#E5E9F4;
+	}
+#container .allContent{
+	height:108px;
+	border:1px solid lightgray;
+	line-height:25px;
+	}
+.allContent ._setting a{
+	text-decoration:none;
+	display:block;
+	}
+	
+#container .allContent .tdcls{
+	color:#458BFD;
+	text-decoration:none;
+}
+#container .allContent .tdcls:hover{
+	color:#C00;
+	font-size:18px;
+}
+
+.allContent a:hover{
+	color:#C00;
+	}
+#container .setting_plan{
+	height:25px;
+	}
+#container .setting_plan a{
+	display:block;
+	text-decoration:none;
+	color:#444;
+	height:25px;
+	width:1236px;
+	line-height:25px;
+	border:1px solid black;
+	cursor:pointer;
+	border:1px solid lightgray;
+	background-color:#f2f2f2;
+	}
+#container .setting_plan a img{
+	vertical-align:middle;
+	}
+/*针对单个产品的多个解决方案*/
+.plan_list table{
+	border:1px solid lightgray;
+	border-bottom:none;
+	background-color:#e9f7ff;
+	}
+.plan_list ._title{
+	width:95px;
+	height:60px;
+	border:none;
+	background:none;
+	font-family:"微软雅黑";
+	font-size:18px;
+	color:#333;
+	float:left;
+	}
+.plan_list ._submit1{
+	cursor:pointer;
+	float:right;
+	width:48px;
+	height:25px;
+	background-color:#eeeeee;
+	border:1px solid #999;
+	font-family:"微软雅黑";
+	font-size:15px;
+	text-align:center;
+	margin-right:10px;
+	+margin-right:5px;
+	margin-top:18px;
+	+margin-top:9px;
+	}
+.plan_list .keyWord1{
+	float:right;
+	height:23px;
+	line-height:23px;
+	width:196px;
+	border:1px solid #999;
+	border-right:none;
+	margin-top:18px;
+	+margin-top:9px;
+	}
+.plan_list .plan_list_content{
+	height:90px;
+	line-height:28px;
+	border-bottom:1px solid lightgray;
+	}
+.plan_list .plan_list_content .plan_setting a{
+	display:block;
+	text-decoration:none;
+	}
+.plan_list .plan_list_content a:hover{
+	color:#C00;
+	}
+._color{background-color:#EFEFEF;}
+.d_color{background-color:#DFE8F7;}
+/*分页组件*/
+#kkpager{
+	width:1260px;
+	height:80px;
+	text-align:center;
+	line-height:80px;
+	}

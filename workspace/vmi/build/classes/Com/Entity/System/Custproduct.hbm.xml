@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-5-18 13:32:40 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.Custproduct" table="t_bd_custproduct">
+        <id name="fid" type="string">
+            <column name="FID" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fnumber" type="string">
+            <column name="FNUMBER" length="80" />
+        </property>
+        <property name="fname" type="string">
+            <column name="FNAME" length="80" />
+        </property>
+        <property name="fspec" type="string">
+            <column name="FSPEC" length="45" />
+        </property>
+        <property name="forderunit" type="string">
+            <column name="FORDERUNIT" length="45" />
+        </property>
+        <property name="fcustomerid" type="string">
+            <column name="FCUSTOMERID" length="44" />
+        </property>
+        <property name="fdescription" type="string">
+            <column name="FDESCRIPTION" length="100" />
+        </property>
+        <property name="fcreatorid" type="string">
+            <column name="FCREATORID" length="36" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="FCREATETIME" length="0" />
+        </property>
+        <property name="flastupdateuserid" type="string">
+            <column name="FLASTUPDATEUSERID" length="36" />
+        </property>
+        <property name="flastupdatetime" type="timestamp">
+            <column name="FLASTUPDATETIME" length="0" />
+        </property>
+        <property name="frelationed" type="java.lang.Integer">
+            <column name="Frelationed" />
+        </property>
+        <property name="fmaterial" type="string">
+            <column name="fmaterial" length="80" />
+        </property>
+        <property name="ftilemodel" type="string">
+            <column name="ftilemodel" length="80" />
+        </property>
+        <property name="fcharactername" type="string">
+            <column name="fcharactername" length="100" />
+        </property>
+        <property name="fcharacterid" type="string">
+            <column name="fcharacterid" length="44" />
+        </property>
+        <property name="ftype" type="java.lang.Integer">
+            <column name="ftype" />
+        </property>
+        <property name="feffect" type="java.lang.Integer">
+            <column name="feffect" />
+        </property>
+        <property name="fproductmatching" type="string">
+            <column name="fproductmatching" length="80">
+                <comment>&#183;&#162;&#183;&#197;&#178;&#250;&#198;&#183;&#198;&#165;&#197;&#228;</comment>
+            </column>
+        </property>
+        <property name="fproductid" type="string">
+            <column name="fproductid" length="45">
+                <comment>&#178;&#250;&#198;&#183;ID&#163;&#168;&#191;&#236;&#203;&#217;&#207;&#194;&#181;&#165;&#211;&#195;&#163;&#169;</comment>
+            </column>
+        </property>
+        <property name="fordercount" type="java.lang.Integer">
+            <column name="fordercount">
+                <comment>&#207;&#194;&#181;&#165;&#180;&#206;&#202;&#253;</comment>
+            </column>
+        </property>
+        <property name="forderamount" type="java.lang.Integer">
+            <column name="forderamount">
+                <comment>&#207;&#194;&#181;&#165;&#202;&#253;&#193;&#191;</comment>
+            </column>
+        </property>
+        <property name="fprice" type="big_decimal">
+            <column name="fprice" precision="10" scale="3">
+                <comment>&#181;&#165;&#188;&#219;</comment>
+            </column>
+        </property>
+        <property name="fiscommon" type="java.lang.Boolean">
+            <column name="fiscommon">
+                <comment>&#202;&#199;&#183;&#241;&#179;&#163;&#211;&#195;</comment>
+            </column>
+        </property>
+        <property name="funit" type="string">
+            <column name="funit" length="10">
+                <comment>&#181;&#165;&#206;&#187;</comment>
+            </column>
+        </property>
+         <property name="flastorderfamount" type="java.lang.Integer">
+            <column name="flastorderfamount"/>
+        </property>
+         <property name="flastordertime" type="date">
+            <column name="flastordertime" length="0" />
+        </property>
+          <property name="fisupdate" type="java.lang.Integer">
+            <column name="fisupdate"/>
+        </property>
+         <property name="flastordertype" type="string">
+            <column name="flastordertype" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

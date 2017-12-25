@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"	
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    	http://www.springframework.org/schema/context 
+    	http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    	http://www.springframework.org/schema/tx    	 
+	    http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+	    http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-3.0.xsd" 
+    default-autowire="byName" default-lazy-init="false">
+	
+	<!-- 配置dbcp数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<!--
+		
+		<property name="url" value="jdbc:mysql://121.40.160.69:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="djvmi" />
+		<property name="password" value="djvmi" />
+		
+		<property name="url" value="jdbc:mysql://localhost:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		-->
+		 
+		<property name="url" value="jdbc:mysql://192.168.10.206:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="djvmi" />
+		<property name="password" value="djvmi" />
+		
+		<property name="minIdle" value="1"></property><!-- 队列中的最小等待数 -->
+		<property name="maxIdle" value="5"></property><!-- 队列中的最大等待数 -->
+		<property name="maxWait" value="3000"></property><!-- 最长等待时间，单位毫秒 -->
+		<property name="maxActive" value="300"></property><!-- 最大活跃数 -->
+		<property name="initialSize" value="3"></property>
+	</bean>
+	<!-- 扫描组件-->
+	<context:component-scan base-package="com.**.dao"/>
+	
+	<!-- 事务配置 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 使用注解方式配置事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:com/pc/model/sqlmap/*SqlMap.xml" />
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<!--springmvc支持上传文件 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>  
+    
+<!--     <bean id="couponsDao2" class="com.pc.dao.coupons.impl.CouponsDaoImpl" > </bean> 
+    <bean id="couponsDetailDao2" class="com.pc.dao.couponsDetail.impl.CouponsDetailDaoImpl" > </bean> 
+ -->    
+    <!-- spring定时调度 -->	
+<!-- 	<bean id="delJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.pc.controller.trigger.DelTriggerController"></property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="couponsDao" value-ref="couponsDao2"></entry>
+				<entry key="couponsDetailDao" value-ref="couponsDetailDao2"></entry>
+			</map>
+		</property>
+	</bean> -->
+	
+	<!-- 定时器注册 -->
+	<!-- <bean id="delTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		<property name="jobDetail" ref="delJob" /> 
+		<property name="cronExpression" value="0 0 0 * * ?"></property> 
+	</bean>
+	
+	<bean id="csclTimerTask" class="com.pc.util.CsclTimerTask"></bean> -->
+	<!-- 定时器配置 -->
+	<!-- <bean id="billjob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="csclTimerTask"></property>指定任务类
+		<property name="targetMethod" value="updateOrderStatus"></property>指定任务方法
+	</bean> -->
+	<!-- 生成账单时间间隔触发器    暂时改为定时更新订单状态-->
+	<!-- <bean id="billTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="billjob"></property>
+		<property name="cronExpression">
+			每个月1号1点钟触发
+			<value>0 0 1 1 * ?</value>
+			<value>0 0/15 *  * * ?</value>
+		</property>
+	</bean> -->
+	<!-- 定时任务工厂注册 -->  
+ <!-- 	<bean id="schedulerFactory"  class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no">  
+	    <property name="triggers">  
+	        <list>  
+	            <ref bean="delTrigger" /> 
+	            <ref bean="billTrigger" /> 
+	        </list>  
+	    </property>  
+ 	</bean> -->
+ 	
+ 	<context:component-scan base-package="com.pc.task" />
+	<task:executor id="executor" pool-size="5" />
+	<task:scheduler id="scheduler" pool-size="1" />
+	<task:annotation-driven executor="executor" scheduler="scheduler" />
+ 	
+ 
+</beans>

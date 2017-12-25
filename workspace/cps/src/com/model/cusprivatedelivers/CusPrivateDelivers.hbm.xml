@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.model.cusprivatedelivers.CusPrivateDelivers" table="t_ord_cusprivatedelivers">
+        <id name="fid" type="java.lang.String">
+            <column name="fid" length="44" />
+            <generator class="assigned"></generator>
+        </id>
+        <property name="fcusproduct" type="java.lang.String">
+            <column name="fcusproduct" length="80" />
+        </property>
+        <property name="farrivetime" type="java.sql.Timestamp">
+            <column name="farrivetime" length="0" />
+        </property>
+        <property name="flinkman" type="java.lang.String">
+            <column name="flinkman" length="80" />
+        </property>
+        <property name="flinkphone" type="java.lang.String">
+            <column name="flinkphone" length="80" />
+        </property>
+        <property name="famount" type="java.lang.Integer">
+            <column name="famount" />
+        </property>
+        <property name="faddress" type="java.lang.String">
+            <column name="faddress" length="200" />
+        </property>
+        <property name="fdescription" type="java.lang.String">
+            <column name="fdescription" length="200" />
+        </property>
+        <property name="fcusfid" type="java.lang.String">
+            <column name="fcusfid" length="200" />
+        </property>
+        <property name="fmaktx" type="java.lang.String">
+            <column name="fmaktx" length="200" />
+        </property>
+        <property name="freqaddress" type="java.lang.String">
+            <column name="freqaddress" length="200"/>
+        </property>
+        <property name="fcustomerid" type="java.lang.String">
+            <column name="fcustomerid" length="44" />
+        </property>
+        <property name="freqdate" type="java.sql.Timestamp">
+            <column name="freqdate" length="0" />
+        </property>
+        <property name="fwerkname" type="java.lang.String">
+            <column name="fwerkname" length="200" />
+        </property>
+        <property name="fmakno" type="java.lang.String">
+            <column name="fmakno" length="200" />
+        </property>
+        <property name="fcreatetime" type="java.sql.Timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+        <property name="fcreatorid" type="java.lang.String">
+            <column name="fcreatorid" length="44" />
+        </property>
+        <property name="fmaksupplier" type="java.lang.String">
+            <column name="fmaksupplier" length="44" />
+        </property>
+        <property name="fsupplierid" type="java.lang.String">
+            <column name="fsupplierid" length="44" />
+        </property>
+        <property name="ftype" type="java.lang.Integer">
+            <column name="ftype" />
+        </property>
+        <property name="fordertype" type="java.lang.Integer">
+            <column name="fordertype" />
+        </property>
+        
+          <property name="fnumber" type="java.lang.String">
+            <column name="fnumber" length="80" />
+        </property>
+        
+         <property name="faveragefamount" type="java.lang.Integer">
+            <column name="faveragefamount" />
+        </property>
+    </class>
+</hibernate-mapping>

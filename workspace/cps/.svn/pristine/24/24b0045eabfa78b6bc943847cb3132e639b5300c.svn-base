@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-10-18 16:14:44 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.model.productplan.Productindetail" table="t_inv_productindetail" >
+        <id name="fid" type="string">
+            <column name="fid" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fnumber" type="string">
+            <column name="fnumber" length="80" />
+        </property>
+        <property name="fname" type="string">
+            <column name="fname" length="80" />
+        </property>
+        <property name="fsimplename" type="string">
+            <column name="fsimplename" length="80" />
+        </property>
+        <property name="fcreatorid" type="string">
+            <column name="fcreatorid" length="44" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+        <property name="fupdateuserid" type="string">
+            <column name="fupdateuserid" length="44" />
+        </property>
+        <property name="fupdatetime" type="timestamp">
+            <column name="fupdatetime" length="0" />
+        </property>
+        <property name="ftype" type="int">
+            <column name="FType" not-null="true" />
+        </property>
+        <property name="fsaleOrderId" type="string">
+            <column name="FSaleOrderID" length="36" />
+        </property>
+        <property name="fproductId" type="string">
+            <column name="FProductID" length="44" />
+        </property>
+        <property name="finqty" type="big_decimal">
+            <column name="finqty" precision="28" scale="0" />
+        </property>
+        <property name="fwarehouseId" type="string">
+            <column name="FWarehouseID" length="36" />
+        </property>
+        <property name="fwarehouseSiteId" type="string">
+            <column name="FWarehouseSiteID" length="36" />
+        </property>
+        <property name="fdescription" type="string">
+            <column name="fdescription" length="200" />
+        </property>
+        <property name="faudited" type="java.lang.Integer">
+            <column name="faudited" />
+        </property>
+        <property name="fauditorid" type="string">
+            <column name="fauditorid" length="44" />
+        </property>
+        <property name="faudittime" type="timestamp">
+            <column name="faudittime" length="0" />
+        </property>
+        <property name="fproductplanid" type="string">
+            <column name="fproductplanid" length="44" />
+        </property>
+        <property name="forderentryid" type="string">
+            <column name="forderentryid" length="44" />
+        </property>
+        <property name="fsupplierid" type="string">
+            <column name="FSUPPLIERID" length="44" />
+        </property>
+         <property name="ftraitid" type="string">
+            <column name="FTRAITID" length="44" />
+        </property>
+    </class>
+</hibernate-mapping>

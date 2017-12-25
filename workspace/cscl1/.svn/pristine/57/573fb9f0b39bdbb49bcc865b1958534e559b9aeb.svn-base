@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_CouponsDetail">
+
+    <resultMap id="CL_CouponsDetailMap" type="com.pc.model.CL_CouponsDetail">
+        <result property="id" column="id"/>
+        <result property="couponsId" column="coupons_id"/>
+        <result property="userRoleId" column="user_role_id"/>
+        <result property="isUse" column="is_use"/>
+        <result property="isOverdue" column="is_overdue"/>
+        <result property="creator" column="creator"/>
+        <result property="createTime" column="create_time"/>
+        <result property="startTime" column="fstart_time"/>
+        <result property="endTime" column="fend_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        detail.id ,detail.coupons_id ,detail.user_role_id ,detail.is_use ,detail.is_overdue,detail.creator ,detail.create_time ,detail.fstart_time startTime,detail.fend_time endTime,
+        cps.dollars dollars,
+        cps.compare_dollars compareDollars
+	    ]]>
+	</sql>
+	
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_coupons_detail (
+	        id  ,
+	        coupons_id  ,
+	        user_role_id  ,
+	        is_use  ,
+	        is_overdue ,
+	        creator  ,
+	        create_time  ,
+	        fstart_time  ,
+	        fend_time	
+        ) VALUES (
+        	#{id, jdbcType=INTEGER} ,
+        	#{couponsId, jdbcType=INTEGER} ,
+        	#{userRoleId, jdbcType=INTEGER} ,
+        	#{isUse, jdbcType=INTEGER} ,
+        	#{isOverdue, jdbcType=INTEGER} ,
+        	#{creator, jdbcType=INTEGER} ,
+        	#{createTime, jdbcType=TIMESTAMP} ,
+        	#{startTime, jdbcType=TIMESTAMP} ,
+        	#{endTime, jdbcType=TIMESTAMP} 
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+        UPDATE cl_coupons_detail SET
+	        coupons_id = #{couponsId, jdbcType=INTEGER} ,
+	        user_role_id = #{userRoleId, jdbcType=INTEGER} ,
+	        is_use = #{isUse, jdbcType=INTEGER} ,
+	        is_overdue = #{isOverdue, jdbcType=INTEGER} ,
+	        creator = #{creator, jdbcType=INTEGER} ,
+	        create_time = #{createTime, jdbcType=TIMESTAMP} ,
+	        fstart_time = #{startTime, jdbcType=TIMESTAMP} ,
+	        fend_time = #{endTime, jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    <!-- 将领取的优惠券更新为过期 -->
+    <update id="updateCouponsDetail">
+        update cl_coupons_detail  set is_overdue =1 WHERE
+        id IN 
+		<foreach item="item" collection="ids" open="("
+				separator="," close=")">
+				#{item}
+		</foreach>
+    </update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_coupons_detail WHERE
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_CouponsDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_coupons_detail detail
+	        LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+	        WHERE 
+		        detail.id = #{id} 
+	    ]]>
+    </select>
+    
+     <select id="getByUserRoleId" resultMap="CL_CouponsDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_coupons_detail detail
+	        LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+	        WHERE 
+		        detail.user_role_id=#{userRoleId} and detail.is_use=#{isUse}
+	    ]]>
+    </select>
+    
+     <select id="IsExistByUserRoleId" resultMap="CL_CouponsDetailMap">
+     	SELECT id 
+	    <![CDATA[
+	        FROM cl_coupons_detail WHERE coupons_id in (7,8,9) and user_role_id=#{userRoleId} 
+	    ]]>
+    </select>
+    
+    <select id="getByCouponsId" resultMap="CL_CouponsDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_coupons_detail detail
+	        LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+	        WHERE detail.coupons_id = #{couponsId}  AND  cps.type in (2,1)
+	    ]]>
+    </select>
+    
+    <select id="getByCouponsId2" resultMap="CL_CouponsDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_coupons_detail detail
+	        LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+	        WHERE detail.coupons_id = #{couponsId}
+	    ]]>
+    </select>
+    
+    <select id="getBeOverdueCouponsDetail" resultType="int">
+    	select detail.id from  cl_coupons_detail detail
+					WHERE  detail.is_overdue=0 AND DATE_FORMAT(detail.fend_time ,'%Y-%m-%d') &lt; DATE_FORMAT(now(),'%Y-%m-%d')
+	</select>
+    
+
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(id)">
+			    AND detail.id = #{id}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(couponsId)">
+			    AND detail.coupons_id = #{couponsId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(userRoleId)">
+			    AND detail.user_role_id = #{userRoleId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(isUse)">
+			    AND detail.is_use = #{isUse}
+			</if>
+			<if test="@Ognl@isNotEmpty(isOverdue)">
+			    AND detail.is_overdue = #{isOverdue}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(creator)">
+			    AND detail.creator = #{creator}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeBegin)">
+		   		AND detail.create_time >= #{createTimeBegin}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeEnd)">
+		   		AND detail.create_time &lt; #{createTimeEnd}
+		   	</if>
+		   	AND cps.is_effective =1
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_coupons_detail detail
+        LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+        <include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CL_CouponsDetailMap">
+    	SELECT <include refid="columns"/> FROM cl_coupons_detail detail
+    	LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+		<include refid="findWhere"/>
+		ORDER BY detail.is_use asc , detail.is_overdue asc,detail.create_time desc
+    </select>
+
+	
+	<select id="find" resultMap="CL_CouponsDetailMap">
+	    SELECT <include refid="columns"/> FROM cl_coupons_detail detail
+	    LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY detail.create_time ASC
+		</if>
+    </select>
+	
+	<select id="getCountByUserCoupon" resultType="int">
+		SELECT COUNT(1) FROM cl_coupons_detail WHERE coupons_id = #{couponsId} AND user_role_id = #{userId}
+    </select>
+    
+    <select id="getEffective" resultMap="CL_CouponsDetailMap">
+	    SELECT <include refid="columns"/> 
+	    FROM cl_coupons_detail detail LEFT JOIN cl_coupons cps on cps.id = detail.coupons_id
+		where  detail.is_use = #{is_use} and detail.is_overdue= #{is_overdue} and detail.user_role_id = #{userRoleId} and cps.is_effective =1 
+    </select>
+    
+</mapper>
+

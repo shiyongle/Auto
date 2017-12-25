@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Coupons">
+
+    <resultMap id="Cl_CouponsMap" type="com.pc.model.CL_Coupons">
+         <result property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="batchNumber" column="batch_number"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="dollars" column="dollars"/>
+        <result property="compareDollars" column="compare_dollars"/>
+        <result property="redeemCode" column="redeem_code"/>
+        <result property="isEffective" column="is_effective"/>
+        <result property="isOverdue" column="is_overdue"/>
+        <result property="salesMan" column="sales_man"/>
+        <result property="describes" column="describes"/>
+        <result property="creator" column="creator"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        cp.id ,cp.type ,cp.batch_number,cp.start_time ,cp.end_time ,cp.dollars ,cp.compare_dollars ,cp.redeem_code ,cp.is_effective ,cp.is_overdue,cp.sales_man ,cp.describes ,
+        cp.creator ,u1.vmi_user_name creatorName,
+        cp.create_time 
+	    ]]>
+	</sql>
+	
+	<sql id="singlecolumns">
+	    <![CDATA[
+        cp.id ,cp.type ,cp.batch_number,cp.start_time ,date_add(NOW(), interval 1 month) end_time ,cp.dollars ,cp.compare_dollars ,cp.redeem_code ,cp.is_effective ,cp.is_overdue,cp.sales_man ,cp.describes ,
+        cp.creator ,u1.vmi_user_name creatorName,
+        cp.create_time ,
+        if((select d.id from cl_coupons_detail d where d.coupons_id = cp.id and d.creator=#{isReceive} ) is null,0,1) isReceive 
+	    ]]>
+	</sql>
+	
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"  >
+    <![CDATA[
+        INSERT INTO cl_coupons (
+	        id  ,
+	        type  ,
+	        batch_number ,
+	        start_time  ,
+	        end_time  ,
+	        dollars  ,
+	        compare_dollars  ,
+	        redeem_code  ,
+	        is_effective  ,
+	        is_overdue  ,
+	        sales_man  ,
+	        describes  ,
+	        creator  ,
+	        create_time  
+        ) VALUES (
+        	#{id, jdbcType=INTEGER} ,
+        	#{type, jdbcType=INTEGER} ,
+        	#{batchNumber, jdbcType=VARCHAR} ,
+        	#{startTime, jdbcType=TIMESTAMP} ,
+        	#{endTime, jdbcType=TIMESTAMP} ,
+        	#{dollars, jdbcType=DECIMAL} ,
+        	#{compareDollars, jdbcType=DECIMAL} ,
+        	#{redeemCode, jdbcType=VARCHAR} ,
+        	#{isEffective, jdbcType=INTEGER} ,
+        	#{isOverdue, jdbcType=INTEGER} ,
+        	#{salesMan, jdbcType=VARCHAR} ,
+        	#{describes, jdbcType=VARCHAR} ,
+        	#{creator, jdbcType=INTEGER} ,
+        	#{createTime, jdbcType=TIMESTAMP} 
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+        UPDATE cl_coupons SET
+	        type = #{type, jdbcType=INTEGER} ,
+	        batch_number = #{batchNumber, jdbcType=VARCHAR} ,
+	        start_time = #{startTime, jdbcType=TIMESTAMP} ,
+	        end_time = #{endTime, jdbcType=TIMESTAMP} ,
+	        dollars = #{dollars, jdbcType=DECIMAL} ,
+	        compare_dollars = #{compareDollars, jdbcType=DECIMAL} ,
+	        redeem_code = #{redeemCode, jdbcType=VARCHAR} ,
+	        is_effective = #{isEffective, jdbcType=INTEGER} ,
+	        is_overdue = #{isOverdue, jdbcType=INTEGER} ,
+	        sales_man = #{salesMan, jdbcType=VARCHAR} ,
+	        describes = #{describes, jdbcType=VARCHAR} ,
+	        creator = #{creator, jdbcType=INTEGER} ,
+	        create_time = #{createTime, jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    <!-- 批量更新失效/有效 -->
+    <update id="updatepl" >
+        UPDATE cl_coupons SET
+	        is_effective = #{isEffective, jdbcType=INTEGER} 
+        WHERE id IN
+         <foreach item="item" collection="ids" open="("
+                  separator="," close=")">
+             #{item}
+         </foreach>
+    </update>
+    <!--  -->
+    <delete id="deletepl" >
+        DELETE FROM cl_coupons WHERE id IN
+         <foreach item="item" collection="ids" open="("
+                  separator="," close=")">
+             #{item}
+         </foreach>
+    </delete>
+
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_coupons WHERE
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="Cl_CouponsMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_coupons cp
+	        LEFT JOIN cl_user_role u1 on u1.id = cp.creator
+	        WHERE cp.id = #{id} 
+	    ]]>
+    </select>
+    
+    <select id="getByRedeemCode" resultMap="Cl_CouponsMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_coupons cp
+	        LEFT JOIN cl_user_role u1 on u1.id = cp.creator
+	        WHERE cp.redeem_code = #{redeemCode} AND  cp.type=1  AND cp.is_overdue =0
+	    ]]>
+    </select>
+    
+    <select id="getByRedeemCodeForACTIVE" resultMap="Cl_CouponsMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_coupons cp
+	        LEFT JOIN cl_user_role u1 on u1.id = cp.creator
+	        WHERE cp.redeem_code = #{redeemCode} AND  cp.type=1 AND cp.is_effective =1  AND cp.is_overdue =0
+	        AND DATE_FORMAT(cp.start_time ,'%Y-%m-%d') <= DATE_FORMAT(now(),'%Y-%m-%d')
+	        AND DATE_FORMAT(cp.end_time   ,'%Y-%m-%d') >= DATE_FORMAT(now(),'%Y-%m-%d')
+	    ]]>
+    </select>
+    
+    
+    <select id="getBeOverdueCoupons" resultType="int">
+		select cp.id from  cl_coupons cp 
+					WHERE  cp.is_overdue=0 AND DATE_FORMAT(cp.end_time ,'%Y-%m-%d') &lt; DATE_FORMAT(now(),'%Y-%m-%d')
+	</select>
+    
+    <!-- 将领取的优惠券更新为过期 -->
+    <update id="updateCoupons">
+        update cl_coupons  set is_overdue =1 WHERE id IN 
+		<foreach item="item" collection="ids" open="("
+				separator="," close=")">
+				#{item}
+		</foreach>
+    </update>
+    
+
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(id)">
+			    AND cp.id = #{id}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(type)">
+			    AND cp.type = #{type}
+			</if>
+			<if test="@Ognl@isNotEmpty(batchNumber)">
+			    AND cp.batch_number LIKE CONCAT('%',#{batchNumber},'%')
+			</if>
+		   	<if test="@Ognl@isNotEmpty(startTime)">
+		   		AND cp.start_time >= #{startTime}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(endTime)">
+		   		AND cp.end_time &lt; #{endTime}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(isEffective)">
+			    AND cp.is_effective = #{isEffective}
+			</if>
+			<if test="@Ognl@isNotEmpty(isOverdue)">
+			    AND cp.is_overdue = #{isOverdue}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(creator)">
+			    AND cp.creator = #{creator}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeBegin)">
+		   		AND cp.create_time >= #{createTimeBegin}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeEnd)">
+		   		AND cp.create_time &lt; #{createTimeEnd}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(ids)">
+   		     	o.id IN <foreach item="item" collection="ids" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+   			</if>
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_coupons cp<include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="Cl_CouponsMap">
+    	SELECT <include refid="columns"/> 
+    	FROM cl_coupons cp
+	    LEFT JOIN cl_user_role u1 on u1.id = cp.creator
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY cp.create_time ASC
+		</if>
+    </select>
+
+	
+	<select id="find" resultMap="Cl_CouponsMap">
+	    SELECT <include refid="columns"/> 
+	    FROM cl_coupons cp
+	    LEFT JOIN cl_user_role u1 on u1.id = cp.creator
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY cp.create_time ASC
+		</if>
+    </select>
+    
+    
+    <select id="getFooter" resultMap="Cl_CouponsMap">
+	    SELECT 
+	    '合计' batchNumber,
+	    sum(cp.dollars)  dollars,
+	    sum(cp.compare_dollars) compareDollars
+	    FROM cl_coupons cp
+	    LEFT JOIN cl_user_role u1 on u1.id = cp.creator
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY cp.create_time ASC
+		</if>
+    </select>
+	
+	
+	 <select id="singleFindPageCount" resultType="long">
+        SELECT count(*) FROM cl_coupons cp<include refid="findWhere"/>    
+    </select>
+    
+    <select id="singleFindPage" resultMap="Cl_CouponsMap">
+    	SELECT <include refid="singlecolumns"/> 
+    	FROM cl_coupons cp
+	    LEFT JOIN cl_user_role u1 on u1.id = cp.creator
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY cp.create_time ASC
+		</if>
+    </select>
+	
+</mapper>
+

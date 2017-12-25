@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-9-27 11:29:09 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.order.Productstructure" table="t_ord_productstructure">
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fname" type="string">
+            <column name="fname" length="100" />
+        </property>
+        <property name="fnumber" type="string">
+            <column name="fnumber" length="100" />
+        </property>
+        <property name="fcustomerid" type="string">
+            <column name="fcustomerid" length="44" />
+        </property>
+        <property name="fversion" type="string">
+            <column name="fversion" length="20" />
+        </property>
+        <property name="fboxlength" type="big_decimal">
+            <column name="fboxlength" precision="28" scale="1" />
+        </property>
+        <property name="fboxwidth" type="big_decimal">
+            <column name="fboxwidth" precision="28" scale="1" />
+        </property>
+        <property name="fboxheight" type="big_decimal">
+            <column name="fboxheight" precision="28" scale="1" />
+        </property>
+        <property name="fmaterialcodeid" type="string">
+            <column name="fmaterialcodeid" length="44" />
+        </property>
+        <property name="fparentid" type="string">
+            <column name="fparentid" length="44" />
+        </property>
+        <property name="schemedesignid" type="string">
+            <column name="schemedesignid" length="44" />
+        </property>
+        <property name="subProductAmount" type="java.lang.Integer">
+            <column name="subProductAmount" />
+        </property>
+        <property name="fsupplierid" type="string">
+            <column name="fsupplierid" length="44" />
+        </property>
+    </class>
+</hibernate-mapping>

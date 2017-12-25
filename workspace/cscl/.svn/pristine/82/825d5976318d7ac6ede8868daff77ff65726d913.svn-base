@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Util_Option">
+
+    <resultMap id="OptionMap" type="com.pc.model.Util_Option">
+     	<result property="id" column="id"/>
+        <result property="opitonId" column="opitonId"/>
+        <result property="opitonName" column="opitonName"/>
+        <result property="optionVal"  column="optionVal"/>
+        <result property="optionWe"  column="optionWe"/>
+       <result property="optionFc"  column="optionFc"/>
+    </resultMap>
+    
+	<!-- 获取所有的车辆规格 -->
+    <select id="getAllCarType" resultMap="OptionMap">
+	    SELECT 
+	    	id     optionId ,
+	    	name   optionName ,
+	    	cl_car_spec.weight optionWe, <!-- 核载重量（吨）-->
+	    	cl_car_spec.volume optionVal  <!-- 体积（立方米）-->
+	    FROM CL_CAR_SPEC WHERE is_active =1
+	</select>
+	
+	<!-- 获取所有的车辆规格 -->
+    <select id="getAllCarType1" resultMap="OptionMap">
+	    SELECT 
+	    	id     optionId ,
+	    	name   optionName ,
+	    	cl_car_spec.weight optionWe, <!-- 核载重量（吨）-->
+	    	cl_car_spec.volume optionVal  <!-- 体积（立方米）-->
+	    FROM CL_CAR_SPEC 
+	</select>
+	
+  <!-- 获取所有的货主 -->
+    <select id="getByRoleId" resultMap="OptionMap">
+	    SELECT 
+	     id     optionId ,
+	     vmi_user_name  optionName 
+	    FROM  CL_USER_ROLE  WHERE role_id=1
+	</select>
+	
+  <!-- 获取所有提交认证的用户 -->
+    <select id="getByIdentify" resultMap="OptionMap">
+	    SELECT 
+	     user_role_id     optionId ,
+	     name  optionName 
+	    FROM  CL_IDENTIFICATION
+	</select> 
+	
+	<!--查找版本号  -->
+   <select id="getVersion2" resultMap="OptionMap">
+	    SELECT 
+	      fid    optionId ,
+	      fversion optionName,
+	      fversion_name optionCarOtherName,
+	      fremark optionVal ,
+	      furl optionWe,
+	      forcel optionFc
+	    FROM  CL_VERSION  WHERE  ftype=#{ftype}  order by fid desc limit 1 
+	</select>
+	<!--
+  <select id="getVersion" resultMap="OptionMap">
+	    SELECT 
+	      fid    optionId ,
+	      fversion optionName,
+	      fremark optionVal ,
+	      furl optionWe,
+	      forcel optionFc
+	    FROM  CL_VERSION  WHERE  ftype=#{ftype} and forcel = 1
+	</select>
+	-->
+	 
+	
+	 <!-- 获取所有的车主 -->
+    <select id="getByRoleCarId" resultMap="OptionMap">
+	    SELECT 
+	     id     optionId ,
+	     vmi_user_name  optionName 
+	    FROM  CL_USER_ROLE  WHERE role_id=2
+	</select>
+	
+	 <!-- 获取所有的用户 -->
+    <select id="getAll" resultMap="OptionMap">
+	    SELECT 
+	     id     optionId ,
+	     vmi_user_name  optionName 
+	    FROM  CL_USER_ROLE 
+	    order by vmi_user_name,id
+	</select>
+	
+	<!-- 获取车辆规格对应的车型 -->
+	<select id="getAllCarSpecByCarType" resultMap="OptionMap">
+	    SELECT 
+	    	id     optionId,
+	    	name   optionName
+	    FROM CL_CAR_type
+	    where car_spec_id=#{carSpecId} and is_active = 1
+	</select>
+	
+		<!-- 获取所有的协议零担单位-->
+	<select id="getByUnit" resultMap="OptionMap">
+	    SELECT 
+	    	id     optionId,
+	    	name   optionName
+	    FROM CL_UNIT   
+	</select>
+	
+		
+	<!-- 获取车辆规格对应的其他要求 -->
+	<select id="getOtherByCarSpec" resultMap="OptionMap">
+	    SELECT 
+	    	id     optionId,
+	    	name   optionName
+	    FROM CL_CAR_OTHER
+	    where car_spec_id=#{carSpecId}
+	</select>
+	
+	<!-- 获取所有的货物类型 -->
+    <select id="getAllGoodsType" resultMap="OptionMap">
+	    SELECT 
+	    	id     optionId ,
+	    	name   optionName  
+	    FROM CL_GOODS_TYPE
+	</select>
+	
+	<!-- 根据订单id获取订单对应的车辆规格 -->
+    <select id="getCarSpecByOrderId" resultMap="OptionMap">
+	 SELECT 
+		DISTINCT
+		spec.id   optionId,
+		spec.name optionName
+	FROM cl_order_car_detail detail
+	LEFT JOIN cl_car_spec spec on spec.id = detail.car_spec_id
+	where detail.order_id=#{orderId} AND spec.is_active =1
+	</select>
+	
+	<!-- 根据订单id获取订单对应的车辆类型 -->
+    <select id="getCarTypeByOrderId" resultMap="OptionMap">
+	   SELECT 
+			DISTINCT
+			spec.id   id,
+			type.id   optionId,
+			type.name optionName
+	   FROM cl_order_car_detail detail
+	   LEFT JOIN cl_car_type type on type.id = detail.car_type_id
+	   LEFT JOIN cl_car_spec spec on spec.id= detail.car_spec_id
+	   WHERE detail.order_id=#{orderId} AND spec.is_active =1
+	</select>
+	
+	 
+		
+	<!-- 根据订单id获取订单对应的车辆类型Name -->
+    <select id="getCarTypeByOrderIdName" resultMap="OptionMap">
+	   SELECT 
+			DISTINCT
+			spec.id     optionId,
+			spec.name    optionName,
+			type.name    optionCarTypeName,
+			other.name   optionCarOtherName
+	   FROM cl_order_car_detail detail
+	   LEFT JOIN cl_car_type type on type.id = detail.car_type_id
+	   LEFT JOIN cl_car_spec spec on spec.id= detail.car_spec_id
+	   LEFT JOIN cl_car_other other on other.id= detail.car_other_id
+	   WHERE detail.order_id=#{orderId} AND spec.is_active =1
+	</select>
+	
+    <select id="getCarTypeByOrderIdName2" resultMap="OptionMap">
+	   SELECT 
+			DISTINCT
+			spec.id     optionId,
+			spec.name    optionName,
+			type.name    optionCarTypeName,
+			other.name   optionCarOtherName
+	   FROM cl_order_car_detail detail
+	   LEFT JOIN cl_car_type type on type.id = detail.car_type_id
+	   LEFT JOIN cl_car_spec spec on spec.id= detail.car_spec_id
+	   LEFT JOIN cl_car_other other on other.id= detail.car_other_id
+	   WHERE detail.order_id=#{orderId}
+	</select>
+	
+	<!-- 根据车型ID获取司机 -->
+    <select id="getDriverByCarTypeId" resultMap="OptionMap">
+	 SELECT 
+		user_role_id   optionId,
+		driverName  optionName
+	FROM cl_car where car_spec_id =#{carSpecId}  and carType =#{carTypeId}
+	</select>
+	<!-- 获取所有司机-->
+    
+    <select id="getAllDrivers" resultMap="OptionMap">
+		SELECT cl_car.user_role_id   optionId,cl_car.driverName  optionName,cl_car.car_spec_id optionFc,cl_car_spec.name optionWe FROM cl_car 
+		JOIN cl_user_role ON cl_user_role.id = cl_car.user_role_id 
+		join cl_car_spec on cl_car.car_spec_id = cl_car_spec.id
+		WHERE cl_user_role.role_id = 2
+	</select>
+	
+	<!-- 获取所有货主
+    <select id="getAllHuos" resultMap="OptionMap">
+	 SELECT user_role_id   optionId,driverName  optionName FROM cl_car 
+	</select>-->
+	
+	
+		
+	<!-- 根据协议表的零担类型规则ID获取零担类型规则 -->
+    <select id="getByOtherTypeByUnit" resultMap="OptionMap">
+	 SELECT 
+		id   optionId,
+		name  optionName
+	FROM  CL_UNIT
+	</select>
+	
+	<!-- 获取排除已指派优惠券剩余的所有货主 -->
+    <select id="getAllConsignor" resultMap="OptionMap">
+	 SELECT 
+		id   optionId,
+		vmi_user_name  optionName
+	FROM cl_user_role 
+	WHERE role_id =1  AND  id  not in (select detail.user_role_id from cl_coupons_detail detail where detail.coupons_id =#{couponsId})
+	</select>
+	
+	<!-- 获得所有（下拉）客户 -->
+    <select id="getAllCustId" resultMap="OptionMap">
+	 SELECT fid optionId,fname optionName FROM cl_user_customer
+	</select>
+	
+    <!-- 获得所有（下拉）已完成订单 -->
+    <select id="getFinishOrders" resultMap="OptionMap">
+<!-- 	 SELECT id optionId,number optionName FROM cl_order WHERE STATUS>3 AND STATUS &lt;>6 -->
+		 SELECT id optionId,number optionName FROM cl_order where user_role_id is not null and STATUS in (4,5) and fpay_Method &lt;>4
+	</select>
+	
+	
+	 <!-- 查询每月完成的订单数 根据 司机或者货主 -->
+    <select id="find" resultMap="OptionMap">
+	 SELECT   date_format(create_time,'%c') as optionId ,COUNT(id) as optionNum
+           FROM cl_order
+       	<include refid="findWhere"/>
+           GROUP BY optionId 
+	</select>
+	
+   <select id="findOrderByType" resultMap="OptionMap">
+      SELECT type as optionId ,count(type) as optionNum FROM cl_order
+        <include refid="findWhere"/> 
+       GROUP BY optionId
+    </select>
+	 <select id="findOrderByTypeCount" resultType="long">
+        SELECT count(id) FROM cl_order <include refid="findWhere"/>    
+    </select>
+	 <sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(userRoleId)">
+			    AND user_role_id = #{userRoleId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(creator)">
+			    AND creator = #{creator}
+			</if>
+	    </where>
+	</sql>
+	
+ 	<!-- 查询所有客户 -->
+	 <select id="getAllCustomerNew" resultMap="OptionMap">
+		select ur.id as optionWe, ur.vmi_user_name, uc.fname as optionName from cl_user_role ur 
+		JOIN cl_user_customer uc on uc.fuser_role_id = ur.id 
+		where ur.id in(select user_role_id from cl_address)  
+		and ur.role_id = 1 
+		and ur.is_pass_identify=1 
+	</select>  
+	
+	<!-- 查询所有客户,客户id对应的地址 -->
+	<select id="getAllCustomer" resultMap="OptionMap">
+		select address.id as optionId,address.user_role_id as optionWe,address.address_name as optionVal,user.vmi_user_name as optionName from cl_address address
+		 join cl_user_role user on address.user_role_id = user.id
+			<where>
+				<if test="@Ognl@isNotEmpty(type)">
+					and type = #{type}
+				</if>
+				<if test="@Ognl@isNotEmpty(userRoleId)">
+					and user_role_id = #{userRoleId}
+				</if>
+			</where>
+	</select>
+	
+	<!-- 查询所有客户 -->
+	<select id="getAllCus" resultMap="OptionMap">
+		select ur.id as optionId,uc.fname as optionName,ur.vmi_user_phone as optionWe from cl_user_role ur
+		join cl_user_customer uc on ur.id = uc.fuser_role_id
+		where ur.is_pass_identify=1
+	</select>
+	
+	<!-- 查询所有司机 -->
+	<select id="getAllDriver" resultMap="OptionMap">
+		select ur.id as optionId,uc.driverName as optionName,ur.vmi_user_phone as optionWe from cl_user_role ur
+		join cl_car uc on ur.id = uc.user_role_id
+		where ur.is_pass_identify=1
+	</select>
+	
+	<select id="getUseFactory" resultMap="OptionMap">
+		select factory_id optionId,factory optionName from cl_factory where fstatus = 1
+	</select>
+	
+	<select id="getAllProvince" resultMap="OptionMap">
+		select fprovince_id optionId,fprovince optionName from cl_province
+	</select>
+	
+	<select id="getAllCity" resultMap="OptionMap">
+		select fcity_id optionId,fcity optionName from cl_city where fprovince_id = #{fprovince_id}
+	</select>
+	
+	<select id="getAllArea" resultMap="OptionMap">
+		select farea_id optionId,farea optionName from cl_activearea where fcity_id = #{fcity_id}
+	</select>
+	
+	<!-- 前端暂时写死，后备 -->
+	<select id="getAllArea2" resultMap="OptionMap">
+		select farea_id optionId,farea optionName from cl_activearea
+	</select>
+	
+	<!-- 查询所有有效的通用增值服务 -->
+	<select id="getEffectiveAllGeneralAdd" resultMap="OptionMap">
+		select faddservice_id optionId,faddservice_name optionName from cl_addservice where fstatus = 1 and ftype = 1
+	</select>
+	
+
+	<select id="getAllCoupons" resultMap="OptionMap">
+		select id optionId,fcoupons_name optionName from cl_coupons order by create_time desc
+	</select>
+	
+</mapper>
+

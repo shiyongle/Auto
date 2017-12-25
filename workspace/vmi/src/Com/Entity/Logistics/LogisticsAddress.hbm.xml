@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-7-22 14:58:51 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="Com.Entity.Logistics.LogisticsAddress" table="t_bd_logisticsaddress">
+        <id name="fid" type="string">
+            <column name="FID" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fname" type="string">
+            <column name="FNAME" length="80" />
+        </property>
+        <property name="flinkman" type="string">
+            <column name="FLINKMAN" length="80" />
+        </property>
+        <property name="fphone" type="string">
+            <column name="FPHONE" length="80" />
+        </property>
+        <property name="fcreatorid" type="string">
+            <column name="FCREATORID" length="36" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="FCREATETIME" length="0" />
+        </property>
+        <property name="flastupdateuserid" type="string">
+            <column name="FLASTUPDATEUSERID" length="36" />
+        </property>
+        <property name="flastupdatetime" type="timestamp">
+            <column name="FLASTUPDATETIME" length="0" />
+        </property>
+        <property name="ftype" type="java.lang.Integer">
+            <column name="FTYPE" />
+        </property>
+        <property name="fcustomerid" type="string">
+            <column name="FCUSTOMERID" length="44" />
+        </property>
+        <property name="flasted" type="java.lang.Integer">
+            <column name="flasted"  />
+        </property>
+    </class>
+</hibernate-mapping>

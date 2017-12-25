@@ -1,0 +1,103 @@
+*{ margin:0; padding:0}
+body{font-family:"ËÎÌå",Arial,Lucida,Verdana,Helvetica,sans-serif; font-size:14px;color:#666666; background:#f0efed;}
+img{border:0px;}
+a{ cursor:pointer;}
+a:link {text-decoration: none;color: #666666;}
+a:visited {text-decoration: none;color: #666666;}
+a:hover {text-decoration: none;color: #68aedd;}
+a:active {text-decoration: none;color: #68aedd;}
+.clear{ clear:both;}
+ul li{ list-style:none;}
+
+
+
+#container{
+    width: 1076px;
+	margin:0 auto;
+	overflow:hidden;
+}
+#container .p1{
+	width: 1070px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 12px;
+}
+
+.show_list_main{
+	width:1070px;
+	overflow:hidden;
+	background:#fff;
+}
+
+.publish{
+	padding:20px 12px;
+	border-bottom:1px solid #ccc;
+	height:35px;
+	}
+.publish a.publish_a{
+	width:120px;
+	height:40px;
+	line-height:40px;
+	background:#e03d46;
+	display:block;
+	text-align:center;
+	font-size:18px;
+	color:#fff;
+	border-radius:4px;
+	float:left;
+	}
+.publish a.publish_a:hover{color:#fff;}
+
+.searchButton{height:32px;
+    line-height:30px;
+    width:30px;
+    background:url(/cps/css/images/fdj1.png) white 5px 5px no-repeat;
+    cursor:pointer;
+    border:1px solid lightgray;
+    border-left:0px;
+    float:right;
+    }
+.searchKey{ float:right; width:200px !important; padding-left:10px; outline:none;}
+.publish input[type=text]{
+		width:300px;
+		height:30px;
+		border:1px solid lightgray;
+}
+#searchForm{ float:right;}
+	
+.product_list{ overflow:hidden; width:1048px; margin:10px auto;}
+.product_list ul{ overflow:hidden;margin:0px;padding:0; margin-top:10px;}
+.product_list ul li{ list-style:none; width:100px; height:325px; width:255px; float:left; margin-right:5px; margin-bottom:30px; overflow:hidden; border:1px solid #ccc; position:relative;}
+.product_list ul li .product_img img{width:255px; height:175px;}
+.masker{
+	width:255px; 
+	height:175px;
+	 position:absolute; 
+	 left:0; top:0; 
+	 text-align:center;
+	 opacity:0.7;
+	 filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);/*ä¯ÀÀÆ÷¼æÈÝÍ¸Ã÷¶È*/
+	 color:#fff; background:#000; 
+	 line-height:175px; 
+	 overflow:hidden;
+	 display:none;}
+.product_name{ padding:20px 5px 10px 5px; font-size:13px; height:40px; overflow:hidden;}
+.product_date{ padding:5px; font-size:12px;}
+.product_option{ margin:20px 5px 0px 5px; overflow:hidden; position:relative;}
+.product_state{ position:absolute; left:88px; top:2px; display:none;}
+.product_option a{color:#68aedd;}
+.product_option a:hover{color:#cc0000;}
+.product_edit{ float:left;}
+.product_edit img{ margin-bottom:-4px; margin-right:5px;}
+.product_del{ float:right;}
+.product_del img{ margin-right:5px;}
+
+#kkpager{
+		width:1000px;
+		height:180px;
+		line-height:100px;
+		text-align:right;
+		padding-right:50px;
+		background-color:white;
+		margin:0 auto;
+}

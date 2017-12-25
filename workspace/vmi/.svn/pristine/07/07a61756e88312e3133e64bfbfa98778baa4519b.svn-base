@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-12-30 16:14:52 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.Finance.Gathering" table="t_bal_gathering" >
+        <id name="fid" type="string">
+            <column name="FID" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fnumber" type="string">
+            <column name="FNUMBER" length="80" />
+        </property>
+        <property name="fbizdate" type="timestamp">
+            <column name="FBIZDATE" length="0" />
+        </property>
+        <property name="fcreatorid" type="string">
+            <column name="FCREATORID" length="44" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="FCREATETIME" length="0" />
+        </property>
+        <property name="fdeliverapplyid" type="string">
+            <column name="FDELIVERAPPLYID" length="44" />
+        </property>
+        <property name="fsaledeliverid" type="string">
+            <column name="FSALEDELIVERID" length="44" />
+        </property>
+        <property name="fsaledeliverentryid" type="string">
+            <column name="FSALEDELIVERENTRYID" length="44" />
+        </property>
+        <property name="fcustproductid" type="string">
+            <column name="FCUSTPRODUCTID" length="44" />
+        </property>
+        <property name="famount" type="big_decimal">
+            <column name="FAMOUNT" precision="28" scale="10" />
+        </property>
+        <property name="fprice" type="big_decimal">
+            <column name="FPRICE" precision="28" scale="10" />
+        </property>
+        <property name="fsum" type="big_decimal">
+            <column name="FSUM" precision="28" scale="10" />
+        </property>
+        <property name="fdeliverorderid" type="string">
+            <column name="FDELIVERORDERID" length="44" />
+        </property>
+        <property name="fdeliversid" type="string">
+            <column name="FDELIVERSID" length="44" />
+        </property>
+        <property name="fproductplanid" type="string">
+            <column name="FPRODUCTPLANID" length="44" />
+        </property>
+    </class>
+</hibernate-mapping>

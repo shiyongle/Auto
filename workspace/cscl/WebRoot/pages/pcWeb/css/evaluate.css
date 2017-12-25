@@ -1,0 +1,115 @@
+@charset "utf-8";
+.main{
+	background-color:#ffffff!important;
+	overflow:hidden;
+/* 	margin-top:50px; */
+/* 	margin-bottom:20px; */
+}
+/*用户信息*/
+.main_top{
+	padding:30px;
+	border-bottom: 1px solid #ECECED;
+}
+.score{
+	color:#ffffff;
+	background-color:#FFBE58;
+	padding:2px;
+	border-radius:45%;
+}
+
+/*评价部分*/
+.main_bottom{
+	padding:30px;
+}
+
+/*表单*/
+#evaluateType{
+	display:none; 
+}
+/*好/差评*/
+.evaluate_good,.evaluate_bad{
+	cursor:pointer;
+	display:inline-block;
+	padding:6px 23px 6px 12px;
+	position:relative;
+	margin-bottom:25px;
+}
+.evaluate_good{
+	border:2px solid #E44349;
+}
+.evaluate_bad{
+	border:2px solid #C5C5C5;
+	margin-left:30px;
+}
+.evaluate_good span,.evaluate_bad span{
+	margin-left:12px;
+}
+.evaluate_good img:nth-child(3),.evaluate_bad img:nth-child(3){
+	position:absolute;
+	bottom:0;
+	right:0;
+}
+.evaluate_bad img:nth-child(3){
+	display:none;
+}
+/*星星*/
+.star{
+	margin-bottom: 25px;
+	width:300px;
+}
+.star div{
+	display:inline-block;
+	margin:10px 0;
+}
+.star div img{
+	cursor:pointer;
+	margin:2px;
+}
+.star div:nth-child(1) span{
+	 word-spacing:5px;
+}
+.star div:nth-child(2) span{
+	 word-spacing:17px;
+}
+
+@media only screen and (max-width: 400px) {
+	.main_top,.main_bottom{padding:10px;}
+	.main_top div:nth-child(2){padding-left:30px;}
+}
+@media only screen and (min-width: 500px) and (max-width: 768px) {
+	.main_top div:nth-child(2){margin-left:-30px;}
+}
+@media only screen and (min-width: 585px) {
+	.main_bottom textarea{width:540px;}
+}
+
+/*表单验证提示*/
+.star > div{
+	position:relative;
+}
+.star div a{
+	position:absolute;
+	left:40px;
+	top:15px;
+}
+
+
+/*司机评价货主*/
+.grade,.man{
+	width:165px;
+	overflow:hidden;
+	text-align:center;
+}
+.grade{
+	color:#ffb53f;	
+}
+.grade font{
+	font-size:28px;
+	font-weight:bold;
+}
+.man{display:none;}
+
+/*司机评价货主查看*/
+.evaluate-list font{
+	color:#ccc
+}

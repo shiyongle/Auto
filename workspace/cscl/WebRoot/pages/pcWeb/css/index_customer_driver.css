@@ -1,0 +1,148 @@
+.container{
+	position: relative;
+}
+.index_container{
+	background:#fff;
+	margin:50px auto;
+}
+.row{
+	padding: 20px 0;
+}
+
+.month_bg{
+	position: absolute;
+	width: 40px;
+	height: 46px;
+	background: url(images/index/month.png) no-repeat;
+	right: 10px;
+	top: -8px;
+	color: #fff;
+	text-align: center;
+	line-height: 20px;
+}
+.month_bg span{
+	font-size: 25px;
+}
+.month_bg div{
+	margin-top: 8px;
+}
+
+.line1{
+	padding: 10px 0;
+	padding-bottom: 50px;
+	color: #5c6068;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+
+
+.demo{
+	border-right:1px dotted #ddd ;
+	height: 180px;
+	padding-bottom:20px ;
+}
+.demo_in{
+	margin-top: 40px;
+	color: #999;
+}
+.num{
+	font-size: 50px;
+}
+.djboy{
+	padding: 10px 0;
+}
+@media only screen and (max-width:768px ) {
+.demo{
+		border: 0px;
+		padding-top: 5px;
+		border-bottom:1px dotted #ddd ;
+		height:auto;
+		
+	}
+	
+.djboy{
+	margin: 0;
+}
+}
+
+
+.data{
+	padding: 50px 0;
+}
+.border{
+	overflow: hidden;
+	border-right:1px dotted #ddd ;
+}
+.progress1{
+	overflow: hidden;
+}
+
+
+/*table*/
+.pay{
+	font-size: 18px;
+	padding: 20px 0;
+}
+.green{
+	color: #03a40a;
+}
+#time1,#time2{
+	width: 150px;
+}
+#time2{
+	margin-right: 50px;
+}
+
+a.blue{
+	color: #00aaee !important;
+}
+a.blue:hover{
+	color: #00aaee !important;
+}
+
+table tr td{
+	height: 50px;
+	line-height: 50px !important;
+}
+
+table tr:first-child td{
+	border-top: 0;
+}
+
+#data_pic{
+	width:700px;
+	height:400px;
+	margin:0 auto;
+}
+#data_radius{
+	width:350px;
+	height:400px;
+	margin:0 auto;
+}
+@media only screen and (min-width: 100px) and (max-width: 768px) {
+	body{overflow-x:hidden}
+	.demo{
+			border: 0px;
+			padding-top: 5px;
+			border-bottom:1px dotted #ddd ;
+			height:auto;
+			
+		}
+		
+	.djboy{
+		margin: 0;
+	}
+	#data_pic{
+		width:320px;
+		height:300px;
+		margin:0 auto;
+	}
+	#data_radius{
+		width:320px;
+		height:320px;		
+	}
+	.pay{
+	font-size: 16px;	
+	}
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-1-15 10:41:48 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.Note" table="t_sys_note" >
+        <id name="fid" type="string">
+            <column name="fid" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fuser" type="string">
+            <column name="fuser" length="36" />
+        </property>
+        <property name="fuserName" type="string">
+            <column name="fuser_name" length="45" not-null="true">
+                <comment>&#210;&#192;&#213;&#213;&#208;&#232;&#199;&#243;</comment>
+            </column>
+        </property>
+        <property name="fcontent" type="string">
+            <column name="fcontent" length="65535" />
+        </property>
+        <property name="fphone" type="string">
+            <column name="fphone" length="20" not-null="true">
+                <comment>&#210;&#192;&#213;&#213;&#208;&#232;&#199;&#243;</comment>
+            </column>
+        </property>
+        <property name="fdate" type="timestamp">
+            <column name="fdate" length="0" />
+        </property>
+        <property name="fpreNote" type="string">
+            <column name="fpre_note" length="36" />
+        </property>
+        <property name="fprenoteMsg" type="string">
+            <column name="fprenote_msg" length="65535" />
+        </property>
+        <property name="isUnRead" type="java.lang.Integer">
+            <column name="isUnRead" />
+        </property>
+        
+        
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,845 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Order">
+
+    <resultMap id="CLOrderMap" type="com.pc.model.CL_Order">
+		<result property="id" column="id"/>
+        <result property="number" column="number"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="goodsTypeId" column="goods_type_id"/>
+        <result property="goodsTypeName" column="goods_type_name"/>
+        <result property="weight" column="weight"/>
+        <result property="volume" column="volume"/>
+        <result property="length" column="length"/>
+        <result property="loadedTime" column="loaded_time"/>
+        <result property="creator" column="creator"/>
+        <result property="createTime" column="create_time"/>
+        <result property="mileage" column="mileage"/>
+        <result property="freight" column="freight"/>
+        <result property="userRoleId" column="user_role_id"/>
+        <result property="upload" column="upload"/>
+        <result property="receipt" column="receipt"/>
+        <result property="collection" column="collection"/>
+        <result property="isCommon" column="is_common"/>
+        <result property="operator" column="operator"/>
+        <result property="couponsDetailId" column="coupons_detail_id"/>
+        <result property="purposeAmount" column="purpose_amount"/>
+        <result property="isFreightCollect" column="is_freight_collect"/>
+        <result property="protocolType" column="protocol_type"/>
+        <result property="protocolId" column="protocol_id"/>
+        <result property="funitId" column="funit_id"/>
+        <result property="famount" column="famount"/>
+        <result property="fincrementServe" column="fincrementServe"/>
+        <result property="serve_1" column="serve_1"/>
+        <result property="serve_2" column="serve_2"/>
+        <result property="driver_serve_1" column="driver_serve_1"/>
+        <result property="driver_serve_2" column="driver_serve_2"/>
+        <result property="fsalesMan" column="fsales_man"/>
+        <result property="farrivePickUpTime" column="farrive_pickUp_time"/>
+        <result property="fleavePickUpTime" column="fleave_pickUp_time"/>
+        <result property="fremark" column="fremark"/>
+        <result property="fpayMethod" column="fpay_Method"/>
+        <result property="fopint" column="fopint" />
+        <result property="fpayTime" column="fpay_time" />
+        <result property="fcopTime" column="fcop_time" />
+        <result property="fdelOrder" column="fdelOrder" />
+        <result property="fonlinePay" column="fonlinePay" />
+        <result property="frating" column="frating" />
+        <result property="frating_driver" column="frating_driver" />
+        <result property="fdriverfee" column="fdriverfee" />
+        <result property="forigin_driverfee" column="forigin_driverfee" />
+        <result property="fofflinePay" column="offline_pay" />
+		<result property="subUserId" column="sub_user_id"/>
+		<result property="subName" column="sub_name"/>
+		<result property="fordesource" column="fordesource"/>
+		<result property="foriginfreight" column="forigin_freight"/>
+		<result property="fupdateman" column="fupdate_man"/>
+		<result property="fupdatetime" column="fupdate_time"/>
+		<result property="foperate_time" column="foperate_time"/>
+          <result property="fispass_audit" column="fispass_audit"/> 
+          <result property="fregulator" column="fregulator"/> 
+          <result property="fregulate_time" column="fregulate_time"/> 
+          <result property="fauditor" column="fauditor"/> 
+          <result property="faudit_time" column="faudit_time"/> 
+          <result property="freturn_car" column="freturn_car"/> 
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        o.id ,o.number ,o.type ,o.status ,o.fonlinePay,o.fopint,o.fpay_Method,o.frating,o.frating_driver,o.goods_type_id ,o.goods_type_name ,o.fpay_time,o.weight ,o.volume ,o.length ,o.loaded_time ,o.creator , ur1.vmi_user_name creatorName,ur1.vmi_user_phone creatorPhone,o.create_time ,o.fcop_time,o.fdelOrder,o.mileage ,o.freight,
+		o.offline_pay,o.user_role_id, car.driverName orderDriverName,car.carNum OrderDriverCarNumber,cun.name funName, ur2.vmi_user_phone orderDriverphone, o.upload, o.receipt,o.collection,o.is_common,o.operator,o.foperate_time,
+		o.coupons_detail_id ,o.purpose_amount ,o.is_freight_collect,o.protocol_type ,o.protocol_id ,o.funit_id ,o.famount ,o.fincrementServe ,o.serve_1,o.serve_2,o.driver_serve_1,o.driver_serve_2,o.fsales_man ,o.farrive_pickUp_time ,o.fleave_pickUp_time ,o.fremark,o.freturn_car,
+		ur3.vmi_user_name operatorName,if(o.STATUS<=2,if(NOW() > DATE_FORMAT(o.loaded_time,'%Y-%m-%d %H:%i'),1,2),2) isoverdue,cust.fname custName,cust.fnumber custNumber,cust.ftype custType,cust.fsales_man custSaleMan,o.fdriverfee,
+		o.sub_user_id,o.sub_name,o.forigin_freight,car.carType carType,car.car_spec_id,o.fispass_audit,o.forigin_driverfee,o.fauditor,o.fregulator,ur4.vmi_user_name auditor,ur5.vmi_user_name regulator,o.fregulate_time,o.faudit_time,n.car_spec_id carSpec
+	    ]]>
+	</sql>
+	
+	<sql id="columns2">
+	    <![CDATA[
+        o1.id ,o1.number ,o1.type ,o1.fopint, o1.status ,o1.fonlinePay,o1.frating,o.frating_driver,o1.fpay_Method,o1.fpay_time,o1.goods_type_id ,o1.goods_type_name ,o1.weight ,o1.volume ,o1.length ,o1.loaded_time ,o1.creator ,o1.create_time ,o1.mileage ,o1.freight,o1.user_role_id,
+        o1.upload, o1.receipt,o1.collection,o1.is_common,o1.operator,o1.foperate_time,o1.coupons_detail_id ,o1.purpose_amount ,o1.is_freight_collect,o1.protocol_type ,o1.protocol_id ,o1.funit_id ,o1.famount ,o1.fincrementServe,o1.serve_1,o1.serve_2,o1.driver_serve_1,o1.driver_serve_2 ,o1.fcop_time,o1.fdelOrder,
+        o1.fsales_man ,o1.farrive_pickUp_time ,o1.fleave_pickUp_time ,o1.fremark,o.fdriverfee,o.sub_user_id,o.sub_name,o.fispass_audit,o.forigin_driverfee,o.fauditor,o.fregulator,ur4.vmi_user_name auditor,ur5.vmi_user_name regulator,o.fregulate_time,o.faudit_time,o.freturn_car
+	    ]]>
+	</sql>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns3">
+	    <![CDATA[
+        o.id ,o.number ,o.type ,o.status ,o.fopint, o.fpay_Method,o.fonlinePay,o.frating,o.frating_driver,o.fpay_time,o.goods_type_id ,o.goods_type_name ,o.weight ,o.volume ,o.length ,o.loaded_time ,o.creator , ifnull(o.sub_name,ur1.vmi_user_name) creatorName,ur1.vmi_user_phone creatorPhone,o.create_time ,o.mileage ,o.freight,o.fcop_time,o.fdelOrder,
+		o.offline_pay,o.user_role_id,car.id carId,car.driverName orderDriverName,car.carNum OrderDriverCarNumber, cun.name funName,ur2.vmi_user_phone orderDriverphone,o.upload, o.receipt,o.collection,o.is_common,o.operator,o.foperate_time,
+		o.coupons_detail_id ,o.purpose_amount ,o.is_freight_collect,o.protocol_type ,o.protocol_id ,o.funit_id ,o.famount ,o.fincrementServe,o.serve_1,o.serve_2 ,o.driver_serve_1,o.driver_serve_2,o.fsales_man ,o.farrive_pickUp_time ,o.fleave_pickUp_time ,o.fremark,o.fdriverfee,o.freturn_car,
+		ur3.vmi_user_name operatorName,if(o.STATUS<=2,if(NOW() > DATE_FORMAT(o.loaded_time,'%Y-%m-%d %H:%i'),1,2),2) isoverdue,cust.fname custName,cust.fnumber custNumber,cust.ftype custType,cust.fsales_man custSaleMan,od.address_name addressName ,od.phone takephone,
+		o.sub_user_id,o.sub_name,abn.fid abnormityId,o.forigin_freight,o.fupdate_man,o.fupdate_time,car.carType carType,car.car_spec_id,o.fispass_audit,o.forigin_driverfee,o.fauditor,o.fregulator,ur4.vmi_user_name auditor,ur5.vmi_user_name regulator,o.fregulate_time,o.faudit_time
+	    ,n.car_spec_id as carSpecId,n.car_type_id as carTypeId
+	    ]]>
+	</sql>
+	
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO cl_order (
+	        id  ,
+	        number  ,
+	        type  ,
+	        status  ,
+	        goods_type_id  ,
+	        goods_type_name  ,
+	        weight  ,
+	        volume  ,
+	        length  ,
+	        loaded_time  ,
+	        creator  ,
+	        create_time  ,
+	        mileage  ,
+	        freight  ,
+	        user_role_id,
+	        upload,
+	        receipt,
+	        collection,
+	        is_common,
+	        operator ,
+	        foperate_time,
+	        coupons_detail_id,
+	        purpose_amount ,
+	        is_freight_collect ,
+	        protocol_type ,
+	        protocol_id ,
+	        funit_id ,
+	        famount ,
+	        fincrementServe ,
+	        serve_1,
+	        serve_2,
+	        driver_serve_1,
+	        driver_serve_2,
+	        fsales_man ,
+	        farrive_pickUp_time ,
+	        fleave_pickUp_time ,
+	        fremark ,
+	        fpay_Method,
+	        fopint,
+	        fpay_time,
+	        fcop_time,
+	        fdelOrder,
+	        fonlinePay ,
+	        frating ,
+	        frating_driver,
+	        fdriverfee,
+	        forigin_driverfee,
+	        sub_user_id,
+			sub_name,
+			fordesource,
+			fispass_audit,
+			fauditor,
+			fregulator,
+			fregulate_time,
+			faudit_time,
+			forigin_freight,
+			freturn_car
+        ) VALUES (
+        	#{id, jdbcType=INTEGER} ,
+        	#{number, jdbcType=VARCHAR} ,
+        	#{type, jdbcType=INTEGER} ,
+        	#{status, jdbcType=INTEGER} ,
+        	#{goodsTypeId, jdbcType=VARCHAR} ,
+        	#{goodsTypeName, jdbcType=VARCHAR} ,
+        	#{weight, jdbcType=DECIMAL} ,
+        	#{volume, jdbcType=DECIMAL} ,
+        	#{length, jdbcType=DECIMAL} ,
+        	#{loadedTime, jdbcType=TIMESTAMP} ,
+        	#{creator, jdbcType=INTEGER} ,
+        	#{createTime, jdbcType=TIMESTAMP} ,
+        	#{mileage, jdbcType=DECIMAL} ,
+        	#{freight, jdbcType=DECIMAL} ,
+        	#{userRoleId,jdbcType=INTEGER},
+        	#{upload,jdbcType=INTEGER},
+        	#{receipt,jdbcType=INTEGER},
+        	#{collection,jdbcType=INTEGER},
+        	#{isCommon,jdbcType=INTEGER},
+        	#{operator,jdbcType=INTEGER} ,
+        	 #{foperate_time,jdbcType=TIMESTAMP},
+        	#{couponsDetailId,jdbcType=INTEGER},
+        	#{purposeAmount,jdbcType=INTEGER},
+        	#{isFreightCollect,jdbcType=INTEGER},
+	        #{protocolType,jdbcType=INTEGER},
+	       #{protocolId,jdbcType=INTEGER},
+	       #{funitId,jdbcType=INTEGER},
+	       #{famount,jdbcType=DECIMAL},
+	       #{fincrementServe,jdbcType=VARCHAR},
+	       #{serve_1,jdbcType=DECIMAL},
+	       #{serve_2,jdbcType=DECIMAL},
+	       #{ driver_serve_1,jdbcType=DECIMAL},
+	       #{driver_serve_2,jdbcType=DECIMAL},
+	       #{fsalesMan,jdbcType=VARCHAR},
+	       #{farrivePickUpTime,jdbcType=TIMESTAMP},
+	       #{fleavePickUpTime,jdbcType=TIMESTAMP},
+	       #{fremark,jdbcType=VARCHAR},
+	       #{fpayMethod,jdbcType=INTEGER},
+	       #{fopint,jdbcType=INTEGER},
+	       #{fpayTime,jdbcType=TIMESTAMP},
+	       #{fcopTime,jdbcType=TIMESTAMP},
+	       #{fdelOrder,jdbcType=INTEGER},
+	       #{fonlinePay,jdbcType=INTEGER} ,
+	       #{frating,jdbcType=INTEGER} ,
+	       #{frating_driver,jdbcType=INTEGER} ,
+	       #{fdriverfee,jdbcType=DECIMAL},
+	       #{forigin_driverfee,jdbcType=DECIMAL},
+	       #{subUserId,jdbcType=INTEGER},
+	       #{subName,jdbcType=VARCHAR},
+	       #{fordesource,jdbcType=VARCHAR},
+	       #{fispass_audit,jdbcType=INTEGER},
+	       #{fauditor,jdbcType=INTEGER},
+	       #{fregulator,jdbcType=INTEGER},
+	       #{fregulate_time,jdbcType=TIMESTAMP},
+	       #{faudit_time,jdbcType=TIMESTAMP},
+	       #{foriginfreight,jdbcType=DECIMAL},
+	       #{freturn_car,jdbcType=INTEGER}
+        )
+    ]]>
+    </insert>
+
+    <update id="update"  >
+    <![CDATA[
+        UPDATE cl_order SET
+	        number = #{number, jdbcType=VARCHAR} ,
+	        type = #{type, jdbcType=INTEGER} ,
+	        status = #{status, jdbcType=INTEGER} ,
+	        goods_type_id = #{goodsTypeId, jdbcType=VARCHAR} ,
+	        goods_type_name = #{goodsTypeName, jdbcType=VARCHAR} ,
+	        weight = #{weight, jdbcType=DECIMAL} ,
+	        volume = #{volume, jdbcType=DECIMAL} ,
+	        length = #{length, jdbcType=DECIMAL} ,
+	        loaded_time = #{loadedTime, jdbcType=TIMESTAMP} ,
+	        creator = #{creator, jdbcType=INTEGER} ,
+	        create_time = #{createTime, jdbcType=TIMESTAMP} ,
+	        mileage = #{mileage, jdbcType=DECIMAL} ,
+	        freight = #{freight, jdbcType=DECIMAL},
+        	user_role_id=#{userRoleId,jdbcType=INTEGER},
+        	upload=#{upload,jdbcType=INTEGER},
+        	receipt=#{receipt,jdbcType=INTEGER},
+        	collection=#{collection,jdbcType=INTEGER},
+        	is_common=#{isCommon,jdbcType=INTEGER} ,
+        	operator = #{operator,jdbcType=INTEGER} ,
+        	foperate_time = #{foperate_time,jdbcType=INTEGER},
+        	coupons_detail_id = #{couponsDetailId,jdbcType=INTEGER} ,
+        	purpose_amount = #{purposeAmount,jdbcType=INTEGER},
+        	is_freight_collect =#{isFreightCollect,jdbcType=INTEGER},
+        	protocol_type = #{protocolType,jdbcType=INTEGER},
+	       protocol_id = #{protocolId,jdbcType=INTEGER},
+	       funit_id = #{funitId,jdbcType=INTEGER},
+	       famount = #{famount,jdbcType=DECIMAL},
+	       fincrementServe = #{fincrementServe,jdbcType=VARCHAR},
+	       serve_1 = #{serve_1,jdbcType=DECIMAL},
+	       serve_2 = #{serve_2,jdbcType=DECIMAL},
+	       driver_serve_1 = #{driver_serve_1,jdbcType=DECIMAL},
+	       driver_serve_2 = #{driver_serve_2,jdbcType=DECIMAL},
+	       fsales_man = #{fsalesMan,jdbcType=VARCHAR},
+	       farrive_pickUp_time = #{farrivePickUpTime,jdbcType=TIMESTAMP},
+	       fleave_pickUp_time = #{fleavePickUpTime,jdbcType=TIMESTAMP},
+	       fremark = #{fremark,jdbcType=VARCHAR},
+	       fpay_Method=#{fpayMethod,jdbcType=INTEGER},
+	       fopint=#{fopint,jdbcType=INTEGER},
+	       fpay_time=#{fpayTime,jdbcType=TIMESTAMP},
+	       fcop_time=#{fcopTime,jdbcType=TIMESTAMP},
+	       fdelOrder=#{fdelOrder,jdbcType=INTEGER},
+	       fonlinePay=#{fonlinePay,jdbcType=INTEGER},
+	       frating=#{frating,jdbcType=INTEGER},
+	       frating_driver=#{frating_driver,jdbcType=INTEGER},
+	       sub_user_id=#{subUserId,jdbcType=INTEGER},
+	       sub_name=#{subName,jdbcType=VARCHAR},
+	       fdriverfee=#{fdriverfee,jdbcType=VARCHAR},
+	       forigin_driverfee=#{forigin_driverfee,jdbcType=VARCHAR},
+	       forigin_freight=#{foriginfreight,jdbcType=VARCHAR},
+	       fupdate_man=#{fupdateman,jdbcType=VARCHAR},
+	       fupdate_time=#{fupdatetime,jdbcType=VARCHAR},
+	       fispass_audit=#{fispass_audit,jdbcType=INTEGER},
+	       fauditor=#{fauditor,jdbcType=INTEGER},
+	       fregulator=#{fregulator,jdbcType=INTEGER},
+	       fregulate_time=#{fregulate_time,jdbcType=TIMESTAMP},
+		   faudit_time=#{faudit_time,jdbcType=TIMESTAMP},
+		   freturn_car=#{freturn_car,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    <!-- 修改在司机评价后只改变订单状态，不改变评价状态的逻辑 by Liar 17/3/27 -->
+    <update id="updateByNumber"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       status = #{status, jdbcType=INTEGER},
+			       frating_driver = 1
+			 WHERE  number = #{orderNum} 
+	    ]]>
+    </update>
+    
+    
+    <update id="updateServerById"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       fincrementServe = #{fincrementServe, jdbcType=VARCHAR},
+			       famount = #{famount,jdbcType=DECIMAL}
+			 WHERE   id = #{id} 
+	    ]]>
+    </update>
+    
+       <update id="updateDriverFeeById"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       fdriverfee = #{fdriverfee, jdbcType=DECIMAL}
+			 WHERE   id = #{id} 
+	    ]]>
+    </update>
+    
+    
+        
+    <update id="updateStatusOnline"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       fonlinePay = #{fonlinePay, jdbcType=INTEGER},
+			       fcop_time=#{fcopTime,jdbcType=TIMESTAMP}
+			 WHERE   id = #{id} 
+	    ]]>
+    </update>
+    
+    <update id="updateStatusByOrderId"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       status = #{status, jdbcType=INTEGER}
+			 WHERE  id = #{orderId}  
+	    ]]>
+    </update>
+        <update id="updateStatusByOrderIdAndTask"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       status = #{status, jdbcType=INTEGER},
+			       operator=1301,
+			       fremark=DATE_FORMAT(NOW(),'%T  %m-%d-%Y')		
+			 WHERE  id = #{orderId}   and status=1
+	    ]]>
+    </update>
+       <update id="updateFratingByOrderId"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       frating = #{frating, jdbcType=INTEGER}
+			 WHERE  id = #{orderId} 
+	    ]]>
+    </update>
+    
+    <update id="updateByUserId"  >
+    <![CDATA[
+        UPDATE cl_order SET
+        	is_common=#{isCommon,jdbcType=INTEGER}
+        WHERE 
+	        id = #{orderId} 
+    ]]>
+    </update>
+    <update id="updateByArriveTime"  >
+    <![CDATA[
+        UPDATE cl_order SET
+            farrive_pickUp_time = #{farrivePickUpTime,jdbcType=TIMESTAMP}
+        WHERE 
+	        id = #{orderId} 
+    ]]>
+    </update>
+      <update id="updateByLeaveTime"  >
+    <![CDATA[
+        UPDATE cl_order SET
+            fleave_pickUp_time = #{fleavePickUpTime,jdbcType=TIMESTAMP}
+      WHERE 
+	        id = #{orderId} 
+    ]]>
+    </update>
+    
+    
+    <update id="updateByOrderId"  >
+    <![CDATA[
+        UPDATE cl_order SET
+        	operator=#{operator,jdbcType=INTEGER},
+        	foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+        	user_role_id=#{userRoleId,jdbcType=INTEGER},
+        	status = #{status,jdbcType=INTEGER}
+        WHERE id = #{orderId} 
+    ]]>
+    </update>
+
+    <update id="updateofflinePayByOrderId"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       offline_pay = #{fofflinePay, jdbcType=INTEGER},fcop_time=NOW() 
+			 WHERE  id = #{id}  
+	    ]]>
+    </update>
+
+    <update id="updatecouponsdetailByOrderId"  >
+		<![CDATA[	
+			 UPDATE cl_order SET
+			       coupons_detail_id = #{couponsdetatilid,jdbcType=INTEGER} 
+			 WHERE  id = #{orderid}  
+	    ]]>
+    </update>
+    
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_order WHERE id = #{id} 
+    ]]>
+    </delete>
+    
+   <select id="getByCreator" resultMap="CLOrderMap">
+	    SELECT  * FROM cl_order WHERE  status= 1 or status = 9
+    </select>
+    
+   <select id="getBycouponsDetailId" resultMap="CLOrderMap">
+	    SELECT  * FROM cl_order WHERE  coupons_detail_id = #{couponsDetailId} 
+    </select>
+    
+    <select id="getById" resultMap="CLOrderMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	     FROM cl_order o
+		 LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		 LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		 LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		 LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id
+		 LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		 LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		 left join cl_user_role ur4 on ur4.id=o.fauditor
+		 left join cl_user_role ur5 on ur5.id=o.fregulator
+		  left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+	     WHERE o.id = #{id} 
+	    ]]>
+    </select>
+    
+      <select id="getByIdAndCreator" resultMap="CLOrderMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	     FROM cl_order o
+		 LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		 LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		 LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		 LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id
+		 LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		 LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		 left join cl_user_role ur4 on ur4.id=o.fauditor
+		 left join cl_user_role ur5 on ur5.id=o.fregulator
+		 left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+	     WHERE o.id = #{id}  and o.creator=#{creator}    
+	    ]]>
+    </select>
+    
+    
+    <select id="getOrdersByStatus" resultMap="CLOrderMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	     FROM cl_order o
+		 LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		 LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		 LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		 LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id
+		 LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		  LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		  left join cl_user_role ur4 on ur4.id=o.fauditor
+		  left join cl_user_role ur5 on ur5.id=o.fregulator
+		  left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+  		 WHERE o.status = #{status} 
+	    ]]>
+    </select>
+    
+    <select id="getIdByStatus" resultMap="CLOrderMap">
+	    SELECT  <include refid="columns"/>
+	    <![CDATA[
+	     FROM cl_order o
+		 LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		 LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		 LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		 LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id
+		 LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		  LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		  left join cl_user_role ur4 on ur4.id=o.fauditor
+		  left join cl_user_role ur5 on ur5.id=o.fregulator
+		  left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+  		 WHERE o.status = #{status} 
+	    ]]>
+    </select>
+    
+    <select id="IsExistIdByStatus" resultMap="CLOrderMap">
+	    SELECT id ,type
+	    <![CDATA[
+	        FROM cl_order WHERE status=2 AND  id = #{id} 
+	    ]]>
+    </select>
+    
+ 
+    <select id="IsExistIdByRatingCar" resultMap="CLOrderMap">
+	    SELECT id 
+	    <![CDATA[
+	        FROM cl_order WHERE   id = #{id} AND  frating=1
+	    ]]>
+    </select>
+    
+     <select id="IsExistIdByRating" resultMap="CLOrderMap">
+	    SELECT id 
+	    <![CDATA[
+	        FROM cl_order WHERE status=4 AND  id = #{id} 
+	    ]]>
+    </select>
+    
+    <select id="getByNumber" resultMap="CLOrderMap">
+    	SELECT <include refid= "columns" />
+	    <![CDATA[
+	     FROM cl_order o
+		 LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		 LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		 LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		 LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id 
+		 LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		  LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		  left join cl_user_role ur4 on ur4.id=o.fauditor
+		  left join cl_user_role ur5 on ur5.id=o.fregulator
+		  left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+		 WHERE o.number=#{number}
+	    ]]>
+    </select>
+    
+    <select id="getByNowTime" resultMap="CLOrderMap">
+    	SELECT <include refid= "columns2" />
+    	 <![CDATA[
+    	 FROM cl_order o1 INNER JOIN(
+			SELECT MAX(number) as number FROM cl_order WHERE DATE_FORMAT(create_time  ,'%Y-%m-%d')=DATE_FORMAT(#{nowTime},'%Y-%m-%d') 
+		) o2 on o1.number = o2.number
+		]]>
+    </select>
+    
+    <select id="getLockedAmount" resultType="java.math.BigDecimal" >
+    		SELECT IFNULL(SUM(o.fdriverfee),0)+IFNULL(SUM(ca.fdriverfee),0)
+	        FROM cl_order o
+			LEFT JOIN cl_addto ca ON ca.forder_id = o.id
+			LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+			LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+			LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+			LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id 
+			LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+			LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+	        WHERE o.user_role_id=#{userRoleId}  
+            AND o.status in(4,5)
+            AND ((o.offline_pay=1 and o.fonlinePay=2) or o.fonlinePay=1 )
+            AND o.fcop_time >#{fcopTime} 
+    </select>
+    
+    <select id="getByUserRoleIdAndStatus" resultMap="CLOrderMap">
+    	    SELECT <include refid="columns"/>
+	        FROM cl_order o
+			LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+			LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+			LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+			LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id 
+			LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+			 LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+			 left join cl_user_role ur4 on ur4.id=o.fauditor
+			left join cl_user_role ur5 on ur5.id=o.fregulator
+			left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+	        WHERE o.user_role_id=#{userRoleId}  
+            <if test="status==5">
+              AND o.status in(4,5)
+            </if>
+            <if test="status!=5">
+              AND o.status=#{status}
+            </if>   	
+    </select>
+ 
+	<sql id="findWhere">
+	    <where>
+	       	<if test="@Ognl@isNotEmpty(number)">
+  			 	AND o.number LIKE CONCAT('%',#{number},'%')
+  			</if>
+	       	<if test="@Ognl@isNotEmpty(fusername)">
+  			 	AND c.vmi_user_name LIKE CONCAT('%',#{fusername},'%')
+  			</if>
+		    <if test="@Ognl@isNotEmpty(goodsTypeName)">
+	   			AND o.goods_type_name LIKE '%'||#{goodsTypeName}||'%'
+	   		</if>
+		   	<if test="@Ognl@isNotEmpty(id)">
+			    AND o.id = #{id}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(type)"  >
+			    AND o.type = #{type}
+			</if>
+			<if test="@Ognl@isNotEmpty(DrloadCar)">
+				  <if test="DrloadCar==1">
+			   			 AND o.status in (3)
+			   	  </if>
+				  <if test="DrloadCar==2">
+		   			 AND o.status in(4,5)
+		    	 </if>
+		   		 <if test="DrloadCar==3">
+		   			 AND o.status in(6,7)
+		   		</if>
+		   		 AND o.fdelOrder!=2 AND o.fdelOrder!=3
+			</if>
+		 <if test="@Ognl@isNotEmpty(huoLoadOrder)">
+			     <if test="huoLoadOrder==0">
+			   			 AND o.status not in (6)
+			   	  </if>
+				  <if test="huoLoadOrder==1">
+			   			 AND o.status in (1,9)
+			   	  </if>
+				  <if test="huoLoadOrder==2">
+		   			 AND o.status in(2,3)
+		    	 </if>
+		   		 <if test="huoLoadOrder==3">
+		   			 AND o.status in(4)
+		   		</if>
+		   		 <if test="huoLoadOrder==4">
+		   			 AND o.status in(5,6,7)
+		   		</if>
+		   		  <if test="huoLoadOrder==5">
+		   			 AND o.status=5  <!-- pc端显示历史订单已完成 -->
+		   		</if>
+		   		  <if test="huoLoadOrder==6">
+		   			 AND o.status=6   <!-- pc端显示历史订单已取消 -->
+		   		</if>
+		   		 AND o.fdelOrder!=1 AND o.fdelOrder!=3
+			</if>
+			 <if test="@Ognl@isNotEmpty(fdelOrder)">
+		   		 	 <if test="fdelOrder==1">
+		   				 AND o.fdelOrder!=1 AND o.fdelOrder!=3
+		   		</if>
+		   		 <if test="huoLoadOrder==2">
+		   				 AND o.fdelOrder!=2 AND o.fdelOrder!=3
+		   		</if>
+		   		 <if test="huoLoadOrder==0">
+		   			 AND o.fdelOrder=#{fdelOrder}
+		   		</if>
+			</if>
+		   	<if test="@Ognl@isNotEmpty(status)">
+		   		AND o.status=#{status} 
+			</if>
+			<if test="@Ognl@isNotEmpty(upload)">
+			    AND o.upload = #{upload}
+			</if>
+			<if test="@Ognl@isNotEmpty(receipt)">
+			    AND o.receipt = #{receipt}
+			</if>
+			<if test="@Ognl@isNotEmpty(isCommon)">
+				AND o.is_common = #{isCommon}   
+			</if>
+		    <if test="@Ognl@isNotEmpty(frating)">
+				AND o.frating = #{frating}   
+			</if>
+			<if test="@Ognl@isNotEmpty(collection)">
+			    AND o.collection = #{collection}
+			</if>
+			<if test="@Ognl@isNotEmpty(userRoleId)">
+			    AND o.user_role_id = #{userRoleId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(loadedTimeBegin)">
+		   		AND DATE_FORMAT(o.loaded_time ,'%Y-%m-%d %H') >= DATE_FORMAT(#{loadedTimeBegin},'%Y-%m-%d %H')
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(loadedTimeEnd)">
+		   		AND DATE_FORMAT(o.loaded_time ,'%Y-%m-%d %H') &lt; DATE_FORMAT(#{loadedTimeEnd},'%Y-%m-%d %H')
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(creator)">
+			    AND o.creator = #{creator}
+			</if>
+			<if test="@Ognl@isNotEmpty(subUserId)">
+			    AND o.sub_user_id = #{subUserId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeBegin)">
+		   		AND o.create_time >= #{createTimeBegin}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeEnd)">
+		   		AND o.create_time &lt; #{createTimeEnd}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(searchKey)">
+		   		AND (
+		   		     o.number 	 	   LIKE CONCAT('%',#{searchKey},'%') OR
+		   		     <if test="@Ognl@isNotEmpty(drivers)">
+		   		     	o.user_role_id IN <foreach item="item" collection="drivers" open="(" separator="," close=")">
+							#{item}
+						</foreach>
+		   				OR
+		   			</if>
+		   		     o.goods_type_name   LIKE CONCAT('%',#{searchKey},'%')
+		   		    )
+		   	</if>
+   		    <if test="@Ognl@isNotEmpty(ids)">
+   		     	AND o.id IN <foreach item="item" collection="ids" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+   			</if>
+   			   			
+   			<if test="@Ognl@isNotEmpty(fonlinePay)">
+  			 	AND o.fonlinePay = #{fonlinePay}
+  			</if>
+  			   			
+   		   <if test="@Ognl@isNotEmpty(fpayMethod)">
+  			 	AND o.fpay_Method = #{fpayMethod}
+  			</if>
+  			<if test="@Ognl@isNotEmpty(mySearchKey)">
+  			 	AND ( o.number LIKE CONCAT('%',#{mySearchKey},'%') OR car.driverName LIKE CONCAT('%',#{mySearchKey},'%') or cust.fname  LIKE CONCAT('%',#{mySearchKey},'%') )
+  			</if>
+  			<if test="@Ognl@isNotEmpty(OrderDriverCarNumber)">
+  				and car.carNum like concat('%',#{OrderDriverCarNumber},'%')
+  			</if>
+  			<if test="@Ognl@isNotEmpty(phone)">
+  				and (ur2.vmi_user_phone like concat('%',#{phone},'%')  or ur1.vmi_user_phone like concat('%',#{phone},'%'))
+  			</if>
+  			<if test="@Ognl@isNotEmpty(customer)">
+  				and cust.fuser_role_id = #{customer}
+  			</if>
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(o.id) FROM cl_order o
+		LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id
+		LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		left join cl_user_role ur4 on ur4.id=o.fauditor
+		left join cl_user_role ur5 on ur5.id=o.fregulator
+		<include refid="findWhere"/>    
+    </select>
+    
+     <select id="getMaxNOBytable" resultType="java.util.HashMap">
+         select MAX(number) as number from ${talbe} where number like #{No} and CHAR_LENGTH(number)=${length}
+    </select> 
+    
+     <select id="getAppVersion" resultType="java.util.HashMap">
+     	select forcel from cl_version where ftype=#{ftype} and fversion = #{VersionCode}
+    <!-- select android,ios from (select max(fversion) as android from cl_version where ftype=0 and forcel=1) a,(select max(fversion) as ios from cl_version where ftype=1 and forcel=1) b --> 
+    </select> 
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    
+    <select id="findPage" resultMap="CLOrderMap">
+    	SELECT <include refid="columns3"/> 
+    	FROM cl_order o
+    	LEFT JOIN cl_order_detail od on od.order_id = o.id and od.detail_type=1
+		LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id  
+		LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		left join cl_user_role ur4 on ur4.id=o.fauditor
+		left join cl_user_role ur5 on ur5.id=o.fregulator
+		left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+		LEFT JOIN (select max(fid) fid,forder_id from cl_abnormity group by forder_id) abn on abn.forder_id = o.id and o.status=3
+		<include refid="findWhere"/>  
+	 	ORDER BY abn.fid DESC,o.create_time DESC,o.STATUS ASC
+    </select>
+    
+	<select id="find" resultMap="CLOrderMap">
+	    SELECT <include refid="columns3"/> 
+	    FROM cl_order o
+		LEFT JOIN cl_order_detail od on od.order_id = o.id and od.detail_type=1
+		LEFT JOIN cl_user_role ur1 on ur1.id = o.creator
+		LEFT JOIN cl_user_customer cust on cust.fuser_role_id=o.creator
+		LEFT JOIN cl_car car on car.user_role_id = o.user_role_id
+		LEFT JOIN cl_user_role ur2 on ur2.id = o.user_role_id  
+		LEFT JOIN cl_user_role ur3 on ur3.id = o.operator
+		LEFT JOIN cl_unit cun  on cun.id=o.funit_id
+		left join cl_user_role ur4 on ur4.id=o.fauditor
+		left join cl_user_role ur5 on ur5.id=o.fregulator
+		left join (select order_id,car_spec_id,car_type_id from cl_order_car_detail GROUP BY order_id)n on n.order_id = o.id
+		LEFT JOIN (select max(fid) fid,forder_id from cl_abnormity group by forder_id) abn on abn.forder_id = o.id and o.status=3
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+		ORDER BY abn.fid DESC,o.create_time DESC,o.STATUS ASC
+    </select>
+	 
+    <select id="getEndOrderCount" resultType="long">
+        SELECT end_order_times,rate_times FROM cl_user_role ur
+		WHERE ur.id=#{userId}  
+    </select>
+    
+    <select id="getOrderCountByProtocol" resultType="int">
+  		 SELECT COUNT(1) FROM cl_order o WHERE o.creator = #{userId} AND o.protocol_id = #{protocolId}
+    </select>
+    
+    <select id="findUploadPage" resultMap="CLOrderMap">
+	    SELECT d.id,o.number,c.vmi_user_name AS creatorName,c.vmi_user_phone AS creatorPhone,
+  		h.vmi_user_name AS orderDriverName,h.vmi_user_phone AS orderDriverphone,u.url 
+	    FROM cl_order o	JOIN cl_order_detail d ON d.order_id = o.id 
+  		INNER JOIN cl_upload u ON u.parent_id = d.id 
+  		JOIN cl_user_role c ON c.id = o.creator 
+  		JOIN cl_user_role h ON h.id = o.user_role_id 
+  		<include refid="findWhere"/>  
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+
+    <select id="findUploadPageCount" resultType="long">
+	    SELECT count(*) FROM cl_order o	JOIN cl_order_detail d ON d.order_id = o.id 
+  		LEFT JOIN cl_upload u ON u.parent_id = d.id 
+  		JOIN cl_user_role c ON c.id = o.creator 
+  		JOIN cl_user_role h ON h.id = o.user_role_id 
+  		<include refid="findWhere"/>  
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+    
+   <!-- 查找最早的调度时间 -->
+    <select id="findOperateTime" resultType="Date">
+    	select min(foperate_time) from cl_order where user_role_id = #{userRoleId} and status = #{status}
+    </select>
+    
+    <!--查找司机或者客户是否有订单记录 -->
+    <select id="getByUserRoleId" resultType="int">
+    	select count(id) from cl_order
+    	<where>
+    		<if test="@Ognl@isNotEmpty(userRoleId)">
+    			and user_role_id = #{userRoleId}
+    		</if>
+    		<if test="@Ognl@isNotEmpty(creatorId)">
+    			and creator =#{creatorId}
+    		</if>
+    	</where>
+    </select>
+    
+    <select id="getUnfinishByUserRoleId" resultType="int">
+    	select count(id) from cl_order where user_role_id = #{userRoleId} and status = 3
+    </select>
+    	
+    <select id="getNumByRuleSpec" resultType="int">
+    	select count(o.id) from cl_order o
+    	left join cl_order_car_detail cd on cd.order_id = o.id
+    	where cd.car_spec_id = #{spec} and o.protocol_type = 0
+    </select>
+    
+    
+</mapper>
+

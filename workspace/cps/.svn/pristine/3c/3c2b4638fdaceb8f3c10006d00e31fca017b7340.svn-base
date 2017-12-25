@@ -1,0 +1,20 @@
+@charset "utf-8";
+/* CSS Document */
+/* --------------------初始-------------------- */
+*{margin:0px;padding:0px;}
+li{list-style:none;}
+img{border:none;}
+a{text-decoration: none;color:#000;font-size:12px;font-family:宋体;}
+body{font-size:14px;background:#f1f1f1;font-family:微软雅黑;}
+.clear{zoom:1;}
+.clear:after{content:'';display:block;clear:both;}
+
+/* --------------------开头导航------------------ */
+#header{margin:0 auto;background:#f0f0f0;width:1070px;height:36px;}
+#header p{line-height:36px;padding-left:12px;}
+/* --------------------主体-------------------- */
+#container{margin:0 auto;width:950px;font-family:微软雅黑;background:#fff;padding:50px 60px 120px;}
+.item{padding-bottom:20px;}
+.item span{padding-right:30px;color:#919090;}
+.item label{margin-right:40px;font-size:16px;}
+.item input{vertical-align:middle;}

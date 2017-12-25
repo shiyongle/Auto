@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+  <mapper namespace="CL_Factory">
+   	<resultMap id="CL_FactoryMap" type="com.pc.model.CL_Factory">
+        <result property="factory_id" column="factory_id"/>
+        <result property="factory" column="factory"/>
+        <result property="fstatus" column="fstatus"/>
+        <result property="flinkman" column="flinkman"/>
+        <result property="flinkphone" column="flinkphone"/>
+        <result property="faddress" column="faddress"/>
+        <result property="flongitude" column="flongitude"/>
+        <result property="flatitude" column="flatitude"/>
+        <result property="fremark" column="fremark"/>
+        <result property="fcreator" column="fcreator"/>
+        <result property="fcreat_time" column="fcreat_time"/>
+        <result property="feditor" column="feditor"/>
+        <result property="fedit_time" column="fedit_time"/>
+    </resultMap>
+    
+    <sql id="columns">
+    	cf.factory_id,cf.factory,cf.fstatus,cf.flinkman,cf.flinkphone,cf.faddress,cf.flongitude,cf.flatitude,cf.fremark,cf.fcreator,cf.fcreat_time,cf.feditor<!--  ,car.active_area,car.car_spec_id -->
+    </sql>
+    
+    <insert id="insert">
+    	insert into cl_factory(
+    		factory,
+    		fstatus,
+    		flinkman,
+    		flinkphone,
+    		faddress,
+    		flongitude,
+    		flatitude,
+    		fremark,
+    		fcreator,
+    		fcreat_time,
+    		feditor,
+    		fedit_time
+    	) values(
+    		#{factory,jdbcType=VARCHAR},
+    		#{fstatus,jdbcType=INTEGER},
+    		#{flinkman,jdbcType=VARCHAR},
+    		#{flinkphone,jdbcType=VARCHAR},
+    		#{faddress,jdbcType=VARCHAR},
+    		#{flongitude,jdbcType=VARCHAR},
+    		#{flatitude,jdbcType=VARCHAR},
+    		#{fremark,jdbcType=VARCHAR},
+    		#{fcreator,jdbcType=INTEGER},
+    		#{fcreat_time,jdbcType=TIMESTAMP},
+    		#{feditor,jdbcType=INTEGER},
+    		#{fedit_time,jdbcType=TIMESTAMP}
+    	)
+    </insert>
+    
+    <update id="update">
+    	update cl_factory set
+    		factory = #{factory,jdbcType=VARCHAR},
+    		fstatus = #{fstatus,jdbcType=INTEGER},
+    		flinkman = #{flinkman,jdbcType=VARCHAR},
+    		flinkphone = #{flinkphone,jdbcType=VARCHAR},
+    		faddress = #{faddress,jdbcType=VARCHAR},
+    		flongitude = #{flongitude,jdbcType=VARCHAR},
+    		flatitude = #{flatitude,jdbcType=VARCHAR},
+    		fremark = #{fremark,jdbcType=VARCHAR},
+    		fcreator = #{fcreator,jdbcType=INTEGER},
+    		fcreat_time = #{fcreat_time,jdbcType=TIMESTAMP},
+    		feditor = #{feditor,jdbcType=INTEGER}
+    	where 
+    		factory_id = #{factory_id}
+    </update>
+    
+    <select id="getById"  resultMap="CL_FactoryMap">
+    	select <include refid="columns"/> from cl_factory cf
+    	where cf.factory_id = #{factory_id}
+    </select>
+    
+    <select id="findPage" resultMap="CL_FactoryMap">
+    	select <include refid="columns"/> from cl_factory cf
+    </select>
+    
+    <select id="findPageCount" resultType="long">
+    	select count(factory_id) from cl_factory 
+    </select>
+    
+    <select id="getAllUseFactory" resultMap="CL_FactoryMap">
+    	select <include refid="columns"/> from cl_factory cf 
+    	where cf.fstatus = 1
+    </select>
+   
+   </mapper>

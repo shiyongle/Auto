@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-21 16:31:28 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.traffic.Saledeliverentry" table="t_tra_saledeliverentry">
+        <id name="fid" type="string">
+            <column name="FID" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fseq" type="java.lang.Integer">
+            <column name="FSEQ" />
+        </property>
+        <property name="fparentid" type="string">
+            <column name="FPARENTID" length="44" />
+        </property>
+        <property name="fsaleorderid" type="string">
+            <column name="FSALEORDERID" length="100" />
+        </property>
+        <property name="fdeliverorderid" type="string">
+            <column name="FDELIVERORDERID" length="100" />
+        </property>
+        <property name="fsupplierid" type="string">
+            <column name="FSUPPLIERID" length="44" />
+        </property>
+        <property name="fproductid" type="string">
+            <column name="FPRODUCTID" length="44" />
+        </property>
+        <property name="fproductspec" type="string">
+            <column name="FPRODUCTSPEC" length="100" />
+        </property>
+        <property name="famount" type="big_decimal">
+            <column name="FAMOUNT" precision="28" scale="10" />
+        </property>
+        <property name="freceiveaddress" type="string">
+            <column name="FRECEIVEADDRESS" length="100" />
+        </property>
+        <property name="freceiver" type="string">
+            <column name="FRECEIVER" length="100" />
+        </property>
+        <property name="freceiverphone" type="string">
+            <column name="FRECEIVERPHONE" length="100" />
+        </property>
+        <property name="fdeliveryaddress" type="string">
+            <column name="FDELIVERYADDRESS" length="100" />
+        </property>
+        <property name="fdelivery" type="string">
+            <column name="FDELIVERY" length="100" />
+        </property>
+        <property name="fdeliveryphone" type="string">
+            <column name="FDELIVERYPHONE" length="100" />
+        </property>
+        <property name="fremark" type="string">
+            <column name="FREMARK" />
+        </property>
+        <property name="feasid" type="string">
+            <column name="FEASID" length="44" />
+        </property>
+        <property name="fassembleentryid" type="string">
+            <column name="FASSEMBLEENTRYID" length="44" />
+        </property>
+          <property name="frealamount" type="big_decimal">
+            <column name="FREALAMOUNT" precision="28" scale="10" />
+        </property>
+         <property name="freceiptorid" type="string">
+            <column name="FRECEIPTORID" length="44" />
+        </property>
+        <property name="freceiptdate" type="timestamp">
+            <column name="FRECEIPTDATE" length="0" />
+        </property>
+        <property name="fisreceipts" type="java.lang.Integer">
+            <column name="FISRECEIPTS" />
+        </property>
+         <property name="fmaterialspec" type="string">
+            <column name="fmaterialspec" />
+        </property>
+        <property name="faffirmed" type="java.lang.Integer">
+            <column name="faffirmed" />
+        </property>
+        <property name="fdeliverordernumber" type="string">
+            <column name="FDELIVERORDERNUMBER" />
+        </property>
+        <property name="fpcmordernumber" type="string">
+            <column name="fpcmordernumber" />
+        </property>
+        <property name="fboxtype" type="java.lang.Integer">
+            <column name="fboxtype" />
+        </property>
+	
+    </class>
+</hibernate-mapping>

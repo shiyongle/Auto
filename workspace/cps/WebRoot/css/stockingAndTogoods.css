@@ -1,0 +1,174 @@
+@charset "utf-8";
+*{
+	margin:0px auto;
+	padding:0px;
+	}
+#nav{
+	width:1280px;
+	}
+#container{
+	width:1260px;
+	}
+.instruct{
+	width:1260px;
+	height:45px;
+	font-family:"微软雅黑";
+	font-size:14px;
+	}
+.instruct p{
+	height:45px;
+	line-height:45px;
+	}
+/*菜单选项*/
+.menu{
+	height:53px;
+	width:1260px;
+	line-height:50px;
+	}
+.menu ul li{
+	float:left;
+	list-style:none;
+	width:105px;
+	text-align:center;
+	font-family:"微软雅黑";
+	font-size:18px;
+	cursor:pointer;
+	}
+.menu ul a{
+	text-decoration:none;
+	color:#666;
+	}
+.menu ul li a:hover{
+	color:red;
+	}
+.menu .current{
+	border-left:1px solid lightgray;
+	border-right:1px solid lightgray;
+	background-color:#fff;
+	border-top:4px solid #C00;
+	}
+.menu .current a{
+	color:#C00;
+	}
+/*条件选项*/
+.condition{
+	width:1230px;
+	height:50px;
+	padding-left:30px;
+	line-height:50px;
+	font-family:"微软雅黑";
+	font-size:14px;
+	color:#666;
+	border:1px solid lightgray;
+	border-bottom:none;
+	}
+.condition .for_date{
+	width:100px;
+	height:25px;
+	padding-right:22px;
+	font-size:16px;
+	border:1px solid lightgray;
+	background:url(images/sj.png) 100px 2px no-repeat;
+	}
+.condition .key_word{
+	width:180px;
+	height:25px;
+	font-size:16px;
+	border:1px solid lightgray;
+	}
+.condition .for_submit{
+	height:25px;
+	width:60px;
+	background-color:#eee;
+	border:1px solid #ccc;
+	}
+.condition .for_submit:hover{
+	cursor:pointer;
+	}	
+
+.condition .export{
+	height:25px;
+	width:75px;
+	background-color:#eee;
+	border:1px solid #ccc;
+	float:right;
+	line-height:25px;
+	margin-top:15px;
+	margin-right:10px;
+	}
+.condition .export:hover{
+	cursor:pointer;
+	}	
+.data{
+	width:1260px;
+	border:1px solid lightgray;
+	border-bottom:none;
+	border-top:none;
+	}
+.data ._chk,.data .txt{
+	float:left;
+	line-height:42px;
+	}
+.data ._chk{
+	margin-left:6px;
+	}
+.data .check{
+	width:20px;
+	height:20px;
+	vertical-align:middle;
+	}
+.data .txt{
+	width:280px;
+	}
+.data table{
+	text-align:center;
+	font-size:15px;
+	color:#444;
+	font-family:Arial, Helvetica, sans-serif;
+	}
+.data .tbl_tlt{
+	background-color:#eee;
+	height:40px;
+	}
+.data .alltr td{
+	border-bottom:1px solid lightgray;
+	}
+.date .alltr .act{
+	line-height:10px;
+	}
+.alltr ._del,.alltr ._upd{
+	line-height:25px;
+	height:25px;/*基于订单商品列表的样式，不同于上商品列表样式*/
+	letter-spacing:5px;
+	background:white;
+	border:none;
+	cursor: pointer;
+	}
+.date .td1{
+	text-align:left;
+	}
+.td1 p{
+	float:left;
+	}
+.td1 .ch_box{
+	width:20px;
+	height:20px;
+	margin-top:28px;
+	margin-left:6px;
+	}
+.td1 img{
+	margin-left:15px;
+	}
+.td1 .explan{
+	width:207px;
+	height:73px;
+	line-height:25px;
+	text-align:left;
+	margin-left:5px;
+	}
+#kkpager{
+	width:1260px;
+	height:80px;
+	text-align:center;
+	line-height:80px;
+	}

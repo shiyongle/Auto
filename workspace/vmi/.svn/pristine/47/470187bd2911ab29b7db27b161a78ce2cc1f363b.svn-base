@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-9-2 16:53:24 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.order.Statement" table="t_ord_statement" >
+        <id name="fid" type="string">
+            <column name="fid" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fcustomerid" type="string">
+            <column name="fcustomerid" length="44" />
+        </property>
+        <property name="fmonth" type="string">
+            <column name="fmonth" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+        <property name="ffileid" type="string">
+            <column name="ffileid" />
+        </property>
+        <property name="fcreateuserid" type="string">
+            <column name="fcreateuserid" />
+        </property>
+    </class>
+</hibernate-mapping>

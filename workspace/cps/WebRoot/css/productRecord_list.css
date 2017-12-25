@@ -1,0 +1,166 @@
+@charset "utf-8";
+/* CSS Document */
+*{
+	margin:0px auto;
+	padding:0px;
+	font-family:"宋体";
+	}
+#nav{
+	width:1070px;
+	}
+#p_title{
+	height:40px;
+	width:1070px;
+	line-height:40px;
+	font-size:12px;
+	background-color:#f1f1f1;
+	}
+.condition_form{
+	width:1045px;
+	height:65px;
+	line-height:65px;
+	}
+/*********搜索下拉框样式*************/
+.condition_form .selectdiv{
+	float:left;
+	width:270px;
+	margin-top:18px !important
+}
+ .condition_form #selectList{
+ 	float:left; 
+	 line-height:27px;
+}
+.condition_form ._txt{
+	font-size:14px;
+	float:left;
+	line-height:27px; 
+} 
+
+/* .condition_form ._txt{
+	font-size:14px;
+} */
+.condition_form ._key,.condition_form ._submit{
+	float:right;
+	}
+.condition_form ._key{
+	width:280px;
+	height:27px;
+	font-size:14px;
+	line-height:14px;
+	outline:none;
+	border:1px solid #ccc;
+	border-right:none;
+	margin-top:18px !important;
+	*margin-top:9px;
+	}
+.condition_form ._submit{
+	height:29px;
+	width:65px;
+	border:1px solid #ccc;
+	background:none;
+	margin-top:18px !important;
+	*margin-top:9px;
+	}
+.tbl{
+	border-collapse:collapse;
+	text-align:center;
+	}
+.firstTr{
+	height:30px;
+	line-height:30px;
+	background-color:#f0f0f0;
+	font-size:12px;
+	}
+.btngroup  input:hover{color:white;background-color:red;border:red;cursor:pointer;}
+.tbl ._add,.tbl ._del,.tbl ._setting{
+	float:left;
+	width:78px;
+	height:20px;
+	background:none;
+	border:1px solid #ccc;
+	font-size:12px;
+	margin-right:20px;
+	color:#333;
+	}
+.tbl ._add,.tbl ._del{
+	text-align:center;
+	letter-spacing:5px;
+	}
+.tbl ._excel{
+	float:right;
+	width:78px;
+	height:20px;
+	color:red;
+	border:1px solid red;
+	background-color:white;
+	}
+.tbl .data_title{
+	height:30px;
+	font-size:12px;
+	background-color:#f0f0f0;
+	border:1px solid #ccc;
+	}
+.data_title span{
+	display:inline-table;
+	height:28px;
+	line-height:28px;
+/* 	color:white;
+ */	}
+.data_title .span1{
+	width:160px;
+	text-align:left;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	}
+.data_title .span2{
+	margin-left:5px;
+	width:790px;
+	text-align:left;
+	}
+.data_title .span3{
+	width:35px;
+	text-align:left;
+	color:#00e;
+	cursor: pointer;
+	}
+.data_title .span4{
+	width:25px;
+	cursor:pointer;
+	float:right;
+	background:url(images/iconfont-lajitong9.png) 0px 0px no-repeat;
+	}
+.tbl ._data{
+	height:115px;
+	font-size:12px;
+	border:1px solid #ccc;
+	}
+.buttonTR a{
+	 display: inline-table;
+    text-decoration: none;
+  	height: 20px;
+    width: 80px;
+    border: 1px solid lightgray;
+    color: black;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+    font-size:12px;
+    margin:4px; 
+ }
+ .buttonTR a:hover{
+color:#fff;
+	background-color:red; }
+td.remark{
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+/*分页组件*/
+#kkpager{
+	height:80px;
+	width:1045px;
+	line-height:80px;
+	text-align:right;
+	}
+	

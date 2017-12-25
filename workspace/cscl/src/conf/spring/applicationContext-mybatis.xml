@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"	
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+    	http://www.springframework.org/schema/context 
+    	http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    	http://www.springframework.org/schema/tx    	 
+	    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	    http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-3.0.xsd" 
+    default-autowire="byName" default-lazy-init="false">
+    
+    <context:property-placeholder location="classpath:conf\spring\conf.properties" />
+	
+	<bean id="urlConf"  class="com.pc.util.UrlConf">
+		<property name="DJPAY_URL" value="${DJPAY_URL}" />
+		<property name="HSWURL" value="${HSWURL}" />
+		<property name="DJLOGIN_URL" value="${DJLOGIN_URL}" />
+		<property name="DJLOGIN_AN" value="${DJLOGIN_AN}" />
+		<property name="DJLOGIN_PS" value="${DJLOGIN_PS}" />
+		<property name="DJBASE_URL" value="${DJBASE_URL}" />
+		<property name="DJMSGPUSH" value="${DJMSGPUSH}" />
+	</bean>
+	
+	<!-- 配置dbcp数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+				
+<!-- 杭州测试服务器IP
+		<property name="url" value="jdbc:mysql://localhost:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="djvmi" />
+		<property name="password" value="djvmi" />
+-->
+		<!-- <property name="minIdle" value="1"></property>队列中的最小等待数 -->
+		<!-- <property name="maxIdle" value="5"></property>队列中的最大等待数 -->
+		<!-- <property name="maxWait" value="3000"></property>最长等待时间，单位毫秒 -->
+		<!-- <property name="maxActive" value="300"></property>最大活跃数 -->
+		<!-- <property name="initialSize" value="3"></property> -->
+		
+		<property name="driverClassName" value="${ds.driver}" />
+		<property name="url" value="${ds.url}" />
+		<property name="username" value="${ds.username}" />
+		<property name="password" value="${ds.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${ds.initialSize}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${ds.maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${ds.maxIdle}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${ds.minIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${ds.maxWait}"></property>
+	</bean>
+	
+	<!-- 扫描组件-->
+	<context:component-scan base-package="com.**.dao,com.pc.util"/>
+	
+	<!-- 事务配置 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 使用注解方式配置事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:com/pc/model/sqlmap/*SqlMap.xml" />
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<!--springmvc支持上传文件 -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>  
+    
+<!--     <bean id="couponsDao2" class="com.pc.dao.coupons.impl.CouponsDaoImpl" > </bean> 
+    <bean id="couponsDetailDao2" class="com.pc.dao.couponsDetail.impl.CouponsDetailDaoImpl" > </bean> 
+ -->    
+    <!-- spring定时调度 -->	
+<!-- 	<bean id="delJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.pc.controller.trigger.DelTriggerController"></property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="couponsDao" value-ref="couponsDao2"></entry>
+				<entry key="couponsDetailDao" value-ref="couponsDetailDao2"></entry>
+			</map>
+		</property>
+	</bean> -->
+	
+	<!-- 定时器注册 -->
+	<!-- <bean id="delTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+		<property name="jobDetail" ref="delJob" /> 
+		<property name="cronExpression" value="0 0 0 * * ?"></property> 
+	</bean>
+	
+	<bean id="csclTimerTask" class="com.pc.util.CsclTimerTask"></bean> -->
+	<!-- 定时器配置 -->
+	<!-- <bean id="billjob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="csclTimerTask"></property>指定任务类
+		<property name="targetMethod" value="updateOrderStatus"></property>指定任务方法
+	</bean> -->
+	<!-- 生成账单时间间隔触发器    暂时改为定时更新订单状态-->
+	<!-- <bean id="billTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="billjob"></property>
+		<property name="cronExpression">
+			每个月1号1点钟触发
+			<value>0 0 1 1 * ?</value>
+			<value>0 0/15 *  * * ?</value>
+		</property>
+	</bean> -->
+	<!-- 定时任务工厂注册 -->  
+ <!-- 	<bean id="schedulerFactory"  class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no">  
+	    <property name="triggers">  
+	        <list>  
+	            <ref bean="delTrigger" /> 
+	            <ref bean="billTrigger" /> 
+	        </list>  
+	    </property>  
+ 	</bean> -->
+ 	
+ 	 <!-- spring注解redis缓存 
+ 	<bean id="lockproxy"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>appOrderControll</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>lockInterfaceImpl</value>
+			</list>
+		</property>
+	</bean>
+ 	 --> 
+ 	
+ 	<context:component-scan base-package="com.pc.task" />
+	<task:executor id="executor" pool-size="5" />
+	<task:scheduler id="scheduler" pool-size="1" />
+	<task:annotation-driven executor="executor" scheduler="scheduler" />
+ 	
+ 	
+ 	
+ 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!--可用连接实例的最大数目，默认值为8 -->
+        <property name="maxTotal" value="${redis.maxIdle}"/>
+        <!--等待可用连接的最大时间 毫秒-->
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
+        <!--在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的-->
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        <!--Idle时进行连接扫描 -->
+        <property name="testWhileIdle" value="${redis.testWhileIdle}"/>
+        <!--控制一个pool最多有多少个状态为idle(空闲的)的jedis实例，默认值也是8。-->
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <!--表示idle object evitor两次扫描之间要sleep的毫秒数-->
+        <property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}"/>
+        <!--表示idle object evitor每次扫描的最多的对象数-->
+        <property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}"/>
+        <!--表示一个对象至少停留在idle状态的最短时间 毫秒数-->
+        <property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}"/>
+    </bean>
+ 	
+ 	<bean id="jedisCluster" class="redis.clients.jedis.JedisCluster" >
+        <constructor-arg>
+            <set>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${cluster.d1.host}" />
+                    <constructor-arg name="port" value="${cluster.d1.port}" />
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${cluster.d2.host}" />
+                    <constructor-arg name="port" value="${cluster.d2.port}" />
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${cluster.d3.host}" />
+                    <constructor-arg name="port" value="${cluster.d3.port}" />
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${cluster.d4.host}" />
+                    <constructor-arg name="port" value="${cluster.d4.port}" />
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${cluster.d5.host}" />
+                    <constructor-arg name="port" value="${cluster.d5.port}" />
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${cluster.d6.host}" />
+                    <constructor-arg name="port" value="${cluster.d6.port}" />
+                </bean>
+            </set>
+        </constructor-arg>
+        <constructor-arg name="connectionTimeout" value="2000" />
+        <constructor-arg name="soTimeout" value="2000" />
+        <constructor-arg name="maxAttempts" value="5" />
+        <constructor-arg name="password" value="${cluster.password}" />
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig" />
+    </bean>
+ 
+</beans>

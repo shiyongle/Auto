@@ -1,0 +1,24 @@
+@charset "utf-8";
+.main{
+	background-color:#ffffff;
+	margin:40px auto;
+	padding:50px 0;
+}
+
+.main h3{
+	margin:8px 0;
+}
+.main p{
+	font-size:15px;
+	margin:0px 0;
+}
+
+@media only screen and (max-width: 500px) {
+	.main h3{font-size:18px;margin:5px 0;margin-left:15px;}
+	.main p{font-size:11px;margin-left:15px;}
+	.main img{width:110px;}
+}
+@media only screen and (min-width: 992px) and (max-width: 1200px){
+	.main h3{margin-left:35px;}
+	.main p{margin-left:35px;}
+}

@@ -1,0 +1,119 @@
+@charset "utf-8";
+/* CSS Document */
+/* --------------------初始-------------------- */
+*{margin:0px auto;padding:0px;}
+ul{list-style:none;}
+img{border:none;}
+a{text-decoration: none;color:#000;font-size:12px;font-family:宋体;}
+body{font-size:14px;background:#f0f0f0;font-family:微软雅黑;}
+.noselect{
+	moz-user-select: -moz-none;
+	-moz-user-select: none;
+	-o-user-select:none;
+	-khtml-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+}
+.clear{clear:both;}
+/* --------------------开头导航------------------ */
+a.download{font-size:12px;color:#00f;padding-left:6px;}
+label{color:#4c4b4b;}
+#header{background:#f0f0f0;width:1070px;height:42px;}
+#header p{float:left;line-height:42px;padding-left:14px;}
+#header .header_btn{float:right;font-size:12px;color:#fff;background:#f76350;padding:6px 8px;margin-top:12px;margin-right:7px;border-radius:4px;}
+
+/* --------------------主体-------------------- */
+#main{width:1070px;font-family:微软雅黑;background:#fff;}
+.main_head{height:50px;border-bottom:2px solid #f76356;margin-bottom: 42px;}
+#main_nav{float:left;text-align:center;}
+#main_nav a{width:120px;height:50px;line-height:50px;display:block;float:left;color:#232323;font-size:18px;}
+#main_nav a.active{background:#f76356;color:#fff;}
+.designer{float:right;font-size:14px;color:#545454;height:50px;line-height:56px;padding-right:18px;}
+/*-----------状态-----------*/
+#status_wrap{width:840px;padding:40px 115px;margin-bottom: 28px;background:#fff;}
+.status{width:790px;background:#fff url(images/status_package.gif) no-repeat center 4px;}
+.status li{width:122px;float:left;margin-right:100px;padding-top:34px;color:#919090;}
+.status li.last{margin-right:0;}
+.status em{display:block;font-style:normal;text-align:center;line-height:18px;}
+.status span{display:none;}
+li.done{background:transparent url(images/status_dot.png) no-repeat center top;color:#f76350;}
+.done span{display:inline;}
+/*-----------内容--------*/
+
+h3{width:946px;height:44px;background:url(images/title_line.gif) no-repeat center 20px;text-align:center;font-size:25px;color:#676464;}
+h3 span{color:#8d8c8c;font-size:15px;font-family:Calibri;}
+/*---需求信息---*/
+.content1{padding-top:80px;padding-left:218px;padding-bottom:84px;}
+.content1 p{line-height:36px;margin:0;width:750px;}
+.content1 p label{font-size:18px;padding-right:8px;}
+.content1 p span{font-size:14px;width:200px;color:#727272;font-family:宋体;}
+.content1 .and{display:inline-block;}
+/*---方案设计---*/
+.content2{padding-top:48px;text-align:center;}
+.content2 em{display:inline-block;width:129px;height:129px;border-radius:150px;background:#7a7a7a;overflow:hidden;margin-bottom:20px;}
+.content2 p{font-size:20px;line-height:40px;color:#787d80;}
+.content2 .qq{display:inline-block;width:48px;height:21px;background:#fff url(images/online.png) no-repeat left center;}
+
+.design{position:relative;}
+.design h5{margin:52px auto 38px;width:132px;height:54px;border:2px solid #f76350;position:relative;text-align:center;cursor:pointer;-moz-user-select:none;-webkit-user-select:none;user-select:none;}
+h5 div.bg{width:100%;border:10px solid #fff;position:absolute;top:16px;left:-10px;line-height:0;}
+h5 span{position:relative;z-index:10;display:inline-block;font-size:15px;font-family:宋体;color:#6f6c6c;}
+h5 strong{display:inline-block;width:74px;height:24px;line-height:30px;border-bottom:1px solid #f87867;margin-bottom:5px;}
+h5 a{display:block;position:absolute;left:14px;top:31px;width:10px;height:10px;border:2px solid #716e6e;}
+h5 a div{position:absolute;left:-2px;top:-2px;width:15px;height:15px;}
+h5 input{opacity:1;}
+.design p{text-align:left;font-size:16px;margin-left:168px;line-height:32px;}
+.design .best{display:none;}
+.selected img.best{display:block;position:absolute;right:280px;top:-40px;}
+.design .files{margin-left:168px;margin-top:10px;}
+.files .file_title{color:#4c4b4b;float:left;padding-right:10px;font-size:16px;}
+.files ul{float:left;width:688px;}
+.files ul li{float:left;padding-right:15px;color:#646464;font-size:16px;}
+.design .choose{position:absolute;right:170px;top:60px;color:#f60;}
+.design .choose input{position:relative;top:2px;}
+.selected h5 a div{background:url(images/design_gou.png) no-repeat right top;}
+.selected .frame{border:5px solid #e60012;}
+.selected .img_query .right{right:-28px;}
+/*设计图*/
+.design .img_query{margin:0 auto;width:729px;height:352px;position:relative;}
+.img_query .frame{width:100%;height:100%;overflow:hidden;text-align:center;background-color:#eee;}
+.img_query img{max-width:100%;max-height:100%;}
+.img_query span{position:absolute;display:block;cursor:pointer;}
+.img_query .left{left:-20px;top:160px;width:40px;height:41px;background:url(images/design_row.png) no-repeat left top;}
+.img_query .right{right:-20px;top:160px;width:40px;height:41px;background:url(images/design_row.png) no-repeat left bottom;}
+/* .img_query .view{right:0;bottom:0;background:url(images/design_view.png);width:28px;height:26px;} */
+/*按钮*/
+.content2 a.btn{display:inline-block;margin:54px;font-size:16px;color:#fff;background-color:#d80c18;width:94px;line-height:36px;border-radius:4px;}
+/*---方案产品档案---*/
+.content3{text-align:center;padding-top:40px;/* padding-bottom:120px; */}
+.content3 table{border:1px solid #ccc;width:792px;border-collapse:collapse;font-size:18px;color:#3c3b3b;}
+.content3 thead tr{height:44px;background:#dfdddd;}
+.content3 tbody tr{height:48px;color:#646464;}
+/*---方案特性---*/
+.pdtEntry{padding-left:170px;/* padding-top:80px;padding-bottom:84px; */}
+.pdtEntry p{line-height:36px;margin:0;width:750px;}
+.pdtEntry p label{font-size:18px;padding-right:8px;}
+.pdtEntry p span{font-size:14px;width:200px;color:#727272;font-family:宋体;}
+.pdtEntry .and{display:inline-block;}
+td.files{border-bottom:1px dashed #ddd;padding-left:20px;}
+td.file_info ul{}
+.design table{
+	padding:10px;
+}
+.design td:nth-child(odd) span{
+	float:right;
+}
+.design td:nth-child(even) span{
+	float:left;
+}
+.designEntry tr{
+	height:45px;
+	border:1px solid #aaa;
+}
+body .designEntry table tr.titleTr{
+	background-color:#dfdddd;
+}
+.designEntry table{
+	margin-bottom:10px;
+}

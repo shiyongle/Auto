@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_MessageSend">
+
+    <resultMap id="CL_MessageSendMap" type="com.pc.model.CL_MessageSend">
+        <result property="fid" column="fid"/>
+        <result property="fmessageid" column="fmessageid"/>
+        <result property="freceiverid" column="freceiverid"/>
+        <result property="fisread" column="fisread"/>
+        <result property="freadtime" column="freadtime"/>
+    </resultMap>
+    
+    <!-- TEST START -->
+    <!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[msg.fid,msg.fmessageid,msg.freceiverid,msg.fisread,
+  msg.freadtime,cm.title,cm.content,cm.create_time createtime]]>
+	</sql>
+	
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(fid)">
+			    AND msg.fid = #{fid}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(fmessageid)">
+			    AND msg.fmessageid = #{fmessageid}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(freceiverid)">
+			    AND msg.freceiverid = #{freceiverid}
+			</if>
+			<if test="@Ognl@isNotEmpty(fisread)">
+			    AND msg.fisread = #{fisread}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(freadtime)">
+			    AND msg.freadtime = #{freadtime}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(title)">
+			    AND cm.title = #{title}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(content)">
+		   		AND cm.content = #{content}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(createtime)">
+		   		AND cm.create_time = #{createtime}
+		   	</if>
+		
+	    </where>
+	</sql>
+    
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_message_send msg
+    	LEFT JOIN cl_message cm ON msg.fmessageid = cm.id 
+        <include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CL_MessageSendMap">
+    	SELECT <include refid="columns"/> FROM cl_message_send msg 
+    	LEFT JOIN cl_message cm ON msg.fmessageid = cm.id 
+		<include refid="findWhere"/>
+		ORDER BY cm.create_time DESC
+    </select>
+    
+    <update id="updatePart" >
+    <![CDATA[
+        UPDATE cl_message_send SET
+        	fisread  = 1,
+        	freadtime= NOW()
+        WHERE 
+	        fid = #{fid}
+    ]]>
+    </update>
+    
+    
+    <select id="getByMsgId" resultMap="CL_MessageSendMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_message_send msg
+	        LEFT JOIN cl_message cm ON msg.fmessageid = cm.id 
+	        WHERE 
+		        msg.fmessageid = #{fmessageid} 
+	    ]]>
+    </select>
+
+    <!-- TEST END -->
+    
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_message_send (
+	        fid  ,
+	        fmessageid ,
+	        freceiverid ,
+	        fisread  ,
+	        freadtime    
+        ) VALUES (
+        	#{fid, jdbcType=INTEGER} ,
+        	#{fmessageid, jdbcType=INTEGER} ,
+        	#{freceiverid, jdbcType=INTEGER} ,
+        	#{fisread, jdbcType=INTEGER} ,
+        	#{freadtime, jdbcType=TIMESTAMP} 
+        )
+    ]]>
+    </insert>
+    
+     <insert id="insertByuserrole" >
+    <![CDATA[
+       INSERT INTO cl_message_send (fmessageid,freceiverid,fisread)
+SELECT #{fmessageid},id freceiverid,0 FROM `cl_user_role` WHERE role_id =2 
+    ]]>
+    </insert>
+    
+ 	<delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_message_send WHERE
+        fid = #{id} 
+    ]]>
+    </delete>
+    
+    <delete id="deletepl" >
+        DELETE FROM cl_message_send WHERE fmessageid IN
+         <foreach item="item" collection="ids" open="("
+                  separator="," close=")">
+             #{item}
+         </foreach>
+    </delete>
+
+
+</mapper>
+

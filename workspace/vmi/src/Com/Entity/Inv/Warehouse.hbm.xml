@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-6-26 8:47:41 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class name="Com.Entity.Inv.Warehouse" table="t_bd_warehouse">
+  <id name="fid" type="string">
+   <column length="36" name="FID"/>
+   <generator class="assigned"/>
+  </id>
+  <property generated="never" lazy="false" name="fnumber" type="string">
+   <column length="80" name="FNUMBER"/>
+  </property>
+  <property generated="never" lazy="false" name="fcreatorid" type="string">
+   <column length="36" name="FCREATORID"/>
+  </property>
+  <property generated="never" lazy="false" name="fcreatetime" type="timestamp">
+   <column length="0" name="FCREATETIME"/>
+  </property>
+  <property generated="never" lazy="false" name="flastupdateuserid" type="string">
+   <column length="36" name="FLASTUPDATEUSERID"/>
+  </property>
+  <property generated="never" lazy="false" name="flastupdatetime" type="timestamp">
+   <column length="0" name="FLASTUPDATETIME"/>
+  </property>
+  <property generated="never" lazy="false" name="fsimplename" type="string">
+   <column length="80" name="FSIMPLENAME"/>
+  </property>
+  <property generated="never" lazy="false" name="fcontrollerid" type="string">
+   <column length="36" name="FCONTROLLERID"/>
+  </property>
+  <property generated="never" lazy="false" name="faddress" type="string">
+   <column length="100" name="FADDRESS"/>
+  </property>
+  <property generated="never" lazy="false" name="foutstorage" type="big_decimal">
+   <column name="FOUTSTORAGE" precision="28" scale="4"/>
+  </property>
+  <property generated="never" lazy="false" name="finstorage" type="big_decimal">
+   <column name="FINSTORAGE" precision="28" scale="4"/>
+  </property>
+  <property generated="never" lazy="false" name="fname" type="string">
+   <column name="FNAME"/>
+  </property>
+  <property generated="never" lazy="false" name="fdescription" type="string">
+   <column name="FDESCRIPTION"/>
+  </property>
+  <property generated="never" lazy="false" name="fwarehousetype" type="int">
+   <column name="FWAREHOUSETYPE" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="cffreightprice" type="big_decimal">
+   <column name="CFFREIGHTPRICE" precision="28" scale="10"/>
+  </property>
+  <property generated="never" lazy="false" name="cfaddresid" type="string">
+   <column length="36" name="CFADDRESID"/>
+  </property>
+ </class>
+</hibernate-mapping>

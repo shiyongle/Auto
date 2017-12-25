@@ -1,0 +1,40 @@
+# huashengke
+HSWURL=http://dacuoxiaosa.vicp.cc:15010/DJBankPay
+ds.driver=com.mysql.jdbc.Driver
+
+# hz ceshi IP
+ds.url=jdbc:mysql://121.40.160.69:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8
+ds.username=djvmi
+ds.password=djvmi
+
+# ali ceshi IP
+#url=jdbc:mysql://121.40.160.69:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8
+#username=djvmi
+#password=djvmi
+
+# zhengshi IP
+#url=jdbc:mysql://10.27.224.232:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8
+#username=djcscl
+#password=DongJingcscl
+
+#ds.url=jdbc:mysql://localhost:3306/cscl?useUnicode=true&amp;characterEncoding=UTF-8
+#ds.username=djvmi
+#ds.password=djvmi
+
+ds.initialSize=0
+ds.maxActive=20
+ds.maxIdle=20
+ds.minIdle=1
+ds.maxWait=60000
+
+# zhifu ali ceshi DJPAY_URL=http://121.40.160.69:8080/djpay/UnifiedRequest
+# zhifu hz ceshi DJPAY_URL=http://118.178.130.13:53657/djpay/UnifiedRequest
+# zhifu zhengshi DJPAY_URL=http://10.27.238.157:53657/djpay/UnifiedRequest
+DJPAY_URL=http://121.40.160.69:8080/djpay/UnifiedRequest
+
+# denglu zhengshi DJLOGIN_URL=http://10.117.28.235/cps/CsclDispatcher
+# denglu hz ceshi DJLOGIN_URL=http://192.168.10.201/cps/CsclDispatcher
+# denglu ali ceshi DJLOGIN_URL=http://121.40.160.69:8080/cps/CsclDispatcher
+DJLOGIN_URL=http://121.40.160.69:8080/cps/CsclDispatcher
+DJLOGIN_AN=csclapp
+DJLOGIN_PS=csclapp

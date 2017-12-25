@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Umeng_Push">
+
+	<resultMap id="CLUmengPush" type="com.pc.model.CL_Umeng_Push">
+		<result property="fid" column="fid" />
+		<result property="fuserid" column="fuserid" />
+		<result property="fdeviceType" column="fdeviceType" />
+		<result property="fdevice" column="fdevice" />
+		<result property="fcreateTime" column="fcreateTime" />
+		<result property="flastTime" column="flastTime" />
+		<result property="fuserType" column="fuserType" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+	     fid,fuserid,fdeviceType,fdevice,fcreateTime,flastTime,fuserType
+           ]]>
+	</sql>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO CL_Umeng_Push (
+	      fuserid,fdeviceType,fdevice,fcreateTime,flastTime,fuserType
+        ) VALUES (
+        	#{fuserid, jdbcType=INTEGER} ,
+        	#{fdeviceType, jdbcType=INTEGER} ,
+        	#{fdevice, jdbcType=VARCHAR} ,
+        	#{fcreateTime,jdbcType=TIMESTAMP},
+        	#{flastTime,jdbcType=TIMESTAMP},
+        	#{fuserType, jdbcType=INTEGER}
+        )
+    ]]>
+	</insert>
+
+	<update id="update">
+    <![CDATA[
+        UPDATE CL_Umeng_Push SET
+        	fuserid=#{fuserid, jdbcType=INTEGER} ,
+        	fdeviceType=#{fdeviceType, jdbcType=INTEGER} ,
+        	fdevice=#{fdevice, jdbcType=VARCHAR} ,
+        	fcreateTime=#{fcreateTime,jdbcType=TIMESTAMP},
+        	flastTime=#{flastTime,jdbcType=TIMESTAMP},
+        	fuserType=#{fuserType, jdbcType=INTEGER} 
+        
+        WHERE 
+	        fid = #{fid} 
+    ]]>
+	</update>
+
+	<select id="getDevice" resultMap="CLUmengPush">
+		SELECT
+		<include refid="columns" />
+		FROM CL_Umeng_Push
+		where fuserid=#{fuserid}
+		<if test="@Ognl@isNotEmpty(ftype)">
+			and fdeviceType=#{ftype}
+		</if>
+		
+	</select>
+</mapper>
+

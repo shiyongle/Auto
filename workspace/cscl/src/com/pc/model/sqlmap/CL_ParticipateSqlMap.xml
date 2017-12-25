@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="CL_Participate">
+	<resultMap id="CLParticipateMap" type="com.pc.model.CL_Participate">
+		<result property="fid" column="id"/>
+		<result property="ftype" column="ftype"/>
+		<result property="fname" column="fname"/>
+		<result property="ftel" column="ftel"/>
+		<result property="fphone" column="fphone"/>
+		<result property="faddress" column="faddress"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+		 fid,ftype,fname,ftel,fphone,faddress
+	</sql>
+	
+	<!-- 添加 -->
+	<insert id="insert">
+		INSERT INTO CL_Participate(
+		   ftype,fname,ftel,fphone,faddress
+		)
+		values(
+		       #{ftype jdbcType=INTEGER},
+		       #{fname jdbcType=VARCHAR},
+		       #{ftel jdbcType=VARCHAR},
+		       #{fphone jdbcType=VARCHAR},
+		       #{faddress jdbcType=VARCHAR}
+	    )
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delete">
+		DETELE FROM CL_Participate where fid=#{fid}
+	</delete>
+	
+	
+	<!-- 更新 -->
+	<update id="update">
+		UPDATE CL_Participate set 
+		       ftype=#{ftype jdbcType=INTEGER},
+               fname=#{fname jdbcType=VARCHAR},	
+			   ftel=#{ftel jdbcType=VARCHAR},
+			   fphone=#{fphone jdbcType=VARCHAR},
+			   faddress=#{faddress jdbcType=VARCHAR}
+		WHERE fid=#{fid}								 							 						  
+	</update>
+	
+	<!-- 通过ID查询 -->
+	<select id="getById" resultMap="CLParticipateMap">
+	   SELECT <include refid="columns"/> FROM CL_Participate WHERE  fid = #{fid} 
+    </select>
+
+    <sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(id)">
+			    AND fid = #{fid}
+			</if>
+            <if test="@Ognl@isNotEmpty(ftype)">
+                AND ftype = #{ftype}
+            </if>
+            <if test="@Ognl@isNotEmpty(fname)">
+                AND fname = #{fname}
+            </if>
+            <if test="@Ognl@isNotEmpty(ftel)">
+                AND ftel = #{ftel}
+            </if>
+            <if test="@Ognl@isNotEmpty(fphone)">
+                AND fphone = #{fphone}
+            </if>
+            <if test="@Ognl@isNotEmpty(faddress)">
+                AND faddress = #{faddress}
+            </if>
+	    </where>
+	</sql>
+    
+      <!-- 求满足条件的记录数 --> 
+   	<select id="findPageCount" resultType="long">
+        SELECT COUNT(*) FROM CL_Participate <include refid="findWhere"/>    
+    </select>
+    
+     <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CLParticipateMap">
+    	SELECT <include refid="columns"/> FROM CL_Participate 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+
+	<!-- 查询记录树 -->
+	<select id="find" resultMap="CLParticipateMap">
+	    SELECT <include refid="columns"/> FROM CL_Participate 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY #{sortColumns}
+		</if>
+    </select>
+	
+</mapper>

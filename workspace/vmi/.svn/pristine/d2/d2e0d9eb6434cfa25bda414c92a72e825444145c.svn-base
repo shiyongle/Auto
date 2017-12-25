@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-6-17 14:50:46 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.Inv.Usedstorebalance" table="t_inv_usedstorebalance" >
+        <id name="fid" type="string">
+            <column name="FID" length="45" />
+            <generator class="assigned" />
+        </id>
+        <property name="fratio" type="java.lang.Integer">
+            <column name="fratio" />
+        </property>
+        <property name="fusedqty" type="java.lang.Integer">
+            <column name="fusedqty" />
+        </property>
+        <property name="fdeliverorderid" type="string">
+            <column name="fdeliverorderid" length="44" />
+        </property>
+        <property name="fstorebalanceid" type="string">
+            <column name="fstorebalanceid" length="45" />
+        </property>
+        <property name="fproductid" type="string">
+            <column name="fproductid" length="45" />
+        </property>
+        <property name="ftype" type="java.lang.Integer">
+            <column name="ftype" />
+        </property>
+    </class>
+</hibernate-mapping>

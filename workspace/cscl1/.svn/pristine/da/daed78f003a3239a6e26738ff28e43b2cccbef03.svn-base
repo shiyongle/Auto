@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="CL_Refuse">
+
+    <resultMap id="CLRefuseMap" type="com.pc.model.CL_Refuse">
+		<result property="fid" column="fid"/>
+        <result property="fstart_time" column="fstart_time"/>
+        <result property="fend_time" column="fend_time"/>
+        <result property="fcreator" column="fcreator"/>
+        <result property="fcreate_time" column="fcreate_time"/>
+        <result property="fupdate_time" column="fupdate_time"/>
+        <result property="ftype" column="ftype"/>
+        <result property="fkey" column="fkey"/>
+        <result property="fvalues" column="fvalues"/>
+    </resultMap>
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO cl_refuse (
+	        fid  ,
+	        fcreator  ,
+	        fcreate_time  ,
+	        fstart_time  ,
+	        fend_time  ,
+	        fupdate_time,
+	        ftype,
+	        fkey,
+	        fvalues
+        ) VALUES (
+        	#{fid, jdbcType=INTEGER} ,
+        	#{fcreator, jdbcType=INTEGER} ,
+        	#{fcreate_time, jdbcType=TIMESTAMP} ,
+        	#{fstart_time, jdbcType=INTEGER} ,
+        	#{fend_time, jdbcType=TIMESTAMP} ,
+        	#{fupdate_time, jdbcType=TIMESTAMP} ,
+        	#{ftype, jdbcType=INTEGER} ,
+	        #{fkey,jdbcType=VARCHAR} ,
+	        #{fvalues,jdbcType=VARCHAR}
+        )
+    ]]>
+    </insert>
+
+    <update id="update"  >
+    <![CDATA[
+        UPDATE cl_refuse SET
+        	fstart_time = #{fstart_time, jdbcType=TIMESTAMP} ,
+        	fend_time = #{fend_time, jdbcType=TIMESTAMP} ,
+        	fupdate_time= #{fupdate_time, jdbcType=TIMESTAMP} ,
+        	ftype = #{ftype, jdbcType=INTEGER} ,
+	        fkey = #{fkey,jdbcType=VARCHAR} ,
+	        fvalues = #{fvalues,jdbcType=VARCHAR}
+        WHERE 
+	        fid = #{fid} 
+    ]]>
+    </update>
+    
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_refuse WHERE fid = #{fid} 
+    ]]>
+    </delete>
+    
+    <sql id="columns">
+    	cr.fid,DATE_FORMAT(cr.fstart_time,'%Y-%m-%d %H:%i%s') fstart_time,DATE_FORMAT(cr.fend_time,'%Y-%m-%d %H:%i%s') fend_time,cr.fcreator,DATE_FORMAT(cr.fcreate_time,'%Y-%m-%d %H:%i%s') fcreate_time,DATE_FORMAT(cr.fupdate_time,'%Y-%m-%d %H:%i%s') fupdate_time,cr.ftype,cr.fvalues,cr.fkey,ur1.vmi_user_name fcreatorName
+    </sql>
+    
+    <select id="getById" resultMap="CLRefuseMap">
+    	select <include refid="columns"/> from cl_refuse cr LEFT JOIN cl_user_role ur1 on ur1.id = cr.fcreator where cr.fid = #{fid}
+    </select>
+ 
+	<sql id="findWhere">
+	    <where>
+	    
+		   	<if test="fid != null and fid != 0">
+			    AND cr.fid = #{fid}
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(fcreator)">
+			    AND cr.fcreator = #{fcreator}
+			</if>
+			
+		   	<if test="@Ognl@isNotEmpty(fcreate_time)">
+		   		AND cr.fcreate_time=#{fcreate_time} 
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(fupdate_time)">
+			    AND cr.fupdate_time = #{fupdate_time}
+			</if>
+			
+		   	<if test="@Ognl@isNotEmpty(ftype)"  >
+			    AND cr.ftype = #{ftype}
+			</if>
+			
+	    </where>
+	</sql>
+    
+    <select id="findPage" resultMap="CLRefuseMap">
+    	SELECT <include refid="columns"/> 
+    	FROM cl_refuse cr 
+		LEFT JOIN cl_user_role ur1 on ur1.id = cr.fcreator
+		<include refid="findWhere"/>  
+	 	ORDER BY cr.fcreate_time,cr.ftype ASC
+    </select>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(cr.fid) FROM cl_refuse cr 
+		<include refid="findWhere"/>    
+    </select>
+    
+    <select id="IsExistIdByType" resultMap="CLRefuseMap">
+	    SELECT cr.fid , cr.ftype
+	    <![CDATA[
+	        FROM cl_refuse cr WHERE cr.ftype = #{ftype} 
+	    ]]>
+    </select>
+    
+    <select id="getusername" resultMap="CLRefuseMap">
+    	SELECT GROUP_CONCAT(vmi_user_name) fvalues from cl_user_role ur2 where id IN 
+    	<foreach item="item" collection="array" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+    </select>
+    
+</mapper>

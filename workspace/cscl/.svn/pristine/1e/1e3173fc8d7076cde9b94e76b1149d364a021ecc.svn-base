@@ -1,0 +1,13 @@
+APP端：
+
+	项目路径：src\com\pc\appInterface为APP调用的类文件,其下的Controller类中的方法 @RequestMapping规则为("/app/目录名/方法名")
+	
+	
+PC端：
+
+         项目路径：src\com\pc\controller为PC调用的类文件,其下的Controller类中的方法 @RequestMapping规则为("/目录名/方法名")
+
+
+
+
+			 

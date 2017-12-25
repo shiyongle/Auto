@@ -1,0 +1,59 @@
+@CHARSET "UTF-8";
+/******表单按钮***********/
+.Mbutton20 {
+	background: url("../css/images/button20.png") repeat-x scroll 0 0;
+	width: 51px;
+	height: 21px;
+	float: right;
+	line-height: 20px;
+	text-align: center;
+	color: #2977A8;
+	font-weight: 700;
+	cursor: pointer;
+	margin-top: 5px;
+	margin-right: 10px;
+	font-size: 13px;
+}
+
+.Mbutton25 {
+	background: url("../css/images/button25.png") repeat-x scroll 0 0;
+	width: 61px;
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+	color: #2977A8;
+	font-weight: 700;
+	cursor: pointer;	
+	font-size: 13px;
+}
+
+.createButton{
+	float: right;
+	margin-top: 5px;
+}
+
+.leftButton{
+	margin-left:10px;
+	margin-top:12px;
+	float:left;
+}
+
+.searchButton{
+	float:left;
+	margin-left:20px;
+}
+/******表单input***********/
+.red{
+    color: #ff0000;
+    position: relative;
+}
+.m-info-title{
+		text-align:right;
+		height:30px;
+		font-weight:700;
+		padding-right:10px;
+	}
+
+.m-info-content input{
+	height:22px;
+}

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-7-23 15:42:29 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.Logistics.Logisticsorder" table="t_ord_logisticsorder" >
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fcustomerid" type="string">
+            <column name="fcustomerid" length="44" />
+        </property>
+        <property name="faddressid" type="string">
+            <column name="faddressid" length="100" />
+        </property>
+        <property name="flinkman" type="string">
+            <column name="flinkman" length="40" />
+        </property>
+        <property name="fphone" type="string">
+            <column name="fphone" length="40" />
+        </property>
+        <property name="fcargoname" type="string">
+            <column name="fcargoname" length="100" />
+        </property>
+        <property name="fcargoaddress" type="string">
+            <column name="fcargoaddress" length="100" />
+        </property>
+        <property name="frecipientsname" type="string">
+            <column name="frecipientsname" length="100" />
+        </property>
+        <property name="frecipientsphone" type="string">
+            <column name="frecipientsphone" length="40" />
+        </property>
+        <property name="fdriver" type="string">
+            <column name="fdriver" length="100" />
+        </property>
+        <property name="fdriverphone" type="string">
+            <column name="fdriverphone" length="40" />
+        </property>
+        <property name="farrivedate" type="timestamp">
+            <column name="farrivedate" length="0" />
+        </property>
+        <property name="frealityarrivetime" type="timestamp">
+            <column name="frealityarrivetime" length="0" />
+        </property>
+        <property name="fcost" type="java.lang.Float">
+            <column name="fcost" precision="12" scale="0" />
+        </property>
+        <property name="fstate" type="java.lang.Integer">
+            <column name="fstate" />
+        </property>
+        <property name="fnumber" type="string">
+            <column name="fnumber" length="40" />
+        </property>
+        <property name="frecipientsaddress" type="string">
+            <column name="frecipientsaddress" length="100" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+        <property name="fcreater" type="string">
+            <column name="fcreater" length="44" />
+        </property>
+        <property name="fcargotype" type="string">
+            <column name="fcargotype" length="100" />
+        </property>
+        <property name="fcarnumber" type="string">
+            <column name="fcarnumber" length="44" />
+        </property>
+        <property name="fconveyingstate" type="java.lang.Integer">
+            <column name="fconveyingstate">
+                <comment>&#212;&#203;&#202;&#228;&#215;&#180;&#204;&#172;</comment>
+            </column>
+        </property>
+        <property name="farrivetime" type="java.lang.Integer">
+            <column name="farrivetime">
+                <comment>0&#201;&#207;&#206;&#231; 1&#207;&#194;&#206;&#231;</comment>
+            </column>
+        </property>
+        <property name="fcartype" type="string">
+            <column name="fcartype" length="100">
+                <comment>&#179;&#181;&#208;&#205;</comment>
+            </column>
+        </property>
+        <property name="fdescription" type="string">
+            <column name="fdescription" length="200" />
+        </property>
+    </class>
+</hibernate-mapping>

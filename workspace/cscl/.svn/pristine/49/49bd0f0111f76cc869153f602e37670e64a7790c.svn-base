@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_OrderDetail">
+
+    <resultMap id="CL_OrderDetailMap" type="com.pc.model.CL_OrderDetail">
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="detailType" column="detail_type"/>
+        <result property="linkman" column="linkman"/>
+        <result property="phone" column="phone"/>
+        <result property="addressName" column="address_name"/>
+        <result property="snumber" column="snumber"/>
+        <result property="securityCode"  column="security_code" />
+        <result property="pass" column="pass"/>
+        <result property="longitude"  column="longitude" />
+        <result property="latitude"  column="latitude" />
+        <result property="addressId" column="addressId"/>
+        <result property="fstatus" column="fstatus"/>
+        <result property="farrived_time" column="farrived_time"/>
+
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        id ,order_id ,detail_type ,linkman ,phone ,address_name,snumber,security_code,pass,longitude,latitude,addressId,fstatus,farrived_time
+	    ]]>
+	</sql>
+	
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_order_detail (
+	        id  ,
+	        order_id  ,
+	        detail_type  ,
+	        linkman  ,
+	        phone  ,
+	        address_name,
+	        snumber ,
+	        security_code,
+	        pass,
+	        longitude,
+	        latitude,
+	        addressId,
+	        fstatus,
+	        farrived_time
+        ) VALUES (
+        	#{id, jdbcType=INTEGER} ,
+        	#{orderId, jdbcType=INTEGER} ,
+        	#{detailType, jdbcType=INTEGER} ,
+        	#{linkman, jdbcType=VARCHAR} ,
+        	#{phone, jdbcType=VARCHAR} ,
+        	#{addressName, jdbcType=VARCHAR},
+        	#{snumber,jdbcType=INTEGER},
+        	#{securityCode,jdbcType=VARCHAR},
+        	#{pass,jdbcType=INTEGER},
+        	#{longitude,jdbcType=VARCHAR},	
+        	#{latitude,jdbcType=VARCHAR},
+        	#{addressId,jdbcType=INTEGER},
+        	#{fstatus,jdbcType=INTEGER},
+        	#{farrived_time,jdbcType=TIMESTAMP}
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+        UPDATE cl_order_detail SET
+	        order_id = #{orderId, jdbcType=INTEGER} ,
+	        detail_type = #{detailType, jdbcType=INTEGER} ,
+	        linkman = #{linkman, jdbcType=VARCHAR} ,
+	        phone = #{phone, jdbcType=VARCHAR} ,
+	        address_name = #{addressName, jdbcType=VARCHAR},
+	        snumber = #{snumber, jdbcType=INTEGER} ,
+	        security_code=#{securityCode,jdbcType=VARCHAR},
+	        pass=#{pass,jdbcType=INTEGER},
+	        longitude=#{longitude,jdbcType=VARCHAR},
+	        latitude=#{latitude,jdbcType=VARCHAR},
+	        fstatus=#{fstatus,jdbcType=INTEGER},
+	        farrived_time=#{farrived_time,jdbcType=TIMESTAMP}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+	 <update id="updatePass" >
+		    <![CDATA[
+		        UPDATE cl_order_detail SET
+		         pass=#{pass,jdbcType=INTEGER}
+		        WHERE 
+			      id=#{orderDetailId}   
+		    ]]>
+	 </update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_order_detail WHERE
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_OrderDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        id = #{id} 
+	    ]]>
+    </select>
+   <select id="getByIdAndCode" resultMap="CL_OrderDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        id = #{orderDetailId}  and   security_code=#{securityCode}
+	    ]]>
+    </select>
+    
+     <select id="getByOrderId" resultMap="CL_OrderDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        order_id = #{orderId} and  detail_type =#{detailType}
+	    ]]>
+    </select>
+    
+     <select id="getAllByOrderId" resultMap="CL_OrderDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        order_id = #{orderId}
+	    ]]>
+    </select>
+    
+    <!-- 为防止有出入，专门为app再次下单接口改一个方法	 by	 lancher -->
+     <select id="getByNewOrderId" resultMap="CL_OrderDetailMap">
+	    SELECT order_id ,detail_type ,linkman ,phone ,address_name,snumber,security_code,pass,longitude,latitude,addressId id,fstatus,id orderDetailId,farrived_time
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        order_id = #{orderId} and  detail_type =#{detailType}
+	    ]]>
+    </select>
+    
+    <select id="getByPCOrderId" resultMap="CL_OrderDetailMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        order_id = #{orderId} 
+	    ]]>
+    </select>
+   
+ 
+    <!-- 通过订单ID获取订单明细记录中所有卸货地址的订单记录 -->
+    <select id="getByPCOrderIdForDeliver" resultMap="CL_OrderDetailMap">
+	    SELECT 
+	    <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        order_id = #{orderId}  and detail_type =2
+	    ]]>
+    </select>
+   
+ 
+    <!-- 通过订单ID获取订单明细记录中发货地址为第一条的订单明星记录 -->
+    <select id="getByOrderIdForDeliverAddress" resultMap="CL_OrderDetailMap">
+	    SELECT 
+	    	min(snumber),
+	    <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_order_detail 
+	        WHERE 
+		        order_id = #{orderId}  and detail_type =1 
+	    ]]>
+    </select>
+    
+    <!-- 通过订单ID获取订单明细记录中收货地址为最后一条的订单明星记录 -->
+    <select id="getByOrderIdForConsigneeAddress" resultMap="CL_OrderDetailMap">
+	    SELECT max(snumber),<include refid="columns"/>
+	    <![CDATA[
+	    	
+	        FROM cl_order_detail 
+	        WHERE 
+		        order_id = #{orderId} and detail_type =2 
+	    ]]>
+    </select>
+    
+
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(id)">
+			    AND id = #{id}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(orderId)">
+			    AND order_id = #{orderId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(detailType)">
+			    AND detail_type = #{detailType}
+			</if>
+	    </where>
+	</sql>
+	  <select id="findCount" resultType="Integer">
+	  	 SELECT count(*) FROM cl_order_detail WHERE order_id = #{orderId} and  detail_type = #{detailType}
+	  </select>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_order_detail <include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CL_OrderDetailMap">
+    	SELECT <include refid="columns"/> FROM cl_order_detail 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+
+	
+	<select id="find" resultMap="CL_OrderDetailMap">
+	    SELECT <include refid="columns"/> FROM cl_order_detail 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+	
+</mapper>
+

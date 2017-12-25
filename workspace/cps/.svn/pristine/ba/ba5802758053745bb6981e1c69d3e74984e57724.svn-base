@@ -1,0 +1,100 @@
+@charset "utf-8";
+/* CSS Document */
+/* -------------初始化-------------- */
+*{margin:0px auto;padding:0px;}
+li{list-style:none;}
+img{border:none;}
+a{text-decoration: none;color:#000;}
+body{font-size:14px; }
+/* -------------top-------------- */
+/* hss 2016年4月2日 引人头部去掉原头部样式避免 */
+ #head{position:relative;z-index:999;}
+ 
+/* -------------轮播图片-------------- */
+#banner{width:100%;min-width:1280px;height:410px;position:relative;z-index:1;}
+#banner ul{width:100%;height:100%;overflow:hidden;position:relative;}
+#banner ul li{width:100%;height:100%;text-align:center;position:absolute;left:9999px;top:0;}
+#banner img{height:100% ;cursor:pointer;}
+#banner ol{position:absolute;bottom:30px;right:150px;}
+#banner ol li{width:16px;height:16px;float:left;margin-right:10px;background:url(images/banner_dot.png) no-repeat center bottom;}
+#banner li.on{background-position:center top;}
+/* hss 2016年4月1日 添加左右箭头 */
+.prev{width:48px;height:82px;background:url(images/index_prev.png) no-repeat center bottom; ; position:absolute;left:0; top:164px; cursor:pointer}
+.next{width:48px;height:82px;background:url(images/index_next.png) no-repeat center bottom;; position:absolute;right:0; top:164px;cursor:pointer}
+/* -------------推荐-------------- */
+#header{width:1280px;height:42px;}
+#header ul{float:left;}
+#header ul li{float:left;height:42px;line-height:42px;padding:0 7px;}
+#header ul li.first{color:#f00;}
+#header p{float:right;height:42px;line-height:42px;padding-left:24px;background:#fff url(images/tips.png) no-repeat left center;}
+.ucenter{display:block;position:absolute;top:17px;left:300px;padding:7px 20px 6px 20px;margin-top:6px;margin-left:10px;border:1px solid #d80c18;background:#fff;color:#d80c18;cursor:pointer;}
+#header span:active{border:1px solid #ccc;background:#d80c18;color:#fff;}
+#header span em{position:absolute;width:19px;line-height:19px;font-style:normal;top:1px;right:1px;background:#fff url(images/count.gif) no-repeat center center;text-align:center;color:#fff;}
+
+/*主体部分main*/
+
+ #content{width:100%;height:200px;text-align:center; }  /*hss修改height  */
+#content div.mk{width:1280px;height:168px;position:relative;overflow:hidden; margin-top:37px;}  /*hss修改margin-top */
+#content div.mk img{width:513px;height:168px;position:absolute;top:0;cursor:pointer;}
+.mk1{left:0;z-index:1;}
+.mk2{left:356px;z-index:2;}
+.mk3{left:640px;z-index:3;}
+.mk4{left:924px;z-index:4;}
+
+#main ul{width:1280px;height:150px;margin-bottom:78px;position:relative;}
+#main li{width:280px;height:148px;border:1px solid #ccc;float:left;margin:0 16px;position:relative;font-family:微软雅黑;}
+#main li.hover{border-color:#d80c18}
+#main dl{padding:24px 14px 24px 38px;text-align:left;}
+#main dt{font-size:20px;color:#2f2f35;}
+#main dd{font-size:12px;color:#c6c6c6;line-height:24px;}
+#main li a{position:absolute;right:14px;bottom:12px;border:1px solid #ccc;color:#c6c6c6;padding:6px 12px;}
+#main li a:hover{background-color:#d80c18;color:#fff;border:none;}
+/* #main ul span{position:absolute;right:1px;top:0;width:34px;height:76px;background:url(images/feedback.gif);cursor:pointer;} */
+
+#main h1{width:642px;height:60px;margin:80px auto 54px;}
+#main h1 img{width:100%;height:100%;}
+
+/* --------------------明星产品 hss  2016年4月2日 ------------------------ */
+.Starbackground{width:100%;min-width:1280px;background:#efefec;}
+.StarProduct{width:1280px;height:1020px;padding-top:15px;}
+.startit{width:100%;height:35px;}
+.startit a{width:110px;padding:5px 10px;background:#de5243;text-align:center;line-height:35px;color:#fff;font-size:22px;}
+.StarProduct ul{width:1295px;height:700px;}
+.StarProduct ul li{width:310px;height:300px;border:1px solid #e5e5e3;box-shadow: 0 3px 1px #c7c7c7;float:left;margin:10px 11px 10px 0;background:#fff;cursor:pointer;}
+.tit{color:#6e6e6e;text-align:center;line-height:28px;}
+.left{width:190px;float:left;padding:5px;}
+.left img{width:187px;height:253px;}
+.right{width:90px;float:left;padding: 5px;}
+.right img{width:83px;height:78px;padding:0 0 9px 0;	}
+
+.li1,.li2,.li3,.li4,.li5,.li6,.li7,.li8,.li9,.li10,.li11,.li12{z-index:0;position:absolute;width:310px;}
+.fugai{background:#fff; width:310px;height:300px;opacity: 0.8;  z-index:-1;position:absolute;text-align:center;cursor:pointer;}
+.fugai p{font-size:20px;line-height:300px;}
+
+
+/* -----------------------服务功能图标 hss 2016年4月2日 ------------------------ */
+.Services{width:1280px; height:260px;background:#fff;} 
+.Services ul{width:100%;padding-top:85px;}
+.Services ul li{float:left; width:420px;height:90px;background:#fff;border-right:1px solid #ddd;}
+.Services ul li img{float:left;cursor:pointer;margin-left:65px;}
+.Services ul li span{float:left; font-size:20px;font-family:微软雅黑;cursor:pointer;color:#e42e2e;width:258px;padding:5px 0 5px 15px;}
+.Services ul li p{float:left;font-size:12px;color:#8b8b8b;line-height:20px;cursor:pointer;width:258px;padding:0 0 0 15px;;}
+
+
+/* -------------底部-------------- */
+#footer{width:1280px;height:150px;background:#202223;color:#ccc;font-size:12px;}
+#footer .footer_link{float:left;width:390px;padding-top:10px;padding-left:12px;}
+#footer .footer_link p{line-height:30px;}
+#footer .footer_nav{float:left;width:398;text-align:center;}
+#footer .footer_nav img{margin-top:26px;margin-bottom:5px;}
+#footer p{line-height:36px;}
+#footer p.copyright{line-height:46px;}
+#footer a{color:#ccc;}
+#footer img.code{display:block;float:left;width:100px;height:100px;margin-left:78px;margin-top:25px;}
+
+
+
+.layskin {
+	border-radius:25px;
+	border:2px solid #a1a1a1;
+}

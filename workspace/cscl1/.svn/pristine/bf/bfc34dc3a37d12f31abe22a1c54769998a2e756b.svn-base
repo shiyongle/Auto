@@ -1,0 +1,333 @@
+@charset "utf-8";
+body
+{
+	background-color: #f0f2f5;
+}
+.aggrement_car_lin1{
+	overflow:hidden;
+}
+/*小于768px*/
+@media screen and (max-width: 769px) {
+    .car_mame {
+        font-size: 18px;
+    }
+    .car_big
+	{
+		font-size: 18px;
+	}
+	.car_border {
+       margin-bottom: 5%;
+    }
+    /*表单位移*/
+	.input_left
+	{
+		margin-left: 0px;
+	}
+	/*删除图片大小*/
+	.deletebtn img
+	{
+		width: 25px;
+		margin-top: 2px;
+	}
+}
+/*大于768px*/
+@media screen and (min-width: 769px) {
+    .car_mame {
+        font-size: 18px;
+    }
+    .car_big
+	{
+		font-size: 18px;
+	}
+	.car_border {
+       margin-bottom: 10%;
+    }
+    .input_left
+	{
+		margin-left: 42px;
+	}
+	/*删除按钮*/
+	.deletebtn
+	{
+		margin-top: 5px;
+	}
+}
+/* 小屏幕（平板，大于等于 768px） */
+/*@media (min-width: @screen-sm-min) { }*/
+
+/* 中等屏幕（桌面显示器，大于等于 992px） */
+/*@media (min-width: @screen-md-min) { ... }*/
+
+/* 大屏幕（大桌面显示器，大于等于 1200px） */
+/*@media (min-width: @screen-lg-min) { ... }*/
+.car_title
+{
+	background-color: #fff;
+	margin-top: 2%;
+	padding:30px;
+
+}
+.icons{
+	margin-left:10px;
+}
+/*整车零担*/
+.car_border
+{
+	height: 120px;
+	border: 1px solid #dddddd;
+	border-radius: 6px;
+	cursor: pointer;
+}
+.car_border:hover
+{
+	box-shadow: 0px 0px 10px 1px #a7cdff;
+}
+/*标题*/
+.car_mame
+{
+	padding-top: 1%;
+	padding-bottom: 1%;
+	
+}
+.car_mame img
+{
+	width: 18px;
+	vertical-align: middle;
+}
+/*图标*/
+.car_img_zheng
+{
+	background-image: url(images/car/zheng.png);
+	background-repeat: no-repeat;
+}
+.car_img_ling
+{
+	background-image: url(images/car/ling.png);
+	background-repeat: no-repeat;
+}
+.car_img_bao
+{
+	background-image: url(images/car/bao.png);
+	background-repeat: no-repeat;
+}
+/*车大小*/
+.car_big
+{
+	text-align: center;
+	color: #5c6068;
+	font-size:20px !important;
+}
+.car_text
+{
+	text-align: center;
+	color: #999999;
+	font-size:14px !important;
+	line-height:12px;
+}
+/*遮罩*/
+.mask
+{
+	border-radius: 6px;
+	background-image: url(images/car/bg.png);
+	position: relative;
+}
+.mask_img
+{
+	width: 30px;
+	height: 30px;
+	background-image: url(images/car/yes.png);
+	background-repeat: no-repeat;
+	z-index: 5;
+	position: absolute;
+	bottom: 4%;
+	right: 2%;
+	display: none;
+
+}
+/*地址*/
+/*.add
+{
+	background-image: url(images/car/add.png);
+	background-repeat: no-repeat;
+}*/
+.car_Smame
+{
+	font-size: 14px;
+	color: #999;
+	padding: 0;
+}
+.car_Smame span
+{
+	font-size: 18px;
+	color: #e6454a;
+	display: inline-block;
+}
+/*按钮*/
+.btn_colorXie
+{
+/* 	border: 1px solid #e6454a; */
+/* 	color: #e6454a; */
+}
+.btn_colorXie img
+{
+	width: 18px;
+	vertical-align: sub;
+}
+/*货物类型*/
+.items_type li 
+{
+	list-style: none;
+}
+.items_type div
+{
+	margin-bottom: 3%;
+	
+}
+.items_type div button
+{
+	color: #5c6068;
+	border: 1px solid #dddddd;
+}
+/*提交按钮*/
+.red_btn
+{
+	background-color: #e6454a;
+	margin: 5% 0%;
+}
+/*删除按钮*/
+.deletebtn
+{
+	vertical-align:middle;
+	cursor: pointer;
+	visibility: hidden;
+	z-index: 5;
+}
+
+/*修正bootstrap按钮的默认事件*/
+.btn:focus{
+	outline:none;
+	background-color:#FFFFFF;
+}
+/*货物长度/数量单位的位置修正*/
+.form-control-feedback
+{
+	top: 20px;
+	right: 30px;
+	width: 50px;
+	text-align: right;
+	pointer-events:auto!important;
+	z-index: 999;
+}
+/*下拉菜单*/
+.piao
+{
+	z-index: 999;
+	cursor: pointer;
+}
+#ul_down
+{
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	list-style: none;
+	margin-top: 1%;
+	padding: 0;
+}
+#ul_down li
+{
+	width: 100%;
+	display: block;
+	cursor: pointer;
+	text-align: center;
+}
+#ul_down li:hover
+{
+	background-color: #ddd;
+}
+/*增值服务*/
+.collectingFees{
+	border:none;
+	width:50%;
+	height:28px;
+	margin:-20px auto;
+	display:inline;
+}
+.collection{
+	padding:0 1.9% !important;
+}
+@media only screen and (max-width: 768px) {
+	.collection{padding:0 2.1% !important;}
+}
+@media only screen and (max-width: 600px) {
+	.collection{padding:0 2.6% !important;}
+}
+@media only screen and (max-width: 480px) {
+	.collection{padding:0 3.7% !important;}
+}
+
+/*提交订单*/
+.submit_form{
+	background-color:#DCDCDC;
+	margin-top:45px;
+}
+.submit_form p{
+	font-size:24px;
+	text-align:center;
+	color:#5B5F67;
+	font-weight:bold;
+	
+}
+.submit_form p span{
+	font-size:48px;
+	color:#E6454A;
+	font-weight:bold;
+	
+}
+.submit_form button{
+	margin-top:48px;
+}
+.submit_form button:focus{
+	background-color:#E54549;
+}
+.mileage{
+	line-height:126px;
+}
+.cost{
+	margin-top:20px;
+}
+@media only screen and (max-width: 992px) {
+	.mileage{line-height:50px;}
+	.cost{margin-top:0;}
+	.submit_form button{margin-top:10px;margin-bottom:20px;}
+}
+
+/*验证信息提示*/
+.myForm{
+	position:relative;
+}
+#time_err,#time2_err{
+	position:absolute;
+	top:16px;
+}
+#address_th_err,#address_xh_err,#contactName_err,#contactPhone_err,#contactName2_err,#contactPhone2_err{
+	position:absolute;
+	top:36px;
+}
+#goodsLength_err,#goodsNumber_err{
+	position: absolute;
+	top:37px;
+}
+
+#zheng{
+	display:none;
+	overflow:hidden;
+}
+/*鼠标变成手*/
+.map_icon,.address_icon,#address_table tr{
+	cursor:pointer;
+}
+/*按钮换色*/
+.lin_color_btn
+{
+	border: 1px solid #E6454A!important;
+	color: #E6454A!important;
+}

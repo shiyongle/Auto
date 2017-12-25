@@ -1,0 +1,75 @@
+//给用户分配角色
+Ext.define('DJ.System.Customer.SubRoleToUserEdit',{
+	extend:'Ext.c.SelectFrameUI',
+	id:'DJ.System.Customer.SubRoleToUserEdit',
+	modal:true,
+	title:'分配用户',
+	width:850,
+	height:600,
+	resizable:false,
+	closable:true,
+	MyConfig:{
+		txtLable:"用户名称",   //设置文本宽label值
+		selectbtnname:"分配",  //设置选择按钮text
+		delbtnname:"取消",      //设置取消按钮text
+		selecturl:"addRoleToSubUser.do",          //选择按钮调用接口
+		delurl:"delRoleFromSubUser.do"              //删除按钮调用接口
+	},
+	RightConfig:{
+		width:800,
+		height:200,
+		url:'getAllRoleOfSubUser.do',
+		objectfilterfield:'ur.fuserid',
+		fields:[{
+			name:'fid'
+		},{
+			name:'fname'
+		},{
+			name:'fnumber'
+		}],
+		columns:[{
+			dataIndex:'fid',
+			hidden:true,
+			hideable:false,
+			sortable:true
+		},{
+			header:'角色名称',
+			dataIndex:'fname',
+			flex:1,
+			sortable:true
+		},{
+			header:'角色编号',
+			dataIndex:'fnumber',
+			flex:1,
+			sortable:true
+		}]
+	},
+	LeftConfig:{
+		width:800,
+		height:200,
+		url:'getAllRoleOfUser.do',
+		fields:[{
+			name:'fid'
+		},{
+			name:'fname'
+		},{
+			name:'fnumber'
+		}],
+		columns:[{
+			dataIndex:'fid',
+			hidden:true,
+			hideable:false,
+			sortable:true
+		},{
+			header:'角色名称',
+			dataIndex:'fname',
+			flex:1,
+			sortable:true
+		},{
+			header:'角色编号',
+			dataIndex:'fnumber',
+			flex:1,
+			sortable:true
+		}]
+	}
+});

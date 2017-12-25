@@ -1,0 +1,177 @@
+@charset "utf-8";
+.wallet_payway{
+	background: #fff;
+	overflow: hidden;
+	padding: 0;
+	min-height:550px;
+}
+.main{
+	padding: 0 15px;
+}
+
+.title{
+	font-size: 18px;
+	line-height: 36px;
+	border-bottom: 1px solid #ddd;
+}
+
+#bank img{
+	margin:0 5px;
+	vertical-align: sub;
+	margin-bottom: 3px;
+	width:16px;
+}
+table{
+	margin-top: 30px;
+	cursor:pointer;
+}
+table tr td{
+	height: 50px;
+	line-height: 50px !important;
+}
+.table tr:first-child td{
+	border-top: 0;
+}
+.row{
+	margin: 15px 0;
+}
+.btn-a{
+	width: 150px;
+}
+@media only screen and (max-width:480px ) {
+	.btn-a{
+		width: 100%;
+	}
+}
+
+
+
+/*微信*/
+#close,#close2{
+	cursor: pointer;
+}
+.wx,.zfb{
+	width: 500px;
+	height: 380px;
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	background: url(images/wallet/del_bg.png);
+	z-index:9999;
+}
+@media only screen and (max-width:480px ) {
+.wx,.zfb{
+	width: 300px;
+}
+}
+@media only screen and (min-width: 480px) and (max-width: 640px) {
+.wx,.zfb{
+	width: 500px;
+	}
+}
+.wx_in,.zfb_in{
+	width: 96%;
+	height: 96%;
+	margin: 1.4% auto;
+	background: #fff;
+}
+
+.del_tit{
+	width: 100%;
+	margin: 0 auto;
+	font-size: 18px;
+	color: #5c6068 !important;
+	padding: 10px 0;
+	
+}
+
+.wx_img,.zfb_img{
+	margin: 0 10px;
+}
+.reson{
+	padding: 10px 0;
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+}
+.reson div{
+	margin: 8px 0;
+}
+
+
+/*支付方式选择边框效果*/
+.table_border_red{
+	border:4px solid #e6454a;
+}
+
+
+/*手机验证码样式开始*/
+#colse_yzm{
+	cursor: pointer;
+}
+.tel_yz{
+	width: 500px;
+	height: 380px;
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	background: url(images/wallet/del_bg.png);
+	z-index:999;
+}
+@media only screen and (max-width:480px ) {
+.tel_yz{
+	width: 300px;
+}
+}
+@media only screen and (min-width: 480px) and (max-width: 640px) {
+.tel_yz{
+	width: 500px;
+	}
+}
+.tel_yz_in{
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+	background: #fff;
+}
+
+.del_tit{
+	width: 100%;
+	margin: 0 auto;
+	font-size: 18px;
+	color: #5c6068 !important;
+	padding: 10px 0;
+	border-bottom: 1px solid #ddd;
+}
+.reson{
+	padding: 10px 0;
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+}
+.reson div{
+	margin: 10px 0;
+}
+.btn-a{
+	width: 100px;
+}
+
+.yzm{
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	margin: 5px 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+#yzm-ok{
+	width: 100%;
+}
+/*手机验证码样式结束*/

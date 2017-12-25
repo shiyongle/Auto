@@ -1,0 +1,186 @@
+package com.pc.query.coupons;
+import java.io.Serializable;
+import java.util.Calendar;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
+import com.pc.query.aBase.BaseQuery;
+
+public class CL_CouponsQuery extends BaseQuery implements Serializable {
+    private static final long serialVersionUID = 3148176768559230877L;
+    
+
+	/** 自增主键 */
+	private java.lang.Integer id;
+	/** 批量选中主键*/
+	private Integer[] ids;
+	/** 类型 */
+	private java.lang.Integer type;
+	/***批次号*/
+	private java.lang.String batchNumber;
+	/** 开始时间 */
+	private java.util.Date startTime;
+	/** 结束时间 */
+	private java.util.Date endTime;
+
+	/** 兑换码 */
+	private java.lang.String redeemCode;
+	/** 是否有效:1有效，2失效 */
+	private java.lang.Integer isEffective;
+	/** 是否过期:0否，1是 */
+	private java.lang.Integer isOverdue;
+	/** 业务员 */
+	private java.lang.String salesMan;
+	/** 描述 */
+	private java.lang.String describes;
+	/** 创建人 */
+	private java.lang.Integer creator;
+	/** 创建时间 */
+	private java.util.Date createTimeBegin;
+	private java.util.Date createTimeEnd;
+	
+	private java.lang.Integer isReceive;
+	
+	public java.lang.Integer getIsReceive() {
+		return isReceive;
+	}
+
+	public void setIsReceive(java.lang.Integer isReceive) {
+		this.isReceive = isReceive;
+	}
+
+	public java.lang.Integer getId() {
+		return this.id;
+	}
+	
+	public void setId(java.lang.Integer value) {
+		this.id = value;
+	}
+	
+	public Integer[] getIds() {
+		return ids;
+	}
+
+	public void setIds(Integer[] ids) {
+		this.ids = ids;
+	}
+
+	public java.lang.Integer getType() {
+		return this.type;
+	}
+	
+	public void setType(java.lang.Integer value) {
+		this.type = value;
+	}
+	
+	
+	public java.lang.String getBatchNumber() {
+		return batchNumber;
+	}
+
+	public void setBatchNumber(java.lang.String batchNumber) {
+		this.batchNumber = batchNumber;
+	}
+
+	public java.lang.String getRedeemCode() {
+		return this.redeemCode;
+	}
+	
+	public void setRedeemCode(java.lang.String value) {
+		this.redeemCode = value;
+	}
+	
+	public java.lang.Integer getIsEffective() {
+		return this.isEffective;
+	}
+	
+	public void setIsEffective(java.lang.Integer value) {
+		this.isEffective = value;
+	}
+	
+	public java.lang.String getSalesMan() {
+		return this.salesMan;
+	}
+	
+	public void setSalesMan(java.lang.String value) {
+		this.salesMan = value;
+	}
+	
+	public java.lang.String getDescribe() {
+		return describes;
+	}
+
+	public void setDescribes(java.lang.String describes) {
+		this.describes = describes;
+	}
+
+	public java.lang.Integer getCreator() {
+		return this.creator;
+	}
+	
+	public void setCreator(java.lang.Integer value) {
+		this.creator = value;
+	}
+	
+	public java.util.Date getCreateTimeBegin() {
+		return this.createTimeBegin;
+	}
+	
+	public void setCreateTimeBegin(java.util.Date value) {
+		this.createTimeBegin = value;
+	}	
+	
+	public java.util.Date getCreateTimeEnd() {
+		return this.createTimeEnd;
+	}
+	
+	
+	public java.lang.Integer getIsOverdue() {
+		return isOverdue;
+	}
+
+	public void setIsOverdue(java.lang.Integer isOverdue) {
+		this.isOverdue = isOverdue;
+	}
+
+	public void setCreateTimeEnd(java.util.Date value) {
+		if(value != null){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(value);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			this.createTimeEnd = calendar.getTime();
+		}else {
+			this.createTimeEnd = value;
+		}
+	}
+
+	public java.util.Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(java.util.Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public java.util.Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(java.util.Date value) {
+		if(value != null){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(value);
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+			this.endTime = calendar.getTime();
+		}else {
+			this.endTime = value;
+		}
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+	
+}
+

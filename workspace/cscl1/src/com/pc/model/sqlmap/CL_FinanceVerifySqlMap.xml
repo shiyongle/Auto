@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_FinanceVerify">
+    <resultMap id="CL_FinanceVerifyMap" type="com.pc.model.CL_FinanceVerify">
+        <result property="fid" column="fid"/>
+        <result property="freceiptId" column="freceipt_id"/>
+        <result property="fbillId" column="fbill_id"/>
+        <result property="famount" column="famount"/>
+        <result property="fcreateTime" column="fcreate_time"/>
+        <result property="fcreatorId" column="fcreator_id"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        fv.fid,fv.freceipt_id,fv.fbill_id,fv.famount,fv.fcreate_time,
+        fv.fcreator_id
+	    ]]>
+	</sql>
+	
+	
+    <insert id="insert" useGeneratedKeys="true" keyProperty="fid"  >
+    <![CDATA[
+        INSERT INTO cl_finance_verify (
+	        fid  ,
+	        freceipt_id ,
+	        fbill_id ,
+	        famount ,
+	        fcreate_time ,
+	        fcreator_id
+        ) VALUES (
+        	#{fid, jdbcType=INTEGER} ,
+        	#{freceiptId, jdbcType=INTEGER} ,
+        	#{fbillId, jdbcType=INTEGER} ,
+        	#{famount, jdbcType=DECIMAL} ,
+        	#{fcreateTime, jdbcType=TIMESTAMP} ,
+        	#{fcreatorId, jdbcType=INTEGER}
+        )
+    ]]>
+    </insert>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_finance_verify WHERE
+        fid = #{fid} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_FinanceVerifyMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	    	FROM cl_finance_verify fv 
+	        WHERE 
+		        fv.fid = #{fid} 
+	    ]]>
+    </select>
+
+	<sql id="findWhere">
+	    <where>
+			<if test="@Ognl@isNotEmpty(verifyTimeBegin)">
+		   		AND fv.fcreate_time >= #{verifyTimeBegin}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(verifyTimeEnd)">
+		   		AND fv.fcreate_time &lt; #{verifyTimeEnd}
+		   	</if>
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_finance_verify fv 
+        <include refid="findWhere"/>    
+    </select>
+    
+    <select id="findPage" resultMap="CL_FinanceVerifyMap">
+    	SELECT <include refid="columns"/> FROM cl_finance_verify fv 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+	
+	<select id="find" resultMap="CL_FinanceVerifyMap">
+	    SELECT <include refid="columns"/> 
+	    FROM cl_finance_verify fv 
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+	
+</mapper>
+

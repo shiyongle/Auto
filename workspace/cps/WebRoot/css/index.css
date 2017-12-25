@@ -1,0 +1,250 @@
+*{
+	margin:0px auto;
+	padding:0px;
+	}
+#nav{
+	width:1280px;
+	}
+
+/*中间层css*/
+#container{
+		height:900px;
+		width:1270px;
+		margin-top:10px;
+		padding-left:10px;
+		border-bottom:1px solid #d2d2d2;
+	}
+#picture,#information,#menu,#server{
+	float:left;
+	}
+/*图片轮换*/
+#picture{
+	width:1005px;
+	height:387px;
+	position:relative;
+	z-index:333;
+	}
+#picture .picture_img{
+	overflow:hidden;
+	width:1005px;
+	height:387px;
+	}
+.picture_img ul li{
+	list-style-type:none;
+	width:1005px;
+	height:387px;
+	position:relative;
+	overflow:hidden;
+	}
+.picture_num{
+	width:100px;
+	height:14px;
+	position:absolute;
+	bottom:10px;
+	right:20px;
+	}
+.picture_num ul li{
+	list-style-type:none;
+	width:12px;
+	height:12px;
+	float:left;
+	margin-right:5px;
+	cursor:pointer;
+	border:1px solid #fff;
+	}
+.picture_num ul .bg{
+	background:#ff7300;
+	width:18px;
+	height:18px;
+	border:none;
+	}
+/*无缝滚动*/
+#information{
+	width:244px;
+	height:389px;
+	margin-left:10px;
+	border:1px solid lightgray;
+	}
+#information .demo1{
+		width:230px;
+		height:240px;
+		overflow:hidden;
+		padding-top:10px;
+		padding-bottom:50px;
+		border-top:1px solid lightgray;
+		border-bottom:1px solid lightgray;
+}
+#information .demo1 ul li{
+	list-style:none;
+	width:220px;
+	height:32px;
+	line-height:32px;
+	font-size:14px;
+	overflow:hidden;
+	text-align:center;
+	}
+#information .demo1 li a{
+	text-decoration:none;
+	color:#444444;
+	}
+#information .demo1 li a:hover{
+	color:red;
+	}
+#information .title{
+		width:230px;
+		height:40px;
+		line-height:40px;
+		font-size:18px;
+		font-weight:bolder;
+		color:#444444;
+	}
+#information .more{
+		height:40px;
+		width:230px;
+		line-height:40px;
+		text-align:center;
+		font-size:14px;
+	}
+#information .more a{
+	text-decoration:none;
+	color:#444444;
+	}
+#information .more a:hover{
+	text-decoration:underline;
+	color:#3366FF;
+	}
+/*menu动画*/
+#menu{
+	height:475px;
+	width:1005px;
+	margin-top:10px;
+	position:relative;
+	font-family:"微软雅黑";
+	}
+#menu ul li{
+	list-style:none;
+	height:232px;
+	width:497px;
+	text-align:center;
+	line-height:232px;
+	font-size:42px;
+	<!--[if IE ]>font-weight:bold;<![endif]-->
+	cursor:pointer;
+	color:#333;
+	}
+#menu ul li img{
+	vertical-align:middle;
+	}
+#menu .fastMenu{
+	background-color:#fab0b0;
+	top:0px;
+	left:0px;
+	position:absolute;
+	}
+#menu .designOnline{
+	background-color:#fffaae;
+	position:absolute;
+	top:0px;
+	left:507px;
+	}
+#menu .controlOrder{
+	background-color:#aeefff;
+	position:absolute;
+	top:242px;
+	left:0px;
+	}
+#menu .takeGoods{
+	background-color:#aeffb9;
+	position:absolute;
+	left:507px;
+	top:242px;
+	}
+#menu .menu_controlOrder_tab{
+	height:100px;
+	width:497px;
+	background-color:#000;
+	position:absolute;
+	z-index:9999;
+	top:132px;
+	display:none;
+	opacity:0.5;
+	}
+.menu_controlOrder_tab a{
+	display:block;
+	float:left;
+	text-align:center;
+	text-decoration:none;
+	width:246px;
+	height:100px;
+	color:white;
+	font-family:"微软雅黑";
+	font-size:32px;
+	line-height:100px;
+	}
+.menu_controlOrder_tab a:hover{
+	color:#FF0000;
+	}
+/*服务信息*/
+#server{
+	height:473px;
+	width:244px;
+	margin-top:10px;
+	margin-left:10px;
+	border:1px solid lightgray;
+	text-align:center;
+	}
+#server .title2{
+	width:230px;
+	height:40px;
+	line-height:40px;
+	font-size:18px;
+	font-weight:bolder;
+	color:#444444;
+	text-align:left;
+	border-bottom:1px solid lightgray;
+	}
+#server .img{
+	width:230px;
+	height:158px;
+	padding-top:30px;
+	line-height:188px;
+	vertical-align:middle;
+	}
+#server .a1{
+	height:33px;
+	width:145px;
+	line-height:33px;
+	text-align:left;
+	padding-left:85px;
+	}
+#server .a1 a{
+	text-decoration:none;
+	color:#444444;
+	font-family:Arial, Helvetica, sans-serif;
+	}
+#server .num1,#server .num2{
+	
+	font-size:12px;
+	color:#0033FF;
+	font-family:Arial, Helvetica, sans-serif;
+	}
+#server .num1{
+	width:190px;
+	height:33px;
+	text-align:left;
+	margin-top:10px;
+	line-height:33px;
+	padding-left:40px;
+	}
+#server .num2{
+	width:170px;
+	height:20px;
+	text-align:left;
+	padding-left:60px;
+	}
+/*尾部引用页面*/
+#foot{
+		width:1280px;
+		height:40px;
+		text-align:center;
+	}

@@ -1,0 +1,35 @@
+.main{
+	background: #ffffff !important;
+	overflow: hidden;
+	margin-top: 15px;
+}
+
+/*提醒*/
+.remind{
+	background-color:#F2F3F7;
+	padding:15px 20px;
+	margin-top:15px;
+}
+/*设置密码界面样式*/
+.addIformation > div{
+	margin-top:20px;
+}
+.oldPassword a{
+	color:#D9534F !important;
+}
+.newPassword_remind{
+	margin-top: -20px;
+	color:#B1B1B1;
+}
+
+/*不同屏幕时调整样式*/
+@media only screen and (min-width: 768px) {
+	.account_name{margin-left:28px;}
+	.oldPassword{margin-left:14px;}
+	.newPassword{margin-left:28px;}
+	.newPassword_remind{margin-left:88px;}
+	button{margin-left:88px;}
+}
+@media only screen and (max-width: 768px) {
+	.addIformation > div{margin-top:10px;}
+}

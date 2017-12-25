@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-6-4 15:20:46 by Hibernate Tools 3.4.0.CR1 -->
+
+<hibernate-mapping>
+    <class name="com.model.custRelationAdress.CustRelationAdress" table="t_bd_CustRelationAdress">
+        <id name="fid" type="string">
+            <column name="FID" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="faddressid" type="string">
+            <column name="faddressid" length="44" />
+        </property>
+        <property name="fcustomerid" type="string">
+            <column name="fcustomerid" length="44" />
+        </property>
+        <property name="feffect" type="java.lang.Integer">
+            <column name="feffect" />
+        </property>
+    </class>
+</hibernate-mapping>

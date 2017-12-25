@@ -1,0 +1,138 @@
+@charset "utf-8";
+.main{
+	background: #fff;
+	overflow: hidden;
+	padding: 10px 0;
+	color: #5c6068;
+}
+
+.row{
+	margin: 20px 0;
+}
+
+.tip{
+	background: #f0f2f5;
+	height: 40px;
+	line-height: 40px;
+	border: 1px solid #ddd;
+}
+.tip img{
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+label{
+	font-weight: normal;
+}
+
+.btn-a{
+	width: 150px;
+}
+@media only screen and (max-width:480px ) {
+	.btn-a{
+		width: 100%;
+	}
+	
+	.tip{
+		font-size: 12px;
+	}
+.row{
+	margin: 10px 0;
+}
+}
+
+
+/*手机验证码*/
+#colse{
+	cursor: pointer;
+}
+.tel_yz{
+	width: 500px;
+	height: 380px;
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	background: url(images/wallet/del_bg.png);
+	z-index:999;
+}
+@media only screen and (max-width:480px ) {
+.tel_yz{
+	width: 300px;
+}
+}
+@media only screen and (min-width: 480px) and (max-width: 640px) {
+.tel_yz{
+	width: 500px;
+	}
+}
+.tel_yz_in{
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+	background: #fff;
+}
+
+.del_tit{
+	width: 100%;
+	margin: 0 auto;
+	font-size: 18px;
+	color: #5c6068 !important;
+	padding: 10px 0;
+	border-bottom: 1px solid #ddd;
+}
+.reson{
+	padding: 10px 0;
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+}
+.reson div{
+	margin: 15px 0;
+}
+.btn-a{
+	width: 100px;
+}
+
+.yzm{
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	margin: 5px 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+#yzm-ok{
+	width: 100%;
+}
+
+
+.myForm{
+	position:relative;
+}
+#yzm_err,#yzm_err2{
+	position: absolute;
+	left:30px;
+	top:19px;
+}
+#name_err,#sfz_err,#bank_err,#mobile_err,#mobile_err2,#CVN_err,#BankY_err,#BankM_err{
+	position: absolute;
+	left:28px;
+	top:17px;
+}
+#bank_err2,#sfz_err2{
+	position: absolute;
+	left:-50px;
+	top:0px;
+}
+#agreement_err{
+	position: absolute;
+	left:150px;
+	top:10px;
+}
+@media only screen and (max-width:767px){
+	#bank_err2,#sfz_err2{left:65px;top:-20px;}
+}

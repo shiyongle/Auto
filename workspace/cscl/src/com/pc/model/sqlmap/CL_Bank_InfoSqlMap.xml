@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CL_Bank_Info">
+
+	<resultMap id="CLBankMap" type="com.pc.model.CL_Bank_Info">
+		<result property="fid" column="fid" />
+		<result property="fbankName" column="fbankName" />
+		<result property="fcardIndex" column="fcardIndex" />
+		<result property="ficon" column="ficon" />
+		<result property="fvercode" column="fvercode" />
+		<result property="fdigits" column="fdigits" />
+		<result property="ftype" column="ftype" />
+		<result property="fshortName" column="fshortName" />
+		<result property="fbankNumber" column="fbankNumber" />
+	</resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[fid ,fbankName ,fbankNumber,fcardIndex, ficon,fvercode,fdigits,ftype,fshortName]]>
+	</sql>
+
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="fid">
+    <![CDATA[
+        INSERT INTO cl_bank_info (
+        	fid ,fbankName ,fcardIndex, ficon,fvercode,fdigits,ftype,fshortName
+        )VALUES(
+        	#{fid, jdbcType=INTEGER} ,
+        	#{fbankName, jdbcType=VARCHAR} ,
+        	#{fcardIndex, jdbcType=VARCHAR} ,
+        	#{ficon, jdbcType=VARCHAR} ,
+        	#{fvercode, jdbcType=VARCHAR} ,
+        	#{fdigits, jdbcType=VARCHAR} ,
+        	#{ftype, jdbcType=VARCHAR} ,
+        	#{fshortName, jdbcType=VARCHAR}
+        )
+    ]]>
+	</insert>
+
+	<update id="update">
+    <![CDATA[
+        UPDATE cl_bank_info SET
+	        fbankName=#{fbankName, jdbcType=VARCHAR} ,
+	        fcardIndex=#{fcardIndex, jdbcType=VARCHAR} ,
+	        ficon=#{ficon, jdbcType=VARCHAR} ,
+	        fvercode=#{fvercode, jdbcType=VARCHAR} ,
+	        fdigits= #{fdigits, jdbcType=INTEGER} ,
+	        ftype=#{ftype, jdbcType=TIMESTAMP} ,
+	        fshortName=#{fshortName, jdbcType=INTEGER} 
+        WHERE 
+	        fid = #{fid, jdbcType=INTEGER} 
+    ]]>
+	</update>
+
+	<delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_bank_info WHERE  fid = #{fid}
+    ]]>
+	</delete>
+
+	<select id="getById" resultMap="CLBankMap">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+	        FROM cl_bank_info WHERE  fid = #{fid}   
+	    ]]>fbankNumber
+	</select>
+
+	<!-- 根据fcardIndex 获取数据  java.util.HashMap-->
+	<select id="getByBankInfoCode" resultMap="CLBankMap"> 
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+	        FROM cl_bank_info WHERE  fcardIndex = #{fcardIndex}
+	    ]]>
+	</select>
+
+	<!-- 根据fcardIndex 模糊获取数据 java.util.HashMap-->
+	<select id="getByBankInfoLikeCode" resultMap="CLBankMap">
+		SELECT
+		<include refid="columns" />
+	    <![CDATA[
+	        FROM cl_bank_info WHERE  fcardIndex like  #{fcardIndex}
+	    ]]>
+	</select>
+	
+	
+	
+
+</mapper>

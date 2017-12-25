@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>认证管理-图片查看</title>
+	</head>
+	<script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<style type="text/css">
+		body{font-family: "微软雅黑";}
+		a{color: #666; text-decoration: none;}
+		a:hover{color: #666; text-decoration: none;}
+		a:active{color: #666; text-decoration: none;}
+		a:visited{color: #666; text-decoration: none;}
+		#img{ display: block;margin: 0 auto; border-radius: 5px;}
+		h2{margin-left:5%}
+	</style>
+	<script>
+	$(function(){
+		var imgUrl=window.location.href;
+		imgUrl=imgUrl.split("?")
+		$("#img").attr("src",imgUrl[1]);
+		
+		
+		var i=1;
+		$("#roate").click(function(){
+			$("#img").css({"-webkit-transform":"rotate("+90*i+"deg)",
+							"transform":"rotate("+90*i+"deg)"
+						 });
+			i++;
+		})
+	})
+	
+	</script>
+	<body>
+			<h2><a href="javascript:void(0)" id="roate">旋转</a></h2>
+			<img id="img" src="" />
+			
+		
+	</body>
+</html>

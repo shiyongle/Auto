@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-11-17 9:24:54 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.News" table="t_sys_news" >
+        <id name="fid" type="java.lang.Integer">
+            <column name="fid" />
+            <generator class="identity" />
+        </id>
+        <property name="ftitle" type="string">
+            <column name="ftitle" length="45" />
+        </property>
+        <property name="fcontent" type="string">
+            <column name="fcontent" length="65535" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+        <property name="fcreaterid" type="string">
+            <column name="fcreaterid" length="45" />
+        </property>
+        <property name="fimgid" type="string">
+            <column name="fimgid" length="45">
+                <comment>-1 for empty</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

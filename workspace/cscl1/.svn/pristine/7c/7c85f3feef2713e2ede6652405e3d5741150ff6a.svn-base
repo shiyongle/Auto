@@ -1,0 +1,28 @@
+log4j.rootLogger=WARN, stdout, logfile
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n
+
+log4j.appender.logfile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.logfile.File=${catalina.home}/logs/csclsys/system.log
+log4j.appender.logfile.DatePattern='.'yyyy-MM-dd'.log'
+log4j.appender.logfile.layout=org.apache.log4j.PatternLayout
+log4j.appender.logfile.layout.ConversionPattern=%d{yyyy-MM-dd HH\:mm\:ss.SSS}\t%p\t[%c]\t[%t]%n%m%n
+
+log4j.logger.com.pc.controller.Payment.PaymentCallbackController = info, pay
+log4j.appender.pay=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.pay.File=${catalina.home}/logs/csclpaylog/payapi.log
+log4j.appender.pay.DatePattern='.'yyyy-MM-dd
+log4j.appender.pay.layout=org.apache.log4j.PatternLayout
+log4j.appender.pay.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss:SSS}[%5p]  %m%n
+
+log4j.logger.com.ibatis=DEBUG
+log4j.logger.com.ibatis.common.jdbc.SimpleDataSource=DEBUG
+log4j.logger.com.ibatis.common.jdbc.ScriptRunner=DEBUG
+log4j.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate=DEBUG
+log4j.logger.java.sql.Connection=DEBUG
+log4j.logger.java.sql.Statement=DEBUG
+log4j.logger.java.sql.PreparedStatement=DEBUG
+log4j.logger.java.sql.ResultSet=DEBUG
+
+

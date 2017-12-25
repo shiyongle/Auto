@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="lib/server/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/server/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/server/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/server/hibernate-jpa-2.0-api-1.0.0.Final.jar"/>
+	<classpathentry kind="lib" path="lib/server/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/server/javassist-3.12.0.GA.jar"/>
+	<classpathentry kind="lib" path="lib/server/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/server/mysql-connector-java-5.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/server/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/server/slf4j-nop-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/server/commons-beanutils-core-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/server/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/server/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/server/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/server/ezmorph-1.0.5.jar"/>
+	<classpathentry kind="lib" path="lib/server/json-lib-2.2.2-jdk15.jar"/>
+	<classpathentry kind="lib" path="lib/server/json-lib-ext-spring-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/server/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="lib/server/ojdbc14.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

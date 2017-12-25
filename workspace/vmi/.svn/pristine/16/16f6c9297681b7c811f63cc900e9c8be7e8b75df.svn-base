@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title></title>
+<style type="text/css">
+<!--
+body{font-size:12px;}
+ul{padding:0;margin:0;}
+.star_rating {list-style:none;margin:-1px 0 0 -1px; padding:0; width:95px; height:19px; position:relative; background:url(img/stars-two.png) 0 0 repeat-x; overflow:hidden;font-size:0;}
+.star_rating li{padding:0;margin:0;float:left;}
+.star_rating li a{display:block;width:19px;height:19px;text-decoration:none;text-indent:-9000px;z-index:20;position:absolute;padding:0;margin:0;}
+.star_rating li a:hover{background:url(img/stars-two.png) 0 19px;z-index:2;left:0;}
+.star_rating a.one_star{left:0;}
+.star_rating a.one_star:hover{width:19px;}
+.star_rating a.two_stars{left:19px;}
+.star_rating a.two_stars:hover{width:38px;}
+.star_rating a.three_stars{left:38px;}
+.star_rating a.three_stars:hover{width:57px;}
+.star_rating a.four_stars{left:57px;}
+.star_rating a.four_stars:hover{width:76px;}
+.star_rating a.five_stars{left:76px;}
+.star_rating a.five_stars:hover{width:95px;}
+.star_rating li.current_rating{background:url(img/stars-two.png) 0 19px;position:absolute;height:24px;display:block;text-indent:-9000px;z-index:1;left:0;}
+#www_zzjs_net{margin:0 0 20px 20px;}
+#www_zzjs_net p{margin:20px 0 5px 0;}
+-->
+</style>
+</head>
+<body style="background-color:#dfe8f6;padding:0 0 0 0;margin:0 0 0 0">
+ <!--<form action="" method="get">-background-color:#dfe8f6;-->
+ <div id="www_zzjs_net" star_width="14" style="margin: 0 0 0 0;" >
+	<p style="font-size:14px">̬<b>动态评分</b></p>
+	<table>
+	<tr><td>交期满意度:</td>
+ <td width="100px " align="center">
+  <ul class="star_rating">
+   <li style="display:none;">
+    <input  type="text" name="deliverappraise" value="" />
+   </li>
+   <li class="current_rating">default level</li>
+   <li><a href="#" title="1分,很不满意" class="one_star">1</a></li>
+   <li><a href="#" title="2分,不满意" class="two_stars">2</a></li>
+   <li><a href="#" title="3分,一般" class="three_stars">3</a></li>
+   <li><a href="#" title="4分,满意" class="four_stars">4</a></li>
+   <li><a href="#" title="5分,很满意" class="five_stars">5</a></li>
+  </ul>
+  </td>
+  <td width="35px ">&nbsp;</td>
+  <td>质量满意度:</td>
+  <td width="100px " align="center">
+  <ul class="star_rating">
+   <li style="display:none;">
+    <input type="text" name="qualityappraise" value="" />
+   </li>
+   <li class="current_rating">default level</li>
+   <li><a href="#" title="1分,很不满意" class="one_star">1</a></li>
+   <li><a href="#" title="2分,不满意" class="two_stars">2</a></li>
+   <li><a href="#" title="3分,一般" class="three_stars">3</a></li>
+   <li><a href="#" title="4分,满意" class="four_stars">4</a></li>
+   <li><a href="#" title="5分,很满意" class="five_stars">5</a></li>
+  </ul>
+</td>
+</tr>
+  <tr><td>服务满意度:</td>
+  <td width="100px " align="center">
+  <ul class="star_rating">
+   <li style="display:none;">
+    <input type="text" name="serviceappraise" value="" />
+   </li>
+   <li class="current_rating">default level</li>
+   <li><a href="#" title="1分,很不满意" class="one_star">1</a></li>
+   <li><a href="#" title="2分,不满意" class="two_stars">2</a></li>
+   <li><a href="#" title="3分,一般" class="three_stars">3</a></li>
+   <li><a href="#" title="4分,满意" class="four_stars">4</a></li>
+   <li><a href="#" title="5分,很满意" class="five_stars">5</a></li>
+  </ul>
+  </td>
+  <td >&nbsp;</td>
+  <td>数量准确度:</td>
+  <td width="100px " align="center">
+  <ul class="star_rating">
+   <li style="display:none;">
+    <input type="text" name="multipleappraise" value="" />
+   </li>
+   <li class="current_rating">default level</li>
+   <li><a href="#" title="1分,很不满意" class="one_star">1</a></li>
+   <li><a href="#" title="2分,不满意" class="two_stars">2</a></li>
+   <li><a href="#" title="3分,一般" class="three_stars">3</a></li>
+   <li><a href="#" title="4分,满意" class="four_stars">4</a></li>
+   <li><a href="#" title="5分,很满意" class="five_stars">5</a></li>
+  </ul>
+</td>
+</tr>
+  </table>
+ </div>
+ <!--  <input type="submit" value="选好星星后，点我，然后看地址栏" />
+ </form>-->
+<script type="text/javascript">
+//<!--
+function setstarts()//设置星星选中状态
+{
+	var inputs=document.getElementsByTagName("input");
+	for(var z=0;z<inputs.length;z++)
+	{
+		var currentname=inputs[z].getAttribute("name");
+		var oinputname=window.parent.document.getElementById("DJ.order.Deliver.OrderappraiseEdit.f"+currentname+"-inputEl")
+		var currentvalue=oinputname.value;
+		inputs[z].setAttribute("value",currentvalue);
+		var  parent_obj=inputs[z].parentNode.parentNode;
+		if(!parent_obj.nodeName=="UL"){return false;}
+		var current_li=parent_obj.getElementsByTagName("li");
+		var length=current_li.length;
+		 var ok_li_obj=null;
+		 for(var i=0;i<length;i++){
+		  if(current_li[i].className.indexOf("current_rating")>=0){
+		   ok_li_obj=current_li[i];break;//找到
+		  }
+		 }
+		 ok_li_obj.style.width=currentvalue*19+"px";
+		// return false;
+			}
+	return false;
+
+}
+function __start(){
+ var initialize_width=0;
+ if(document.getElelmentById){return false};
+ if(document.getElementsByTagName==null){return false;}
+ var startLevelObj=document.getElementById("www_zzjs_net")
+ if(startLevelObj==null){return false;}
+ initialize_width=parseInt(startLevelObj.getAttribute("star_width"),10);
+ if(isNaN(initialize_width) || initialize_width==0){return false;}
+ var ul_obj=startLevelObj.getElementsByTagName("ul");
+ if(ul_obj.length<1){return false;}
+ var length=ul_obj.length;
+ var li_length=0;
+ var a_length=0;
+ var li_obj=null;
+ var a_obj=null;
+ var defaultInputObj=null;
+ var defaultValue=null;
+ for(var i=0;i<length;i++){
+  li_obj=ul_obj[i].getElementsByTagName("li");
+  li_length=li_obj.length;
+  if(li_length<0){return false;}
+  //获取默认值
+  defaultInputObj=li_obj[0].getElementsByTagName("input");if(!defaultInputObj){return false;}
+  defaultValue=parseInt(defaultInputObj[0].value,10);
+  if(!isNaN(defaultValue) && defaultValue!=0){
+   //alert("有初始值!");
+   //li_obj[1].style.width=initialize_width*defaultValue+"px";
+   //defaultValue=0;
+  }
+  for(var j=0;j<li_length;j++){
+   a_obj=li_obj[j].getElementsByTagName("a");
+   if(a_obj.length<1){continue;}
+   if(a_obj[0].className.indexOf("star")>0){
+    a_obj[0].onclick=function(){
+     return give_value(this);
+    }
+    a_obj[0].onfocus=function(){
+     this.blur();
+    }
+   }
+  }
+ }
+ var iinputname=window.parent.document.getElementById("DJ.order.Deliver.OrderappraiseEdit.fdeliverappraise-inputEl");
+ if(iinputname.value==0)
+ {
+	return false;
+ }
+ setstarts();
+}
+function give_value(obj){
+ var status=true;
+ var parent_obj=obj.parentNode;
+ var i=0;
+ while(status){
+  i++;
+  if(parent_obj.nodeName=="UL"){break;}
+  parent_obj=parent_obj.parentNode;
+  if(i>1000){break;}//防止找不到ul发生死循环
+ }
+ var hidden_input=parent_obj.getElementsByTagName("input")[0];
+ if(hidden_input.length<1){/*alert("sorry?\nprogram error!")*/;}
+ var txt=obj.firstChild.nodeValue;//确保不能存在空格哦，因为这里用的firstChild
+ if(isNaN(parseInt(txt,10))){/*alert('level error!')*/;return false;}
+ hidden_input.setAttribute("value",txt.toString());
+ var  hidden_input_name=hidden_input.getAttribute("name");
+ 
+ //给EXT隐藏控件赋值
+ var hidden_extinputname=window.parent.document.getElementById("DJ.order.Deliver.OrderappraiseEdit.f"+hidden_input_name+"-inputEl");
+ //hidden_extinputname.setAttribute("value",txt.toString());
+ hidden_extinputname.value=txt.toString();
+ 
+ //固定选中状态,先找到初始化颜色那个li
+ var current_li=parent_obj.getElementsByTagName("li");
+ var length=current_li.length;
+ var ok_li_obj=null;
+ for(var i=0;i<length;i++){
+  if(current_li[i].className.indexOf("current_rating")>=0){
+   ok_li_obj=current_li[i];break;//找到
+  }
+ }
+ __current_width=txt*19;
+ ok_li_obj.style.width=__current_width+"px";
+ return false;
+}
+__start();
+//-->
+</script>
+</body>
+</html>

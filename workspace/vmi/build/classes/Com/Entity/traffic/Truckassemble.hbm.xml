@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-1-15 13:31:57 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.traffic.Truckassemble" table="t_tra_truckassemble" >
+        <id name="fid" type="string">
+            <column name="FID" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fnumber" type="string">
+            <column name="FNUMBER" length="80" />
+        </property>
+        <property name="fbizdate" type="timestamp">
+            <column name="FBIZDATE" length="0" />
+        </property>
+        <property name="fcreatorid" type="string">
+            <column name="FCREATORID" length="44" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="FCREATETIME" length="0" />
+        </property>
+        <property name="flastupdateuserid" type="string">
+            <column name="FLASTUPDATEUSERID" length="44" />
+        </property>
+        <property name="flastupdatetime" type="timestamp">
+            <column name="FLASTUPDATETIME" length="0" />
+        </property>
+        <property name="ftruckid" type="string">
+            <column name="FTRUCKID" length="44" />
+        </property>
+        <property name="feasid" type="string">
+            <column name="feasid" length="44" />
+        </property>
+        <property name="fsupplier" type="string">
+            <column name="FSUPPLIER" length="44" />
+        </property>
+        <property name="ftype" type="java.lang.Integer">
+            <column name="FTYPE" />
+        </property>
+        <property name="faudited" type="java.lang.Integer">
+            <column name="FAUDITED" />
+        </property>
+         <property name="fexternalNum" type="string">
+            <column name="fexternalNum" length="80" />
+        </property>
+         <property name="fdriverid" type="string">
+            <column name="fdriverid" length="44" />
+        </property>
+         <property name="fphone" type="string">
+            <column name="fphone" length="100" />
+        </property>
+    </class>
+</hibernate-mapping>

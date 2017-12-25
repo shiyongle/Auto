@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+
+<html class="no-js no-browser" lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>生成二维码</title>
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet"
+	href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+	<link href='styles.css' rel='stylesheet'>
+		
+	<script src="../../js/jquery-1.8.3.min.js"></script>
+	<script src="jquery.qrcode.js"></script>
+	<script src="scripts.js"></script>
+	<script src="drag.js"></script>  <!-- 拖拽js -->
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+	<div id="container"></div>
+
+	<div class="control left">
+		<!-- <a id="banner" href="http://sc.chinaz.com/">jQuery.qrcode 0.6.0</a>
+		<hr/> -->
+		
+		<label for="render">渲染模式</label>
+		<select id="render">
+			<option value="canvas" selected="selected">Canvas</option>
+			<option value="image">Image</option>
+			<option value="div">DIV</option>
+		</select>
+		<hr/>
+		<label for="size">大小:</label>
+		<input id="size" type="range" value="300" min="100" max="1000" step="50" />
+		<label for="color" >前景颜色</label>
+		<input id="color" type="color" value="#333333"  />
+		<label for="bg-color" >背景颜色</label>
+		<input id="bg-color" type="color" value="#ffffff"  />
+
+		<ul id="myTab" class="nav nav-tabs">
+			<li class="active"><a href="#text1" data-toggle="tab">文本</a></li>
+			<li><a href="#web" data-toggle="tab">网页</a></li>
+			<li><a href="#card" data-toggle="tab">名片</a></li>
+			<li><a href="#email" data-toggle="tab">邮件</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade in active" id="text1">
+				<textarea id="text" placeholder="请输入内容"></textarea>
+			</div>
+			<div class="tab-pane fade " id="web">
+				<textarea id="webtext">http://</textarea>
+			</div>
+			<div class="tab-pane fade " id="card">
+				<label for="name">姓名</label> <input id="name" type="text" /> <label
+					for="tel">电话</label> <input id="tel" type="text" /> <label
+					for="c_email">邮箱</label> <input id="c_email" type="text" />
+			</div>
+			<div class="tab-pane fade " id="email">
+				<label for="address">地址</label> <input id="address" type="text" />
+				<label for="tit">标题</label> <input id="tit" type="text" /> <label
+					for="text3">文本</label> <input id="text3" type="text" />
+			</div>
+		</div>
+
+		<hr/>
+		
+		<label for="eclevel" >误差校正级</label>
+		<select id="eclevel">
+			<option value="L">低(7%)</option>
+			<option value="M">中(15%)</option>
+			<option value="Q">中高(25%)</option>
+			<option value="H" selected="selected">高(30%)</option>
+		</select>
+		<label for="minversion">像素点:</label>
+		<input id="minversion" type="range" value="5" min="1" max="10" step="1" />
+		<label for="quiet"> 外边距:</label>
+		<input id="quiet" type="range" value="1" min="0" max="4" step="1" />
+		<label for="radius">圆角半径:</label>
+		<input id="radius" type="range" value="50" min="0" max="50" step="10" />
+	</div>
+	<div class="control left1">
+	
+	</div>
+
+	<div class="control right">
+	
+	
+		
+		<label for="mode">嵌入模式</label>
+		<select id="mode">
+			<option value="0">0 - 普通(无图文)</option>
+			<option value="1">1 - 文字-带状</option>
+			<option value="2" selected="selected">2 - 文字-盒状</option>
+			<option value="3">3 - 图片-带状</option>
+			<option value="4">4 - 图片-盒状</option>
+		</select>
+		<hr/>
+		<label for="label">嵌入文字</label>
+		<input id="label" type="text" value="DJCPS" />
+		<label for="fontsize">文字大小:</label>
+		<input id="fontsize" type="range" value="11" min="1" max="20" step="1" />
+		<label for="font">字体名称:</label>
+		<input id="font" type="text" value="微软雅黑" />
+		<label for="fontcolor">字体颜色:</label>
+		<input id="fontcolor" type="color" value="#cc0000" />
+		<hr/>
+		<label for="image">嵌入图片</label>
+		<input id="image" type="file" />
+		<label for="imagesize" >图片大小:</label>
+		<input id="imagesize" type="range" value="17" min="1" max="30" step="1" />
+		<br/> 
+		 <a id="download" download="qrcode.png">保存二维码</a>
+	</div>
+
+	<img id="img-buffer" src="dummy.png" />
+	
+	<!-- 拖拽 -->
+	<div id="eldiv" style="width: 140px; height: 100px; background: #CCC; position: absolute; left: 500px; top: 400px">
+		<input id="XY" type="text" style="width: 140px; margin-top: -22px; border:none;"value="X:500px Y:400px" disabled />
+	</div>
+	<!-- <img id="elimg" style="left:500px;top:153px;position:absolute; width:50px;height:50px;" src="1.jpg" /> -->
+
+</body>
+
+</html>

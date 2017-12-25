@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-8-13 10:54:51 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.model.productreqallocationrules.Productreqallocationrules" table="t_pdt_productreqallocationrules" >
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fcustomerid" type="string">
+            <column name="fcustomerid" length="44" />
+        </property>
+        <property name="fsupplierid" type="string">
+            <column name="fsupplierid" length="44" />
+        </property>
+        <property name="fcreatorid" type="string">
+            <column name="fcreatorid" length="44" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="fcreatetime" length="0" />
+        </property>
+          <property name="fisstock" type="java.lang.Integer">
+            <column name="fisstock"  />
+        </property>
+          <property name="fbacthstock" type="java.lang.Integer">
+            <column name="fbacthstock"  />
+        </property>
+    </class>
+</hibernate-mapping>

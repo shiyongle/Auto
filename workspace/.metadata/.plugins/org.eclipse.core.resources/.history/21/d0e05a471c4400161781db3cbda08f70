@@ -1,0 +1,452 @@
+package com.pc.appInterface.finance;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.org.rapid_framework.page.Page;
+
+import com.pc.controller.BaseController;
+import com.pc.dao.UserRole.IUserRoleDao;
+import com.pc.dao.finance.IFinanceDao;
+import com.pc.dao.finance.impl.FinanceDaoImpl;
+import com.pc.dao.financeStatement.impl.FinanceStatementDaoImpl;
+import com.pc.dao.order.impl.OrderDao;
+import com.pc.model.CL_Finance;
+import com.pc.model.CL_FinanceStatement;
+import com.pc.model.CL_UserRole;
+import com.pc.model.Util_UserOnline;
+import com.pc.query.finance.CL_FinanceQuery;
+import com.pc.query.financeStatement.FinanceStatementQuery;
+import com.pc.util.Base64;
+import com.pc.util.CacheUtilByCC;
+import com.pc.util.JSONUtil;
+import com.pc.util.RSA;
+import com.pc.util.ServerContext;
+
+@Controller
+public class AppFinanceController extends BaseController {
+	protected static final String PUBLICKEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDl5nbvmL8Q8tYGcJAgwS4qdqp2" +
+			"Rwme5FKaR+11vXy89Biu8ruF/KmdS4pk+4gEmoPuHLFc6V6VQ77CgtpgboBDjveU" +
+			"n3HnsN1N2LH/hmn8gDvw+0e7lLDFVEGC6L8d9z+yj0zGe0XMDeEW5zJlVCA2FOYq" +
+			"oQAOkIntynv/nfyP6wIDAQAB";
+
+	protected static final String PERSONALPUBLICKEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcu9tqg+XyDB7qygFxn4UQu00T" +
+			"WrnbQmIDUnE8zhDf9ZuCr5Czil1XVR4ApnpcVUTTXHoW2WpzBw1gm53OdKjgPc2Q" +
+			"yRq+ROlo7NhYCRFan+b4p+RqGL+U+alMH1zv1Q+LSgQP6QF9loKAsC3i70KdBw4G" +
+			"n7K8fTzoY8PtMqHlSwIDAQAB";
+	@Resource
+	private IFinanceDao financeDao;
+	@Resource
+	private OrderDao orderDao;
+	@Resource
+	private FinanceDaoImpl financeDaoImpl;
+	@Resource
+	private FinanceStatementDaoImpl statementDao;
+	@Resource
+	private IUserRoleDao userRoleDao;
+
+	private CL_FinanceQuery financeQuery;
+	private FinanceStatementQuery statementQuery;
+
+	public FinanceStatementQuery getStatementQuery() {
+		return statementQuery;
+	}
+	public void setStatementQuery(FinanceStatementQuery statementQuery) {
+		this.statementQuery = statementQuery;
+	}
+	public CL_FinanceQuery getFinanceQuery() {
+		return financeQuery;
+	}
+	public void setFinanceQuery(CL_FinanceQuery financeQuery) {
+		this.financeQuery = financeQuery;
+	}
+
+	/***提现申请
+	 * @throws ParseException */
+	@RequestMapping("/app/finance/withdraw")
+	@Transactional
+	public String withdraw(HttpServletRequest request,HttpServletResponse response) throws IOException, ParseException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		String alipay=null,bankaccount=null,bankname=null,bankaddress=null,versionCode=null,fsystem = "";
+		BigDecimal amount;
+		Integer urid;
+		Integer withdrawType=0;//提现方式1支付宝2银行转账
+		//APP强制更新；
+		HashMap<String, Util_UserOnline> useronline = ServerContext.getUseronline();
+		if(request.getSession().getId()==null || request.getSession().getId().equals("")){
+			map.put("success", "false");
+			map.put("msg","请先登录！");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}
+		versionCode = useronline.get(request.getSession().getId().toString()).getVersionCode();
+		if (versionCode == null || "".equals(versionCode)) {
+			map.put("success", "false");
+			map.put("msg", "请重新登录更新APP后再下单，谢谢合作！");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else {
+			BigDecimal bVersionCode = new BigDecimal(versionCode);
+			fsystem = useronline.get(request.getSession().getId().toString()).getFsystem();
+			if(CacheUtilByCC.isOldVersion(bVersionCode, fsystem)){
+				map.put("success", "false");
+				map.put("msg", "请重新登录更新APP后再下单，谢谢合作！");
+				return writeAjaxResponse(response, JSONUtil.getJson(map));
+			}
+		}
+		
+		if(request.getParameter("urid")==null || "".equals(request.getParameter("urid"))){
+			map.put("success", "false");
+			map.put("msg","请先登录");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{//申请用户id
+			urid = Integer.parseInt(request.getParameter("urid"));
+		}
+		if(request.getParameter("amount")==null || "".equals(request.getParameter("amount"))){
+			map.put("success", "false");
+			map.put("msg","金额不能为空");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{//申请金额
+			amount=new BigDecimal(request.getParameter("amount"));
+		}
+		CL_UserRole role=userRoleDao.getById(urid);
+		
+		/** 提现金额控制 Start  */
+		String requestDataString="";
+		String resString="";
+		JSONObject jo;
+		BigDecimal fbalance=new BigDecimal(0);
+		String Developer = RSA.encrypt("CS",PUBLICKEY);
+		String hzUsenameE = RSA.encrypt(role.getVmiUserPhone(),PERSONALPUBLICKEY);
+		requestDataString = "{\"data\": {\"Developer\": \""+Developer+"\",\"Usename\": \""+hzUsenameE+"\"}}";
+		requestDataString = Base64.encode(requestDataString.getBytes());
+		resString = ServerContext.UsePayBalance(requestDataString);
+		if(resString==null){
+			map.put("success", "false");
+			map.put("msg","提现失败,获取余额有误,请联系客服！");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}
+		jo = JSONObject.fromObject(resString);
+		if("true".equals(jo.get("success").toString()))
+		{
+			fbalance =new BigDecimal(jo.get("data").toString());//取得当前余额
+		}
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();  
+        c.add(Calendar.DATE, - 7);  
+//        Date fcopTime = c.getTime();
+        Date fcopTime = sdf.parse((sdf.format(c.getTime())));
+        BigDecimal  lockedMoney =new BigDecimal(orderDao.getLockedAmount(urid, fcopTime));//查询锁定金额
+		if(fbalance.compareTo(lockedMoney.add(amount))==-1)
+		{
+			map.put("success", "false");
+			map.put("msg","余额不足,请刷新余额");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}
+		/** 提现金额控制 End  */
+		
+		//如果支付宝帐号为空，那么必须传银行的三个参数
+		if(request.getParameter("alipay")==null || "".equals(request.getParameter("alipay"))){
+			if(request.getParameter("bankaccount")==null || "".equals(request.getParameter("bankaccount"))){
+				map.put("success", "false");
+				map.put("msg","银行帐号为空");
+				return writeAjaxResponse(response, JSONUtil.getJson(map));
+			}else{//银行卡帐号
+				bankaccount=request.getParameter("bankaccount");
+			}
+			if(request.getParameter("bankname")==null || "".equals(request.getParameter("bankname"))){
+				map.put("success", "false");
+				map.put("msg","开户行为空");
+				return writeAjaxResponse(response, JSONUtil.getJson(map));
+			}else{//开户行
+				bankname=request.getParameter("bankname");
+//				bankname=new String(bankname.getBytes("ISO-8859-1"),"UTF-8");
+			}
+			if(request.getParameter("bankaddress")==null || "".equals(request.getParameter("bankaddress"))){
+				map.put("success", "false");
+				map.put("msg","开户行所在地为空");
+				return writeAjaxResponse(response, JSONUtil.getJson(map));
+			}else{//开户行所在地
+				bankaddress=request.getParameter("bankaddress");
+//				bankaddress=new String(bankaddress.getBytes("ISO-8859-1"),"UTF-8");
+			}
+			withdrawType=2;
+		}else{//支付宝帐号
+			alipay=request.getParameter("alipay");
+			withdrawType=1;//支付宝
+		}
+		/**调支付系统接口 Start */
+		int newid=financeDaoImpl.getMaxId()+1;//取当前表中最大ID，加一取得新ID
+		
+		String phone="";
+		String userId="";
+		if(role!=null)
+		{
+			phone=role.getVmiUserPhone();
+			userId=role.getVmiUserFid();
+		}
+		HashMap<String, String> withdrawMap=new HashMap<String,String>();
+		withdrawMap=withdrawParams(phone, newid, amount,"Minus");
+		String WithdrawInfo=withdrawMap.get("WithdrawInfo");
+		if(!ServerContext.checkWithdrawStatus(WithdrawInfo)){
+			map.put("success", "false");
+			map.put("msg", ServerContext.getMsg());
+			return writeAjaxResponse(response,JSONUtil.getJson(map));
+		}
+		/**调支付系统接口 End */
+		CL_Finance finance=new CL_Finance();
+		finance.setFuserId(urid);
+		finance.setNumber(CacheUtilByCC.getOrderNumber("CL_Finance", "T", 8));
+		finance.setFcreateTime(new Date());
+		finance.setFamount(amount);
+		finance.setFstate(0);
+		finance.setFwithdrawType(withdrawType);
+		if(alipay!=null)
+		{
+			finance.setFalipayId(alipay);
+		}else
+		{
+			finance.setFbankAccount(bankaccount);
+			finance.setFbankName(bankname);
+			finance.setFbankAddress(bankaddress);
+		}
+		this.financeDao.save(finance);
+		/**添加明细表 Start*/
+		statementDao.saveStatement(finance.getFid().toString(), null, 5, finance.getFamount(), -1, finance.getFuserId(), 0, userId);
+		/**添加明细表 End*/
+		map.put("success", "true");
+		map.put("msg","提现申请提交成功!");
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+
+	/** 提现进度详情查看 */
+	@RequestMapping("/app/finance/withdrawDetail")
+	@Transactional
+	public String withdrawDetail(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		HashMap<String, Object> map=new HashMap<String,Object>();
+		Integer urid,pageNum ,pageSize;
+		if(request.getParameter("urid")==null||"".equals(request.getParameter("famount")))
+		{
+			map.put("success", "false");
+			map.put("msg", "urid用户ID为空！");
+			return writeAjaxResponse(response,JSONUtil.getJson(map));
+		}else{
+			urid=Integer.parseInt(request.getParameter("urid"));
+		}
+		if(request.getParameter("pageNum")==null || "".equals(request.getParameter("pageNum"))){
+			map.put("success", "false");
+			map.put("msg","无法获知第几页");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		}
+		if(request.getParameter("pageSize")==null || "".equals(request.getParameter("pageSize"))){
+			map.put("success", "false");
+			map.put("msg","无法获知每页显示多少条");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			pageSize = Integer.parseInt(request.getParameter("pageSize"));
+		}
+		if(financeQuery==null){
+			financeQuery = newQuery(CL_FinanceQuery.class, null);
+		}
+		if (pageNum != null) {
+			financeQuery.setPageNumber(pageNum);
+		}
+		if (pageSize != null) {
+			financeQuery.setPageSize(pageSize);
+		}
+		if(urid!=null)
+		{
+			financeQuery.setFuserId(urid);
+		}
+//		if(status!=null){
+//			financeQuery.setStatus(status);
+//		}
+//		if(type!=null){
+//			financeQuery.setType(type);
+//		}
+		financeQuery.setSortColumns("fs.fcreate_time desc");
+		Page<CL_Finance> page=financeDao.findPage(financeQuery);
+		map.put("success", "true");
+		map.put("total", page.getTotalCount());
+		map.put("data", page.getResult());
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+
+	/**提现申请驳回*/
+	@RequestMapping("/app/finance/reject")
+	@Transactional
+	public String reject(HttpServletRequest request,HttpServletResponse response,Integer fid,String famount,String fuserId,Integer frejecttype) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		request.getParameter("fid");
+		request.getParameter("famount");
+		CL_UserRole role=userRoleDao.getById(Integer.parseInt(fuserId));
+		String phone="";
+		if(role!=null)
+		{
+			phone=role.getVmiUserPhone();
+		}
+		HashMap<String, String> withdrawMap=new HashMap<String,String>();
+		withdrawMap=withdrawParams(phone, fid,new BigDecimal(famount),"Add");
+		//		withdrawMap=withdrawParams("13587653526", newid, new BigDecimal(90000));
+		String WithdrawInfo=withdrawMap.get("WithdrawInfo");
+		if(!ServerContext.checkWithdrawStatus(WithdrawInfo)){
+			map.put("success", "false");
+			map.put("msg", ServerContext.getMsg());
+			return writeAjaxResponse(response,JSONUtil.getJson(map));
+		}
+		CL_Finance finance=financeDaoImpl.getById(fid);
+		finance.setFstate(2);
+		finance.setFrejectType(frejecttype);
+		financeDaoImpl.update(finance);
+		return writeAjaxResponse(response, "success");
+	}
+
+	/**
+	 * 提现调用支付系统
+	 * @return 返回余额扣除结果
+	 */
+	private HashMap<String,String> withdrawParams(String phone,int newid,BigDecimal amount,String type){
+		JSONObject jo ;
+		JSONObject jo1;
+		try{
+			jo=new JSONObject();
+			jo1=new JSONObject();
+			jo1.put("Fid",newid);
+			jo1.put("Phone",phone);
+			jo1.put("Amount",amount);
+			jo1.put("Type", type);
+			jo.put("data", jo1);
+			HashMap<String, String> params=new HashMap<String,String>();
+			params.put("WithdrawInfo",  Base64.encode(jo.toString().getBytes()));
+			return params;
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**充值明细表添加*/
+	@RequestMapping("/app/finance/rechargeRecord")
+	@Transactional
+	public String rechargeRecord(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String fuserid="";//VMI用户ID
+		String relatedId;//相关表ID
+		BigDecimal famount;//金额
+		int fuserroleId=0;
+		if(request.getParameter("famount")==null || "".equals(request.getParameter("famount"))){
+			map.put("success", "false");
+			map.put("msg","famount empty");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			famount=new BigDecimal(request.getParameter("famount"));
+		}
+		if(request.getParameter("relatedId")==null || "".equals(request.getParameter("relatedId"))){
+			map.put("success", "false");
+			map.put("msg","relatedId empty");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			relatedId=request.getParameter("relatedId");
+		}
+		if(request.getParameter("fuserid")==null || "".equals(request.getParameter("fuserid"))){
+			map.put("success", "false");
+			map.put("msg","VMi fuserid empty");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			fuserid=request.getParameter("fuserid");
+			CL_UserRole role=userRoleDao.getByVmiUserFidAndRoleId(fuserid, 1);
+			if(role!=null)
+			{
+				fuserroleId=role.getId();
+			}
+			else
+			{
+				map.put("success", "false");
+				map.put("msg","post VmiUserId not Exist");
+				return writeAjaxResponse(response, JSONUtil.getJson(map));
+			}
+		}
+		CL_FinanceStatement fs=statementDao.getByRelatedId(relatedId);
+		if(fs==null)
+		{
+			statementDao.saveStatement(relatedId, null, 6, famount, 1, fuserroleId, 0, fuserid);
+			map.put("success", "true");
+			map.put("msg", "saved");
+		}else
+		{
+			map.put("success", "true");
+			map.put("msg", "not saved");
+		}
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+
+	/** 收支明细查询 */
+	@RequestMapping("/app/statement/loadStatement")
+	public String loadStatement(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		HashMap<String, Object> map=new HashMap<String,Object>();
+		Integer pageNum ,pageSize;
+		Integer fid=null;
+		if(request.getParameter("pageNum")==null || "".equals(request.getParameter("pageNum"))){
+			map.put("success", "false");
+			map.put("msg","无法获知第几页");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			pageNum = Integer.parseInt(request.getParameter("pageNum"));
+		}
+		if(request.getParameter("pageSize")==null || "".equals(request.getParameter("pageSize"))){
+			map.put("success", "false");
+			map.put("msg","无法获知每页显示多少条");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			pageSize = Integer.parseInt(request.getParameter("pageSize"));
+		}
+		if(statementQuery==null){
+			statementQuery = newQuery(FinanceStatementQuery.class, null);
+		}
+		if (pageNum != null) {
+			statementQuery.setPageNumber(pageNum);
+		}
+		if (pageSize != null) {
+			statementQuery.setPageSize(pageSize);
+		}
+		
+		if(request.getSession()==null || request.getSession().getId()==null || request.getSession().getId().equals("")){
+			map.put("success", "false");
+			map.put("msg","请重新登录！");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}
+//		String sessionId=request.getSession().getId().toString();
+		Util_UserOnline useronline=ServerContext.getUseronline().get(request.getSession().getId().toString());
+//		fid=useronline.getFuserid();
+		fid=useronline.getFuserCarId();
+		if(fid!=null)
+		{
+			statementQuery.setFuserid(fid.toString());
+		}
+		statementQuery.setSortColumns("bt.fcreate_time desc");
+		Page<CL_FinanceStatement> page=statementDao.findPage(statementQuery);
+		map.put("success", "true");
+		map.put("total", page.getTotalCount());
+		map.put("data", page.getResult());
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+
+
+}

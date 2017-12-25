@@ -1,0 +1,373 @@
+@charset "utf-8";
+.payment-main{
+	background:#fff!important;
+	overflow:hidden;
+	padding-top: 5px;
+}
+.payment-main-in{
+	padding:0 20px;
+}
+.radio{
+	cursor:pointer;
+}
+/* 新加 */
+.password_box{
+	font-family:'微软雅黑';
+	margin-bottom: 30px;
+	display:none;
+}
+.add_card{
+	width:150px;
+	height: 30px;
+	text-align: center;
+	border:1px dashed #ccc;
+	margin-bottom: 15px;
+}
+.add_card a{
+	font-size: 14px;
+	color:#00a8f2;
+	line-height: 30px;
+}
+.safe{
+	font-family:'微软雅黑';
+	font-size: 12px;
+	margin-bottom: 15px;
+}
+.password{
+	line-height: 40px;
+	font-size: 12px;
+	margin-bottom: 0px;
+}
+.password a{
+	color:#00a8f2;
+}
+.password input{
+	width:240px;
+	height: 28px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+/*订单详情*/
+.main_top{
+	position:relative;
+	border-bottom:2px solid #B3B3B3;
+	padding-top:20px;
+	padding-bottom:40px;
+}
+.mian_msg{
+	border-bottom:2px solid #B3B3B3;
+	padding-top:20px;
+	padding-bottom:20px;
+}
+/*订单详情内容*/
+.main_top ul li{
+	list-style-type:none;
+	margin-bottom: 10px;
+}
+.main_top ul li span{
+	color:#959595;
+}
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+	.row > div:nth-child(2){margin-left:-45px;}
+}
+@media only screen and (max-width: 768px) {
+	.row > div:nth-child(2){margin-left:-40px;}
+}
+@media only screen and (min-width: 992px) {
+	.main_top ul li:nth-child(8){position:absolute;left:560px;top:120px;}
+	.main_top ul li:nth-child(10){position:absolute;left:560px;top:140px;}
+}
+/*应付金额*/
+.amount_payable{
+	position:absolute;
+	right:20px;
+	top:20px;
+}
+.amount_payable span{
+	color:#E33431;
+	font-size:22px;
+}
+/*订单详情标签*/
+.order_details{
+	position:absolute;
+	bottom:0;
+	right:20px;
+	width:100px;
+	background-color:#B2B2B2;
+	text-align:center;
+	line-height:34px;
+	color:#ffffff;
+	font-weight:bold;
+}
+
+/*选择支付方式*/
+#bank_card img{width:16px}
+/*边框*/
+.main_bottom > div{
+	border-bottom:1px solid #E6E6E6;
+	padding:20px;
+	position:relative;
+}
+/*应付金额*/
+.amount_payable2{
+	position:absolute;
+	right:16px;
+	top:12px;
+}
+.amount_payable2 span{
+	color:#E5494E;
+	font-size:25px;
+}
+/*银行卡尾号和类型*/
+.card_number{
+	margin-left:90px;
+}
+.card_type{
+	margin-left:90px;
+}
+/*其他付款与添加支付*/
+.main_bottom a:link,.main_bottom a:visited{
+	color:#E33431 !important;
+	display: inline-block;
+}
+.main_bottom a:hover{
+	text-decoration: none;
+}
+.main_bottom .other-pay{
+	border:1px solid #CFCFCF;
+	padding:7px 20px;
+}
+.main_bottom .add-pay{
+	border:1px dashed #CFCFCF;
+	padding:7px 7px;
+	margin-left:10px;
+	margin-bottom:10px;
+}
+.main_bottom a:hover{
+	text-decoration: none;
+}
+
+
+/*输入银行卡号*/
+.import{
+	width: 780px;
+	height: 200px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	background: url(images/wallet/del_bg.png);
+	z-index:999;
+	display:none;
+}
+.import_in{
+	width: 98%;
+	height: 90%;
+	margin: 0.1% auto;
+	background: #fff;
+}
+.reson{
+	padding: 20px;
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+}
+#card_number{
+	border-left:none;
+	width:250px;
+}
+/*合作银行/机构*/
+.reson p{
+	margin-bottom: 20px;
+}
+/*按卡种选择*/
+.reson form a{
+	color:#E33431;
+}
+.reson form a:hover{
+	text-decoration:none;
+}
+/*下一步*/
+.reson > div a{
+	margin-top: 20px;
+}
+
+
+/*不同屏幕调整样式*/
+@media only screen and (max-width: 768px) {
+	.card_number{margin-left:40px;}
+	.card_type{margin-left:40px;}
+}
+@media only screen and (max-width: 480px) {
+	.card_number{margin-left:10px;}
+	.card_type{margin-left:10px;}
+	.main_bottom{color:hsl(12px);}
+	.main_bottom > div{padding:10px;}
+}
+
+
+@media only screen and (max-width: 480px) {
+	.main{font-size:12px;}
+	.row > div:nth-child(1) img{height:85px;}
+}
+
+/*支付宝、微信二维码*/
+.order-ewmPay{
+	position:absolute;
+	top:50%;
+	left:50%;
+	width:150px;
+	height:150px;
+	margin-left:-75px;
+	margin-top:-75px;
+	z-index:99999;
+	display:none;
+}
+.order-close{
+	text-align:right;
+	color:#fff;
+	cursor:pointer;	
+}
+.order-payTip{
+	text-align:center;
+	font-size:12px;
+	color:#fff;
+}
+
+
+/*微信支付宝*/
+#close,#close2,#close_yebz{
+	cursor: pointer;
+}
+
+.wx,.zfb,.yebz{
+	width: 500px;
+	height: 380px;
+	display: none;	
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	background: url(images/wallet/del_bg.png);
+	z-index:999;
+}
+@media only screen and (max-width:480px ) {
+	.wx,.zfb,.yebz{
+		width: 300px;
+	}
+	#close,#close2,#close_yebz{
+		width:24px;
+		height:24px;
+	}
+}
+@media only screen and (min-width: 480px) and (max-width: 640px) {
+.wx,.zfb,.yebz{
+	width: 500px;
+	}
+}
+.wx_in,.zfb_in,.yebz_in{
+	width: 96%;
+	height: 96%;
+	margin: 1.4% auto;
+	background: #fff;
+}
+
+.del_tit{
+	width: 100%;
+	margin: 0 auto;
+	font-size: 18px;
+	color: #5c6068 !important;
+	padding: 10px 0;
+	
+}
+
+.wx_img,.zfb_img{
+	margin: 0 10px;
+}
+
+
+
+/*手机验证码样式开始*/
+#colse_yzm{
+	cursor: pointer;
+}
+.tel_yz{
+	width: 500px;
+	height: 380px;
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	background: url(images/wallet/del_bg.png);
+	z-index:999;
+}
+@media only screen and (max-width:480px ) {
+	.tel_yz{
+		width: 300px;
+	}
+}
+@media only screen and (min-width: 480px) and (max-width: 640px) {
+.tel_yz{
+	width: 500px;
+	}
+}
+.tel_yz_in{
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+	background: #fff;
+}
+
+.del_tit{
+	width: 100%;
+	margin: 0 auto;
+	font-size: 18px;
+	color: #5c6068 !important;
+	padding: 10px 0;
+	border-bottom: 1px solid #ddd;
+}
+.reson{
+	padding: 10px 0;
+	width: 96%;
+	height: 96%;
+	margin: 1.5% auto;
+}
+.reson div{
+	margin: 5px 0;
+}
+.btn-a{
+	width: 100px;
+}
+
+.yzm{
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	margin: 5px 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+#yzm-ok{
+	width: 100%;
+}
+/*手机验证码样式结束*/
+
+
+
+
+
+/*追加款*/
+.payAdd{
+	width:300px;
+}

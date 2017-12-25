@@ -1,0 +1,4 @@
+#Tomcat publish data
+#Fri Oct 13 17:35:14 CST 2017
+org.eclipse.jst.jee.server\:cscl=D\:\\tomcat\\webapps\\cscl
+org.eclipse.jst.jee.server\:/binary\:D\:\\workspace\\cscl\\WebRoot\\WEB-INF\\lib\\spring-web-3.2.8.RELEASE.jar=D\:\\tomcat\\webapps\\cscl\\WEB-INF\\lib\\spring-web-3.2.8.RELEASE.jar

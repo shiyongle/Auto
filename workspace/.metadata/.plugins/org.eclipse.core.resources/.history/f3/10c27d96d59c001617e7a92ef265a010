@@ -1,0 +1,1045 @@
+package com.pc.controller.order;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import sun.misc.BASE64Encoder;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.Option;
+
+import jxl.SheetSettings;
+import jxl.Workbook;
+import jxl.format.Alignment;
+import jxl.format.Colour;
+import jxl.format.VerticalAlignment;
+import jxl.write.Label;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.org.rapid_framework.page.Page;
+
+import com.pc.appInterface.api.DongjingClient;
+import com.pc.controller.BaseController;
+import com.pc.dao.Car.ICarDao;
+import com.pc.dao.UserRole.impl.UserRoleDao;
+import com.pc.dao.addto.IaddtoDao;
+import com.pc.dao.addto.impl.addtoDao;
+import com.pc.dao.couponsDetail.ICouponsDetailDao;
+import com.pc.dao.financeStatement.IFinanceStatementDao;
+import com.pc.dao.order.IorderDao;
+import com.pc.dao.orderCarDetail.IorderCarDetailDao;
+import com.pc.dao.orderCarDetail.impl.OrderCarDetailDao;
+import com.pc.dao.orderDetail.IorderDetailDao;
+import com.pc.dao.select.IUtilOptionDao;
+import com.pc.model.CL_Addto;
+import com.pc.model.CL_Car;
+import com.pc.model.CL_CouponsDetail;
+import com.pc.model.CL_FinanceStatement;
+import com.pc.model.CL_Order;
+import com.pc.model.CL_OrderCarDetail;
+import com.pc.model.CL_OrderDetail;
+import com.pc.model.CL_UserRole;
+import com.pc.model.Util_Option;
+import com.pc.query.order.OrderQuery;
+import com.pc.query.userRole.UserRoleQuery;
+import com.pc.util.Base64;
+import com.pc.util.CacheUtilByCC;
+import com.pc.util.CalcTotalField;
+import com.pc.util.CsclPushUtil;
+import com.pc.util.DJException;
+import com.pc.util.JSONUtil;
+import com.pc.util.LatitudeLongitudeDI;
+import com.pc.util.RSA;
+import com.pc.util.ServerContext;
+
+@Controller
+public class OrderController extends BaseController{
+	protected static final String PUBLICKEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDl5nbvmL8Q8tYGcJAgwS4qdqp2" +
+            "Rwme5FKaR+11vXy89Biu8ruF/KmdS4pk+4gEmoPuHLFc6V6VQ77CgtpgboBDjveU" +
+            "n3HnsN1N2LH/hmn8gDvw+0e7lLDFVEGC6L8d9z+yj0zGe0XMDeEW5zJlVCA2FOYq" +
+            "oQAOkIntynv/nfyP6wIDAQAB";
+
+	protected static final String PERSONALPUBLICKEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcu9tqg+XyDB7qygFxn4UQu00T" +
+            "WrnbQmIDUnE8zhDf9ZuCr5Czil1XVR4ApnpcVUTTXHoW2WpzBw1gm53OdKjgPc2Q" +
+            "yRq+ROlo7NhYCRFan+b4p+RqGL+U+alMH1zv1Q+LSgQP6QF9loKAsC3i70KdBw4G" +
+            "n7K8fTzoY8PtMqHlSwIDAQAB";
+
+	public static final String OrderCreate=ServerContext.getBaseurl()+"/Action_Pay/DJPay/Pay/OrderCreate?XDEBUG_SESSION_START=17402";
+
+	protected static final String UPLOAD_JSP= "/pages/pc/receipt/receipt_list.jsp";
+	protected static final String LIST_JSP= "/pages/pc/order/order_list.jsp";
+	protected static final String VIEW_LIST_JSP= "/pages/pc/order/order_view_list.jsp";
+	protected static final String DETAIL_JSP= "/pages/pc/order/orderDetail.jsp";
+	protected static final String CONTROL_JSP= "/pages/pc/order/orderControl.jsp";
+	protected static final String SPECIALIZED_CONTROL_JSP= "/pages/pc/order/specializedControl.jsp";
+	protected static final String ORDER_ARRIVE_PAY_JSP = "/pages/pc/finance/order_arrivePay.jsp";
+	protected static final String UPDATE_FREIGHT_JSP= "/pages/pc/order/editFreight.jsp";
+
+	@Resource
+	private IorderDao orderDao;
+	@Resource
+	private IorderCarDetailDao orderCarDetailDao;
+	@Resource
+	private IorderDetailDao orderDetailDao;
+	@Resource
+	private ICarDao carDao;
+	@Resource
+	private UserRoleDao userRoleDao;
+	@Resource
+	private IUtilOptionDao optionDao;
+	@Resource
+	private IFinanceStatementDao statementDao;
+	@Resource
+	private IaddtoDao iaddtoDao;
+	@Resource
+	private IFinanceStatementDao financeStatementDao;
+	@Resource
+	private ICouponsDetailDao icouponsDetailDao;
+	
+	private UserRoleQuery userRoleQuery;
+	public UserRoleQuery getUserRoleQuery() {
+		return userRoleQuery;
+	}
+	public void setUserRoleQuery(UserRoleQuery userRoleQuery) {
+		this.userRoleQuery = userRoleQuery;
+	}
+
+	@RequestMapping("/order/list")
+	public String list(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		return LIST_JSP;
+	}
+
+	@RequestMapping("/order/viewlist")
+	public String viewlist(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		return VIEW_LIST_JSP;
+	}
+	
+	@RequestMapping("/order/arrivepaylist")
+	public String arrivepaylist(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		return ORDER_ARRIVE_PAY_JSP;
+	}
+	
+	/***调度**/
+	@RequestMapping("/order/control")
+	public String control(HttpServletRequest request,HttpServletResponse reponse,Integer id) throws Exception{
+		request.getSession().setAttribute("orderid",id);//把需要指派的订单id保存在request中
+		return CONTROL_JSP;
+	}
+	
+	/**指派司机**/
+	@RequestMapping("/order/assign")
+	public String assign(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		HashMap<String,Object> map =new HashMap<String,Object>();
+		int id=Integer.parseInt(request.getParameter("userRoleId"));//获取被指派司机的id
+		int orderid=(int) request.getSession().getAttribute("orderid");//获取被指派订单的id
+		//判断订单是否为未抢状态
+	 	CL_Order orderInfo =orderDao.IsExistIdByStatus(orderid);
+	 	if(orderInfo!=null && !orderInfo.equals("")){
+			CL_Order clo=orderDao.getById(orderid);
+			clo.setUserRoleId(id);//修改被指派订单的司机的id
+			clo.setStatus(3);//修改订单状态从派车中变更为运输中
+			clo.setOperator(Integer.parseInt(request.getSession().getAttribute("userRoleId").toString()));
+			clo.setFoperate_time(new Date());//调度开始时间
+			orderDao.update(clo);//修改
+			List<CL_Car> cars=carDao.getByUserRoleId(id);
+		 	  List<CL_OrderDetail>  detailList=orderDetailDao.getByOrderId(orderid, 2);
+		 	  CL_UserRole userRole=userRoleDao.getById(id);
+		 	  CL_OrderDetail detailOne=orderDetailDao.getByOrderIdForDeliverAddress(orderid);
+		 	  DongjingClient djcn=ServerContext.createVmiClient();
+		 	  String msgString1="%s (车牌号:%s),请于"+clo.getLoadedTimeString()+"前到 "+detailOne.getAddressName()+"提货。您辛苦了,请做好服务工作!";
+		      djcn.setMethod("getDeatilCode");
+		      djcn.setRequestProperty("ftel",userRole.getVmiUserPhone());
+		      djcn.setRequestProperty("fname",cars.get(0).getDriverName());
+			  djcn.setRequestProperty("fcode",cars.get(0).getCarNum());
+			  djcn.setRequestProperty("msgString", msgString1);
+			  djcn.SubmitData();
+//		 	  String msgString="您的货物在运输途中,为您服务的 %s,电话:"+userRole.getVmiUserPhone()+",车牌号:"+cars.get(0).getCarNum()+",客服:0577-85391111,更多优惠下载手机APP,http://fir.im/d1q4";
+		 	 String msgString="您的货物在运输途中,为您服务的 %s,电话:"+userRole.getVmiUserPhone()+",车牌号:"+cars.get(0).getCarNum()+",客服:0577-85391111";
+			  for(CL_OrderDetail detail:detailList ){
+		 		 	 djcn.setMethod("getDeatilCode");
+		 		     djcn.setRequestProperty("ftel", detail.getPhone());
+		 		     djcn.setRequestProperty("fname",cars.get(0).getDriverName());
+		 			 djcn.setRequestProperty("fcode", detail.getSecurityCode());
+		 			 djcn.setRequestProperty("msgString", msgString);
+		 			 djcn.SubmitData();
+		      }
+			String userRoleString=Integer.valueOf(cars.get(0).getUserRoleId()).toString();
+		    CsclPushUtil.SendPushToAllSound(userRoleString , "CPS:您有新的订单 !");
+			map.put("success", "true");
+			map.put("data", "操作成功！");
+	 	}else{
+	 		map.put("success", "false");
+			map.put("data", "该订单已指定司机");
+	 	}
+		return writeAjaxResponse(reponse, JSONUtil.getJson(map));
+	}
+	
+	/***专车调度**/
+	@RequestMapping("/order/specializedControl")
+	public String specializedControl(HttpServletRequest request,HttpServletResponse reponse,Integer id) throws Exception{
+		request.getSession().setAttribute("orderid",id);//把需要指派的订单id保存在request中
+		return SPECIALIZED_CONTROL_JSP;
+	}
+	
+
+	/***加载司机姓名**/
+	@RequestMapping("/order/queryDriver")
+	public String queryDriver(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		int orderid=(int) request.getSession().getAttribute("orderid");
+		CL_Order order =this.orderDao.getById(orderid);
+		List<CL_Car> ls=new ArrayList<CL_Car>();
+		if(order.getType()==1){
+			//根据订单ID,获取其所需车型（去掉重复）
+			List<Util_Option> cartype = this.optionDao.getCarTypeByOrderId(orderid);
+			if(cartype.size()>0){
+				if(cartype.size()==1){
+						if(("任意车型").equals(cartype.get(0).getOptionName())){
+							List<CL_Car> carlist = this.carDao.getByCarSpecId(cartype.get(0).getId());
+							if (carlist!=null) {
+								for (CL_Car car : carlist) {
+									ls.add(car);
+								}
+							}
+						}else{
+							List<CL_Car> temp=carDao.getUrIdByCarType(cartype.get(0).getOptionId());
+							if (temp!=null) {
+								for (CL_Car car : temp) {
+									ls.add(car);
+								}
+							}
+						}
+				}else{
+					for(Util_Option option :cartype){
+						List<CL_Car> temp=carDao.getUrIdByCarType(option.getOptionId());
+						if (temp!=null) {
+							for (CL_Car car : temp) {
+								ls.add(car);
+							}
+						}
+					}
+				}
+			}
+		}else{
+			List<CL_Car> carlist = this.carDao.getAllCar();
+			if(carlist.size()>0){
+				for(CL_Car car:carlist){
+						ls.add(car);
+				}
+			}
+		}
+		
+		return writeAjaxResponse(reponse,JSONUtil.getJson(ls));
+	}
+
+	/***加载司机姓名**/
+	@RequestMapping("/order/controlList")
+	public String controlList(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		int orderid=(int) request.getSession().getAttribute("orderid");
+		CL_Order order =this.orderDao.getById(orderid);
+		CL_OrderDetail  detailInfo=orderDetailDao.getByOrderId(orderid, 1).get(0);
+		List<CL_Car> ls=new ArrayList<CL_Car>();
+		if(order.getType()==1){
+			//根据订单ID,获取其所需车型（去掉重复）
+			List<Util_Option> cartype = this.optionDao.getCarTypeByOrderId(orderid);
+			if(cartype.size()>0){
+				if(cartype.size()==1){
+						if(("任意车型").equals(cartype.get(0).getOptionName())){
+							List<CL_Car> carlist = this.carDao.getByCarSpecId(cartype.get(0).getId());
+							if (carlist!=null) {
+//								for (CL_Car car : carlist) {
+//									ls.add(car);
+//								}
+								ls = controlCar(detailInfo,carlist);
+							}
+						}else{
+							List<CL_Car> temp=carDao.getUrIdByCarType(cartype.get(0).getOptionId());
+							if (temp!=null) {
+//								for (CL_Car car : temp) {
+//									ls.add(car);
+//								}
+								ls = controlCar(detailInfo,temp);
+							}
+						}
+				}else{
+					for(Util_Option option :cartype){
+						List<CL_Car> temp=carDao.getUrIdByCarType(option.getOptionId());
+						if (temp!=null) {
+//							for (CL_Car car : temp) {
+//								ls.add(car);
+//							}
+							ls = controlCar(detailInfo,temp);
+						}
+					}
+				}
+			}
+		}else{
+			List<CL_Car> carlist = this.carDao.getAllCar();
+			if(carlist.size()>0){
+//				for(CL_Car car:carlist){
+//						ls.add(car);
+//				}
+				ls = controlCar(detailInfo,carlist);
+			}
+		}
+		
+		return writeAjaxResponse(reponse,JSONUtil.getJson(ls));
+	}
+	
+	/***构建司机直线距离及是否在线**/
+	public List<CL_Car> controlCar(CL_OrderDetail detailInfo,List<CL_Car> carlist) throws Exception{
+		List<CL_Car> carlistN = new ArrayList<CL_Car>();
+		for(int i=(carlist.size()-1);i>-1;i--){
+			CL_Car car = carlist.get(i);
+			CL_UserRole ur = userRoleDao.getById(car.getUserRoleId());
+			if(ur!=null && ur.getVmiUserPhone()!=null){
+				car.setCarFtel(ur.getVmiUserPhone());
+			}else{
+				carlist.remove(i);
+				continue;
+			}
+			
+			String userRoleid = Integer.toString(car.getUserRoleId());
+			if(!ServerContext.getDriverPosition().containsKey(userRoleid)){
+				car.setFisOnline(0);//司机是否在线(0为否，1为是);
+				car.setFstraightStretch(new BigDecimal(0));
+				carlistN.add(car);
+				carlist.remove(i);
+			}else{
+				//司机与提货点的直线距离;
+				String Longitude = ServerContext.getDriverPosition().get(userRoleid)[0];
+				String Latitude = ServerContext.getDriverPosition().get(userRoleid)[1];
+				BigDecimal straightStretch = LatitudeLongitudeDI.GetDistance(Double.parseDouble(detailInfo.getLatitude()), Double.parseDouble(detailInfo.getLongitude()), Double.parseDouble(Latitude), Double.parseDouble(Longitude));
+				
+				//在当前时间1分钟之前则为不在线;
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				String PositionTime = ServerContext.getDriverPosition().get(userRoleid)[2];
+				Date afterDate = new Date((new Date()) .getTime() - 60000);
+				if(sdf.parse(PositionTime).before(afterDate)){
+					car.setFisOnline(0);//司机是否在线(0为否，1为是);
+					car.setFstraightStretch(new BigDecimal(0));
+					carlistN.add(car);
+					carlist.remove(i);
+				}else{
+					car.setFstraightStretch(straightStretch);
+					car.setFisOnline(1);//司机是否在线(0为否，1为是);
+				}
+			}
+		}
+		Collections.sort(carlist);
+		carlist.addAll(carlistN);
+		return carlist;
+	}
+	
+	/**针对派车中的订单提醒**/
+	@RequestMapping("/order/show")
+	public String show(HttpServletRequest request,HttpServletResponse reponse ,@ModelAttribute OrderQuery orderQuery) throws Exception{
+		//先获取所有派车中的订单信息
+		List<CL_Order> lst=orderDao.getOrdersByStatus(2);
+		//循环所以派车中的订单，当前时间与派车时间的差大于30分钟，那么就开始提醒
+		boolean flag=false;
+		for (CL_Order order : lst) {
+			Date orderDate=order.getLoadedTime();//派车时间
+			Date date=new Date();//当前时间
+			java.util.Calendar c1=java.util.Calendar.getInstance();
+			java.util.Calendar c2=java.util.Calendar.getInstance();
+			c1.setTime(date);
+			c2.setTime(orderDate);
+			int result=c1.compareTo(c2);
+			//result大于0，说明已经过了派车时间了，需要提醒
+			if (result>0) {
+				flag=true;
+				break;
+			//如果大于当前时间，则需要判断差值是否在30分钟以内
+			}else if (result<0) {
+				long l1=orderDate.getTime()-date.getTime();
+				if ((l1/(1000*60))<30) {
+					flag=true;
+				}
+			}
+		}
+		if (flag) {
+			return writeAjaxResponse(reponse, "success");
+		}
+		return writeAjaxResponse(reponse, "fail");
+	}
+	
+	/*** 加载订单信息*/
+	@RequestMapping("/order/load")
+	public String load(HttpServletRequest request,HttpServletResponse reponse ,@ModelAttribute OrderQuery orderQuery) throws Exception{
+		String pageNum = request.getParameter("page");
+		String pageSize = request.getParameter("rows");
+		if (orderQuery == null) {
+			orderQuery = newQuery(OrderQuery.class, null);
+		}
+		if (pageNum != null) {
+			orderQuery.setPageNumber(Integer.parseInt(pageNum));
+		}
+		if (pageSize != null) {
+			orderQuery.setPageSize(Integer.parseInt(pageSize));
+		}
+		if(orderQuery.getCreator()!=null)
+		{
+			if(orderQuery.getCreator()== -1){
+				orderQuery.setCreator(null);
+			}
+		}
+		Page<CL_Order> page = orderDao.findPage(orderQuery);
+		HashMap<String, Object> m = new HashMap<String, Object>();
+		m.put("total", page.getTotalCount());
+		for(CL_Order coinfo : page.getResult()){
+			BigDecimal faddNumber = BigDecimal.ZERO;
+			List<CL_Addto> addto=iaddtoDao.getByOrderId(coinfo.getId());
+			BigDecimal AllCost=coinfo.getFreight();
+			if(addto.size()>0){
+				for(CL_Addto ad:addto){
+					faddNumber=faddNumber.add(ad.getFcost());
+		    	}
+			}
+			coinfo.setFaddNumber(faddNumber);
+			AllCost=AllCost.add(faddNumber);
+			coinfo.setFdriverAllin(AllCost.multiply(CalcTotalField.calDriverFee(AllCost)).setScale(1,BigDecimal.ROUND_HALF_UP));
+		}
+		m.put("rows", page.getResult());
+		return writeAjaxResponse(reponse, JSONUtil.getJson(m));
+	}
+	/*** 加载订单明细信息*/
+	@RequestMapping("/order/detailLoader")
+	public String detailLoader(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		Integer orderId = Integer.parseInt(request.getParameter("orderId"));
+		List<CL_OrderDetail> detail = orderDetailDao.getByPCOrderIdForDeliver(orderId);
+		HashMap<String, Object> m = new HashMap<String, Object>();
+		m.put("total", detail.size());
+		m.put("rows", detail);
+		return writeAjaxResponse(reponse, JSONUtil.getJson(m));
+	}
+	
+	/*** 取消订单*/
+	//TODO:缺少退款步骤
+	@RequestMapping("/order/cancelOrder")
+	@Transactional(propagation=Propagation.REQUIRED)
+	public String cancelOrder(HttpServletRequest request,HttpServletResponse reponse,Integer[] ids) throws Exception{
+		HashMap<String, Object> map=new HashMap<String,Object>();
+		for(Integer id:ids){
+			CL_Order order = this.orderDao.getById(id);
+			if(order.getStatus()>2){
+				map.put("success", "false");
+				map.put("msg", "编号为"+order.getNumber()+"取消失败,请选择状态为代付款、派车中的订单");
+				return writeAjaxResponse(reponse,JSONUtil.getJson(map));
+			}
+			if(order.getStatus()==2||order.getStatus()==3){//派车中，运输中
+				if(order.getFpayMethod()!=5)//非5月结
+				{
+					List<CL_Addto> adds=iaddtoDao.getByOrderId(order.getId());
+					String AllNumber="";
+					BigDecimal AllCost=new BigDecimal(0);
+					BigDecimal CouponsDollars=new BigDecimal(0);
+					CL_CouponsDetail cpsDetail=null;
+
+					if(adds.size()>0){
+						for(CL_Addto add:adds){
+							AllNumber+=AllNumber+add.getFpayNumber()+",";//追加费用流水
+							AllCost=AllCost.add(add.getFcost());
+						}
+					} 
+					/***** 月结、运费到付支持运营后台取消订单  by Cici 2016/9/5*****/
+					if(order.getFpayMethod()!=4) //非4运费到付
+					{
+						if(order.getCouponsDetailId()!=null){
+							cpsDetail=icouponsDetailDao.getById(order.getCouponsDetailId());
+							if(cpsDetail!=null){//订单有使用好运卷
+								CouponsDollars=cpsDetail.getDollars();
+								AllCost=AllCost.subtract(CouponsDollars); //减好运卷面额 by twr 2016-6-21 
+							}
+						}
+						AllCost=AllCost.add(order.getFreight());//订单运费-好运卷金额+追加费用							
+					}
+					if(!"".equals(AllNumber)){
+						AllNumber=AllNumber+order.getNumber();
+					}	
+					if("".equals(AllNumber)){
+						AllNumber=order.getNumber();
+					}
+					if(AllCost.compareTo(new BigDecimal(0))!=0)
+					{
+						String PayInfo=cancelParams(order,AllNumber,AllCost).get("PayInfo");
+						String url=OrderCreate;
+						if(!ServerContext.cancelOrderPay(url,PayInfo)){//支付接口退款
+							map.put("success", "false");
+							map.put("msg", ServerContext.getMsg());
+							System.out.println(ServerContext.getMsg());
+							return writeAjaxResponse(reponse,JSONUtil.getJson(map));
+						}
+						/** 明细记录添加 Start */
+						CL_UserRole user=userRoleDao.getById(order.getCreator());
+						statementDao.saveStatement(order.getId().toString(), order.getNumber(), 8, AllCost, 1, order.getCreator(), 0, user.getVmiUserFid());
+						/** 明细记录添加 End */
+					}
+
+				}
+			}
+			order.setStatus(6);
+			order.setOperator(Integer.parseInt(request.getSession().getAttribute("userRoleId").toString()));
+			this.orderDao.update(order);
+			
+			
+		}
+		return writeAjaxResponse(reponse, "success");
+	}
+	
+	
+	/**导出excel**/
+	@RequestMapping("/order/exportExecl")
+	public String exportExecl(HttpServletRequest request,HttpServletResponse reponse,@ModelAttribute OrderQuery orderQuery,Integer[] ids) throws Exception{
+		boolean ises =true;
+		/***************/
+		Map<String, Object> result = new HashMap<String, Object>();
+		WritableWorkbook wwb = null;
+		OutputStream os = null;
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		String fileName = "ORDER_"+format.format(new Date())+".xls";
+		String path  = OrderController.class.getResource("").toURI().getPath().substring(1);
+		path = path.substring(0,path.lastIndexOf("/WEB-INF"))+"/excel/"+fileName;
+		System.out.println(path);
+		
+		try {
+			File file = new File(path);
+			if(!file.isFile()){
+				file.createNewFile();
+			}
+			os = new FileOutputStream(file);
+			wwb = Workbook.createWorkbook(os);
+			WritableSheet wsheet = wwb.createSheet("物流订单", 0);//创建一个工作页，第一个参数的页名，第二个参数表示该工作页在excel中处于哪一页
+			SheetSettings ss = wsheet.getSettings();
+            ss.setVerticalFreeze(2);  // 设置行冻结前2行
+            WritableFont font1 =new WritableFont(WritableFont.createFont("微软雅黑"), 10 ,WritableFont.BOLD);
+            WritableFont font2 =new WritableFont(WritableFont.createFont("微软雅黑"), 9 ,WritableFont.NO_BOLD);
+            WritableCellFormat wcf = new WritableCellFormat(font1);	  //设置样式，字体
+	            wcf.setAlignment(Alignment.CENTRE);                   //平行居中
+	            wcf.setVerticalAlignment(VerticalAlignment.CENTRE);   //垂直居中
+            WritableCellFormat wcf2 = new WritableCellFormat(font2);  //设置样式，字体
+	            wcf2.setBackground(Colour.LIGHT_ORANGE);
+	            wcf2.setAlignment(Alignment.CENTRE);                  //平行居中
+	            wcf2.setVerticalAlignment(VerticalAlignment.CENTRE);  //垂直居中
+	            wcf2.setWrap(true);  
+            wsheet.mergeCells( 0 , 0 , 14 , 0 ); // 合并单元格  
+            Label titleLabel = new Label( 0 , 0 , " 同城物流调度平台 ",wcf);
+            wsheet.addCell(titleLabel);
+            wsheet.setRowView(0, 1000); // 设置第一行的高度
+            int[] headerArrHight = {10,15,25,25,20,20,20,20,20,20,20,60,25,20,20,20,25,20,25,20,25,20,20,60,60,20,20,15,15,15,25};
+            String headerArr[] = {"序号","订单类型","协议用车","订单编号","用户","客户","客户编码","客户类型","业务员","里程","运费","货物类型","装车时间","重量","体积","长度","司机名称","司机电话","创建时间","司机总运费","状态","提货点","卸货点","支付方式","卸货点数","数量","单位类型","线下支付","增值服务项目","车辆规格","车型"};
+//            String headerArr[] = {"序号","协议用车","订单类型","订单编号","客户","客户编码","客户类型","业务员","提货点","提货联系方式","增值服务费用","总运费","里程","运费","货物类型","装车时间","到达提货点时间","离开提货点时间","重量","体积","长度","司机电话"};
+            for (int i = 0; i < headerArr.length; i++) {
+            	wsheet.addCell(new Label( i , 1 , headerArr[i],wcf));
+            	wsheet.setColumnView(i, headerArrHight[i]);	
+            }
+            if (orderQuery == null) {
+    			orderQuery = newQuery(OrderQuery.class, null);
+    		}
+            if(ids!=null){
+            	orderQuery.setIds(ids);
+            }
+    		List<CL_Order> list = orderDao.ExcelExport(orderQuery);
+    		int conut = 2;
+    		System.out.println("list长度-----"+list.size());//EAS--list=0 
+    		for(int i=0;i<list.size();i++){
+    			//2016-5-17 by  lu 多个卸货点  需要多条显示
+    			List<CL_OrderDetail> listdts = orderDetailDao.getByOrderId(list.get(i).getId(), 2);
+    			
+    			//订单管理导出新增提货点及司机总运费;
+    			List<CL_OrderDetail> listthd = orderDetailDao.getByOrderId(list.get(i).getId(), 1);
+    			String addressNameThd = listthd.get(0).getAddressName();
+    			
+    			BigDecimal faddNumber = BigDecimal.ZERO;
+    			List<CL_Addto> addto=iaddtoDao.getByOrderId(list.get(i).getId());
+    			BigDecimal AllCost=list.get(i).getFreight();
+    			if(addto.size()>0){
+    				for(CL_Addto ad:addto){
+    					faddNumber=faddNumber.add(ad.getFcost());
+    		    	}
+    			}
+    			AllCost=AllCost.add(faddNumber);
+    			String FdriverAllin = AllCost.multiply(CalcTotalField.calDriverFee(AllCost)).setScale(1,BigDecimal.ROUND_HALF_UP).toString();
+    			
+    			if(listdts.size()>0){
+    				for(int j=0;j<listdts.size();j++){
+    					
+    	    			jxl.write.NumberFormat nf2 = new jxl.write.NumberFormat("0.00");//设置数字格式djchd
+    	    			jxl.write.WritableCellFormat wcfN2 = new jxl.write.WritableCellFormat(nf2);//设置表单格式   
+    	    			wcfN2.setBackground(Colour.LIGHT_ORANGE);
+    	    			wcfN2.setAlignment(Alignment.CENTRE);                  //平行居中
+    	    			wcfN2.setVerticalAlignment(VerticalAlignment.CENTRE);  //垂直居中
+    	    			wsheet.addCell(new Label( 0 , conut ,String.valueOf(i+1),wcf2));
+    	    			wsheet.addCell(new Label( 1 , conut ,typeName(list.get(i).getType().toString()),wcf2));
+        				//协议用车（0 否1是）
+            			wsheet.addCell(new Label( 2 , conut ,typeProtocol(list.get(i).getProtocolType().toString()) ,wcf2));
+    	    			wsheet.addCell(new Label( 3 , conut ,list.get(i).getNumber(),wcf2));
+    	    			wsheet.addCell(new Label( 4 , conut ,list.get(i).getCreatorName() ,wcf2));
+            			wsheet.addCell(new Label( 5 , conut ,list.get(i).getCustName() ,wcf2));
+            			wsheet.addCell(new Label( 6 , conut ,list.get(i).getCustNumber() ,wcf2));
+            			wsheet.addCell(new Label( 7 , conut ,list.get(i).getCustType() ,wcf2));
+            			wsheet.addCell(new Label( 8 , conut ,list.get(i).getCustSaleMan() ,wcf2));
+    	    			//订单包天类型判断;
+    	    			if(list.get(i).getType()!=3){
+    	    				wsheet.addCell(new jxl.write.Number(9,conut,Double.parseDouble(list.get(i).getMileage()==null?"0":list.get(i).getMileage().toString()), wcfN2));
+    	    				wsheet.addCell(new jxl.write.Number(13,conut,Double.parseDouble(list.get(i).getWeight()==null?"0":list.get(i).getWeight().toString()), wcfN2));
+    	        			wsheet.addCell(new jxl.write.Number(14,conut,Double.parseDouble(list.get(i).getVolume()==null?"0":list.get(i).getVolume().toString()), wcfN2));
+    	        			wsheet.addCell(new jxl.write.Number(15,conut,Double.parseDouble(list.get(i).getLength()==null?"0":list.get(i).getLength().toString()), wcfN2));
+    	    			}else{
+    	    				wsheet.addCell(new jxl.write.Number(9,conut,0, wcfN2));
+    	    				wsheet.addCell(new jxl.write.Number(13,conut,0, wcfN2));
+    	        			wsheet.addCell(new jxl.write.Number(14,conut,0, wcfN2));
+    	        			wsheet.addCell(new jxl.write.Number(15,conut,0, wcfN2));
+    	    			}
+    	    			
+    	    			wsheet.addCell(new jxl.write.Number(10,conut,Double.parseDouble(list.get(i).getFreight()==null?"0":list.get(i).getFreight().toString()), wcfN2));
+    	    			wsheet.addCell(new Label( 11 , conut ,list.get(i).getGoodsTypeName() ,wcf2));
+    	    			wsheet.addCell(new Label( 12 , conut ,list.get(i).getLoadedTimeString() ,wcf2));
+    	    			
+    	    			wsheet.addCell(new Label( 16 , conut ,list.get(i).getOrderDriverName(),wcf2));
+    	    			wsheet.addCell(new Label( 17 , conut ,list.get(i).getOrderDriverphone(),wcf2));
+    	    			wsheet.addCell(new Label( 18 , conut ,list.get(i).getCreateTimeString() ,wcf2));
+    	    			wsheet.addCell(new jxl.write.Number(19,conut,Double.parseDouble(FdriverAllin), wcfN2));
+    	    			wsheet.addCell(new Label( 20, conut ,statusName(list.get(i).getStatus().toString()) ,wcf2));
+        				wsheet.addCell(new Label( 21, conut ,addressNameThd ,wcf2));
+        				wsheet.addCell(new Label( 22, conut ,listdts.get(j).getAddressName() ,wcf2));
+        				wsheet.addCell(new Label( 23, conut ,paymethodName(list.get(i).getFpayMethod()==null?"":list.get(i).getFpayMethod().toString()) ,wcf2));
+        				wsheet.addCell(new Label( 24, conut ,list.get(i).getFopint()==null?"":list.get(i).getFopint().toString() ,wcf2));
+        				wsheet.addCell(new Label( 25, conut ,list.get(i).getFamount()==null?"":list.get(i).getFamount().toString() ,wcf2));
+        				wsheet.addCell(new Label( 26, conut ,list.get(i).getFunitId()==null?"":funitToName(list.get(i).getFunitId().toString()) ,wcf2));
+        				wsheet.addCell(new Label( 27, conut ,list.get(i).getFonlinePay()==0?"未选择":(list.get(i).getFonlinePay()==1?"线上":"线下") ,wcf2));
+        				wsheet.addCell(new Label( 28, conut ,list.get(i).getFincrementServe(),wcf2));
+    	    			wsheet.addCell(new Label( 29, conut ,list.get(i).getCarSpecName(),wcf2));
+    	    			wsheet.addCell(new Label( 30, conut ,list.get(i).getCarTypeName() ,wcf2));
+        				conut++;
+        			}
+    			}else{
+        			jxl.write.NumberFormat nf2 = new jxl.write.NumberFormat("0.00");//设置数字格式
+        			jxl.write.WritableCellFormat wcfN2 = new jxl.write.WritableCellFormat(nf2);//设置表单格式   
+        			wcfN2.setBackground(Colour.LIGHT_ORANGE);
+        			wcfN2.setAlignment(Alignment.CENTRE);                  //平行居中
+        			wcfN2.setVerticalAlignment(VerticalAlignment.CENTRE);  //垂直居中
+        			wsheet.addCell(new Label( 0 , conut ,String.valueOf(i+1),wcf2));
+        			wsheet.addCell(new Label( 1 , conut ,typeName(list.get(i).getType().toString()),wcf2));
+        			//协议用车（0 否1是）
+        			wsheet.addCell(new Label( 2 , conut ,typeProtocol(list.get(i).getProtocolType().toString()) ,wcf2));
+        			
+        			wsheet.addCell(new Label( 3 , conut ,list.get(i).getNumber(),wcf2));
+        			wsheet.addCell(new Label( 4 , conut ,list.get(i).getCreatorName() ,wcf2));
+        			wsheet.addCell(new Label( 5 , conut ,list.get(i).getCustName() ,wcf2));
+        			wsheet.addCell(new Label( 6 , conut ,list.get(i).getCustNumber() ,wcf2));
+        			wsheet.addCell(new Label( 7 , conut ,list.get(i).getCustType() ,wcf2));
+        			wsheet.addCell(new Label( 8 , conut ,list.get(i).getCustSaleMan() ,wcf2));
+       
+        			//订单包天类型判断;
+        			if(list.get(i).getType()!=3){
+        				wsheet.addCell(new jxl.write.Number(9,conut,Double.parseDouble(list.get(i).getMileage()==null?"0":list.get(i).getMileage().toString()), wcfN2));
+        				wsheet.addCell(new jxl.write.Number(13,conut,Double.parseDouble(list.get(i).getWeight()==null?"0":list.get(i).getWeight().toString()), wcfN2));
+            			wsheet.addCell(new jxl.write.Number(14,conut,Double.parseDouble(list.get(i).getVolume()==null?"0":list.get(i).getVolume().toString()), wcfN2));
+            			wsheet.addCell(new jxl.write.Number(15,conut,Double.parseDouble(list.get(i).getLength()==null?"0":list.get(i).getLength().toString()), wcfN2));
+        			}else{
+        				wsheet.addCell(new jxl.write.Number(9,conut,0, wcfN2));
+        				wsheet.addCell(new jxl.write.Number(13,conut,0, wcfN2));
+            			wsheet.addCell(new jxl.write.Number(14,conut,0, wcfN2));
+            			wsheet.addCell(new jxl.write.Number(15,conut,0, wcfN2));
+        			}
+        			
+        			wsheet.addCell(new jxl.write.Number(10,conut,Double.parseDouble(list.get(i).getFreight()==null?"0":list.get(i).getFreight().toString()), wcfN2));
+        			wsheet.addCell(new Label( 11, conut ,list.get(i).getGoodsTypeName() ,wcf2));
+        			wsheet.addCell(new Label( 12, conut ,list.get(i).getLoadedTimeString() ,wcf2));
+        			
+        			wsheet.addCell(new Label( 16 , conut ,list.get(i).getOrderDriverName(),wcf2));
+        			wsheet.addCell(new Label( 17 , conut ,list.get(i).getOrderDriverphone(),wcf2));
+        			wsheet.addCell(new Label( 18 , conut ,list.get(i).getCreateTimeString() ,wcf2));
+	    			wsheet.addCell(new jxl.write.Number(19,conut,Double.parseDouble(FdriverAllin), wcfN2));
+	    			wsheet.addCell(new Label( 20, conut ,statusName(list.get(i).getStatus().toString()) ,wcf2));
+	    			wsheet.addCell(new Label( 21, conut ,addressNameThd ,wcf2));
+	    			wsheet.addCell(new Label( 22, conut ,paymethodName(list.get(i).getFpayMethod()==null?"":list.get(i).getFpayMethod().toString()) ,wcf2));
+    				wsheet.addCell(new Label( 23, conut ,list.get(i).getFopint()==null?"":list.get(i).getFopint().toString() ,wcf2));
+    				wsheet.addCell(new Label( 24, conut ,list.get(i).getFamount()==null?"":list.get(i).getFamount().toString() ,wcf2));
+    				wsheet.addCell(new Label( 25, conut ,list.get(i).getFunitId()==null?"":funitToName(list.get(i).getFunitId().toString()) ,wcf2));
+    				wsheet.addCell(new Label( 26, conut ,list.get(i).getFonlinePay()==0?"未选择":(list.get(i).getFonlinePay()==1?"线上":"线下") ,wcf2));
+    				wsheet.addCell(new Label( 27, conut ,list.get(i).getFincrementServe(),wcf2));
+    				wsheet.addCell(new Label( 28, conut ,null,wcf2));
+	    			wsheet.addCell(new Label( 29, conut ,list.get(i).getCarSpecName(),wcf2));
+	    			wsheet.addCell(new Label( 230, conut ,list.get(i).getCarTypeName() ,wcf2));
+    				conut++;
+    			}
+    			
+    		}
+			wwb.write();
+			os.flush();
+		} catch (Exception e) {
+			ises =false;
+			e.printStackTrace();
+		}finally{
+			try {
+				if(wwb != null){
+					wwb.close();
+				}
+				if(os != null){
+					os.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		result.put("url", fileName);
+		if(ises==true){
+			result.put("success", true);
+		}else{
+			result.put("success", false);
+		}
+		return writeAjaxResponse(reponse,JSONUtil.getJson(result));
+	}
+	
+	public String typeName(String value){
+		 if(value.equals("1")){
+			return "整车订单";
+		}else {
+			return "零担订单";
+		}
+
+	}
+	
+	//协议用车类型（0 否1是）
+	 public String typeProtocol(String value){
+		 if(value.equals("0")){
+			 return"否";
+		 }else {
+			 return"是";
+		}
+	 }
+	 
+	 
+	public String paymethodName(String value){
+		 if(value.equals("0")){
+			return "余额";
+		}else if(value.equals("1")){
+			return "支付宝";
+		}else if(value.equals("2")){
+			return "微信";
+		}else if(value.equals("3")){
+			return "银联";
+		}else if(value.equals("4")){
+			return "运费到付";
+		}else if(value.equals("5")){
+			return "月结";
+		}else
+		{
+			return "";
+		}
+	}
+	
+	//零担单位id 1:件;2:托;3:面积;4:体积;5:重量
+	public String funitToName(String value){
+		 if(value.equals("0")){
+			return "无";
+		}else if(value.equals("1")){
+			return "件";
+		}else if(value.equals("2")){
+			return "托";
+		}else if(value.equals("3")){
+			return "平方米";
+		}else if(value.equals("4")){
+			return "立方米";
+		}else if(value.equals("5")){
+			return "吨";
+		}else
+		{
+			return "";
+		}
+	}
+	
+	
+	public String statusName(String value){
+		if(value.equals("1")){
+			return "待付款";
+		}else if(value.equals("2")){
+			return "派车中";
+		}else if(value.equals("3")){
+			return "运输中";
+		}else if(value.equals("4")){
+			return "待评价";
+		}else if(value.equals("5")){
+			return "已完成";
+		}else if(value.equals("6")){
+			return "已取消";
+		}else{
+			return "已关闭";
+		}
+	}
+	
+    private HashMap<String,String> cancelParams(CL_Order order,String AllNumber,BigDecimal addAllCost){
+    	JSONObject jo ;
+		JSONObject jo1;
+		try{
+			jo=new JSONObject();
+			jo1=new JSONObject();
+			jo1.put("OrderNumber",RSA.encrypt(order.getNumber(),PUBLICKEY));
+        	jo1.put("TextCode", RSA.encrypt("utf-8", PUBLICKEY));
+			jo1.put("OrderNumbers",AllNumber);
+			jo1.put("OrderType",RSA.encrypt("退款", PUBLICKEY));
+	        Calendar date=Calendar.getInstance();
+	        SimpleDateFormat format= new SimpleDateFormat("yyyyMMddHHmm");
+	        jo1.put("OrderTime", RSA.encrypt(format.format(date.getTime()), PUBLICKEY));
+		    jo1.put("Developer", RSA.encrypt("CS", PUBLICKEY));
+		    jo1.put("Drawee", RSA.encrypt("DJ", PERSONALPUBLICKEY));
+		    //order.getCreatorPhone()
+		    jo1.put("Payee", RSA.encrypt(order.getCreatorPhone(), PERSONALPUBLICKEY));
+		    jo1.put("PayType", RSA.encrypt("系统", PUBLICKEY));
+		    jo1.put("BankName", RSA.encrypt("DJ银行退款", PUBLICKEY));
+		    jo1.put("BankAccountNo", RSA.encrypt("0000", PUBLICKEY));
+		    jo1.put("Money", RSA.encrypt(addAllCost+"", PERSONALPUBLICKEY));
+		    jo1.put("PayPassword", RSA.encrypt("123456", PERSONALPUBLICKEY));
+		    jo.put("data", jo1);
+		    HashMap<String, String> params=new HashMap<String,String>();
+		    params.put("PayInfo", Base64.encode(jo.toString().getBytes()));
+		    params.put("url",OrderCreate);
+		    return params;
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+  }
+    
+    @RequestMapping("/order/uploadlist")
+	public String uploadlist(HttpServletRequest request,HttpServletResponse reponse,@ModelAttribute OrderQuery orderQuery) throws Exception{
+    	return UPLOAD_JSP;
+    }
+    
+    @RequestMapping("/order/loadupload")
+	public String loadupload(HttpServletRequest request,HttpServletResponse reponse,@ModelAttribute OrderQuery orderQuery) throws Exception{
+    	String pageNum = request.getParameter("page");
+		String pageSize = request.getParameter("rows");
+//		String fusername=request.getParameter("fusername");
+		if (orderQuery == null) {
+			orderQuery = newQuery(OrderQuery.class, null);
+		}
+		if (pageNum != null) {
+			orderQuery.setPageNumber(Integer.parseInt(pageNum));
+		}
+		if (pageSize != null) {
+			orderQuery.setPageSize(Integer.parseInt(pageSize));
+		}
+//		if(orderQuery.getCreator()!=null)
+//		{
+//			if(orderQuery.getCreator()== -1){
+//				orderQuery.setCreator(null);
+//			}
+//		}
+		orderQuery.setSortColumns("o.number desc");
+		Page<CL_Order> page = orderDao.findUploadPage(orderQuery);
+		HashMap<String, Object> m = new HashMap<String, Object>();
+		m.put("total", page.getTotalCount());
+		m.put("rows", page.getResult());
+		return writeAjaxResponse(reponse, JSONUtil.getJson(m));
+    }
+    
+	/*** 加载到付订单信息*/
+	@RequestMapping("/order/arriveload")
+	public String arriveload(HttpServletRequest request,HttpServletResponse reponse ,@ModelAttribute OrderQuery orderQuery) throws Exception{
+		String pageNum = request.getParameter("page");
+		String pageSize = request.getParameter("rows");
+		if (orderQuery == null) {
+			orderQuery = newQuery(OrderQuery.class, null);
+		}
+		if (pageNum != null) {
+			orderQuery.setPageNumber(Integer.parseInt(pageNum));
+		}
+		if (pageSize != null) {
+			orderQuery.setPageSize(Integer.parseInt(pageSize));
+		}
+		if(orderQuery.getCreator()!=null)
+		{
+			if(orderQuery.getCreator()== -1){
+				orderQuery.setCreator(null);
+			}
+		}
+		//只显示运费到付且是线下支付的订单
+		orderQuery.setFonlinePay(2);
+		//修改成只要是线下支付就要通过上缴来打运费给司机；
+//		orderQuery.setFpayMethod(4);
+		
+		Page<CL_Order> page = orderDao.findPage(orderQuery);
+		HashMap<String, Object> m = new HashMap<String, Object>();
+		m.put("total", page.getTotalCount());
+		for(CL_Order coinfo : page.getResult()){
+			BigDecimal faddNumber = BigDecimal.ZERO;
+			List<CL_Addto> addto=iaddtoDao.getByOrderId(coinfo.getId());
+			BigDecimal AllCost=coinfo.getFreight();
+			if(addto.size()>0){
+				for(CL_Addto ad:addto){
+					faddNumber=faddNumber.add(ad.getFcost());
+		    	}
+			}
+			coinfo.setFaddNumber(faddNumber);
+			AllCost=AllCost.add(faddNumber);
+			coinfo.setFdriverAllin(AllCost.multiply(CalcTotalField.calDriverFee(AllCost)).setScale(1,BigDecimal.ROUND_HALF_UP));
+		}
+		m.put("rows", page.getResult());
+		return writeAjaxResponse(reponse, JSONUtil.getJson(m));
+	}
+	//2016-6-14  运费上缴
+	// type-> 0:取消上缴    1：上缴
+	@RequestMapping("/order/offlinepay")
+	@Transactional(propagation = Propagation.REQUIRED)
+	public String offlinepay(HttpServletRequest request, HttpServletResponse reponse,Integer id,Integer type) throws DJException {
+		String exceptionStr = "";
+		CL_Order coinfo = orderDao.getById(id);
+		if(coinfo.getFofflinePay()==type){
+			return writeAjaxResponse(reponse,"{\"flag\":\"false\",\"msg\":\"不能多次相同操作！\"}");
+		}
+		CL_UserRole sjinfo = userRoleDao.getById(coinfo.getUserRoleId());	
+		String sjUsename = sjinfo.getVmiUserPhone();
+		List<CL_Addto> addto=iaddtoDao.getByOrderId(coinfo.getId());
+		BigDecimal AllCost=coinfo.getFreight();
+		BigDecimal faddNumber = BigDecimal.ZERO;
+		if(addto.size()>0){
+			for(CL_Addto ad:addto){
+				faddNumber=faddNumber.add(ad.getFcost());
+	    	}
+		}
+		AllCost=AllCost.add(faddNumber);
+		AllCost = AllCost.multiply(CalcTotalField.calDriverFee(AllCost)).setScale(1,BigDecimal.ROUND_HALF_UP);		
+
+		try{	
+			doMakeUserBalance(coinfo.getId(),sjinfo.getId(),sjUsename,type,coinfo.getNumber(),AllCost);	
+		}catch(Exception e){
+			exceptionStr= e.getMessage();
+			return writeAjaxResponse(reponse,"{\"flag\":\"false\",\"msg\":\""+exceptionStr+"\"}");
+		}		
+		orderDao.updateofflinePayByOrderId(id, type);
+		return writeAjaxResponse(reponse,"{\"flag\":\"success\",\"msg\":\""+exceptionStr+"\"}");
+
+	}
+	
+	/*     
+	 *直接操作用户余额方法  
+	 * fid : 相关id
+	 * fuserid : 相关用户id
+	 * phone： 用户手机
+	 * type： 0、扣款  1、返利 
+	 * orderNumber：相关订单号
+	 * famount:操作金额
+	 * */
+	public boolean doMakeUserBalance(int fid,int fuserid,String phone,int type,String orderNumber,BigDecimal famount) throws DJException {
+		if(type==0){
+			String Developer = RSA.encrypt("CS",PUBLICKEY);
+			String Userphone = RSA.encrypt(phone,PERSONALPUBLICKEY);
+			String requestDataString = "{\"data\": {\"Developer\": \""+Developer+"\",\"Usename\": \""+Userphone+"\"}}";
+			requestDataString = Base64.encode(requestDataString.getBytes());
+			String resString = ServerContext.UsePayBalance(requestDataString);
+			JSONObject jo = JSONObject.fromObject(resString);
+			BigDecimal fbalance =new BigDecimal(jo.get("data").toString());
+			if(famount.compareTo(fbalance)>0){
+				throw new DJException("余额不足无法扣款！");
+			}
+		}		
+		CL_UserRole urinfo = userRoleDao.getById(fuserid);
+		//默认theType为收款
+		int theType = 1;
+		//2016-5-20   不校验余额了
+		JSONObject joe=new JSONObject();
+		JSONObject jo1=new JSONObject();
+		jo1.put("Fid",fid);
+		jo1.put("Phone",phone);
+		jo1.put("Amount",famount);
+		jo1.put("Type","Add");
+		if(type==0){
+			theType = -1;
+			jo1.put("Type","Minus");
+		}
+		joe.put("data", jo1);
+		 if(ServerContext.checkWithdrawStatus(Base64.encode(joe.toString().getBytes()))){							 
+			CL_FinanceStatement statement=new CL_FinanceStatement();
+			statement.setFcreateTime(new Date());
+			statement.setNumber(CacheUtilByCC.getOrderNumber("cl_finance_statement", "L", 8));
+			statement.setFrelatedId(String.valueOf(fid));
+			statement.setForderId(orderNumber);
+			statement.setFbusinessType(3);
+			statement.setFamount(famount);
+			statement.setFtype(theType);
+			statement.setFuserroleId(fuserid);
+			statement.setFuserid(urinfo.getVmiUserFid());
+			statement.setFpayType(0);
+			statement.setFremark("到付运费上缴");
+			if(type==0){		
+				statement.setFremark("取消上缴运费");
+			}
+			financeStatementDao.save(statement);
+			
+		 }else{
+			 throw new DJException(phone+":处理余额报错！");
+		 }
+		return true;
+	}
+	
+	private static String encryptBASE64(byte[] data) throws Exception {
+		return (new BASE64Encoder()).encodeBuffer(data).replace("\r\n", "");
+	}
+	@SuppressWarnings("unused")
+	private static String encryptBASE64(String data) throws Exception {
+		if (data == null) {
+			return null;
+		}
+		return encryptBASE64(data.getBytes("utf-8"));
+	}
+
+	/***调整运费**/
+	@RequestMapping("/order/updateFreight")
+	public String updateFreight(HttpServletRequest request,HttpServletResponse reponse,Integer id) throws Exception{
+		request.getSession().setAttribute("orderid",id);//把需要指派的订单id保存在request中
+		return UPDATE_FREIGHT_JSP;
+	}
+	
+	/***调整运费**/
+	@RequestMapping("/order/editfreight")
+	public String editfreight(HttpServletRequest request,HttpServletResponse reponse) throws Exception{
+		HashMap<String,Object> map =new HashMap<String,Object>();
+		BigDecimal newfreight=new BigDecimal(request.getParameter("newfreight"));//获取被指派司机的id
+		int orderid=(int) request.getSession().getAttribute("orderid");//获取被指派订单的id
+	 	CL_Order clo=orderDao.getById(orderid);
+	 	if(clo!=null && !clo.equals("")){
+	 		if(clo.getForiginfreight()==null)
+	 		{
+	 			clo.setForiginfreight(clo.getFreight());//原始运费为空的话赋值原始运费
+	 		}
+	 		clo.setFreight(newfreight);
+	 		clo.setFdriverfee(clo.getFreight().multiply(CalcTotalField.calDriverFee(clo.getFreight())).setScale(1,BigDecimal.ROUND_HALF_UP));
+		
+	 		clo.setFupdateman(Integer.parseInt(request.getSession().getAttribute("userRoleId").toString()));//修改人
+			clo.setFupdatetime(new Date());//修改时间
+			orderDao.update(clo);//修改
+			map.put("success", "true");
+			map.put("data", "修改成功！");
+	 	}else{
+	 		map.put("success", "false");
+			map.put("data", "修改失败");
+	 	}
+		return writeAjaxResponse(reponse, JSONUtil.getJson(map));
+	}
+	
+}

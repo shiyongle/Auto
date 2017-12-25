@@ -1,0 +1,90 @@
+@charset "utf-8";
+.main{
+	background: #ffffff !important;
+	overflow: hidden;
+	margin-top: 15px;
+}
+.red{
+	color: red;
+	padding-right:10px;
+}
+
+.inline-margin{
+	margin: 20px 20px;
+}
+
+select{
+	margin: 10px 0px;
+}
+
+.form-group span{
+	display: inline-block;
+	width: 100px;
+	
+}
+.row{
+	margin: 30px auto;
+	padding: 0 10px;
+}
+
+/*表单样式*/
+@media only screen and (min-width: 768px) {
+	#reveiverName,#telephone,#address{
+		width: 400px;
+	}
+	#street{
+		width: 400px;
+		resize: none;
+	}
+}
+
+@media only screen and (max-width: 768px) {
+	span.mr_s{display: none;}
+}
+
+.mr{
+	margin: 0 10px;
+	vertical-align:sub;
+}
+
+/*a.btn-save,a.btn-save:hover{
+	color: #fff !important;
+	border: 0px;
+}*/
+
+
+/*地址列表*/
+.table_head{
+	background: #f0f2f5;
+}
+
+table tr td{
+	text-align: center;
+	height: 50px;
+	line-height: 50px !important;
+}
+
+/*验证信息提示*/
+.form-group{
+	position:relative;
+}
+#reveiverName_err,#telephone_err,#address_err,#address_th_err{
+	position: absolute;
+	left:110px;
+	top:16px;
+}
+
+@media only screen and (max-width:768px){
+	#reveiverName_err,#telephone_err,#address_err,#street_err{position: absolute;left:0px;top:36px;}
+}
+
+/*地图小标签*/
+.address_div{
+	width: 44px;
+    display: inline-block;
+    border-radius: 4px;
+    background: #fff;
+    border: 0;
+    cursor: pointer;
+    float:right;
+}

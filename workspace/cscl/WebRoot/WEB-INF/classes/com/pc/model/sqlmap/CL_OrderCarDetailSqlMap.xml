@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_OrderCarDetail">
+
+    <resultMap id="CL_OrderCarDetailMap" type="com.pc.model.CL_OrderCarDetail">
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="carSpecId" column="car_spec_id"/>
+        <result property="carTypeId" column="car_type_id"/>
+        <result property="carOtherId" column="car_other_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        orce.id ,orce.order_id ,orce.car_spec_id ,orce.car_type_id ,orce.car_other_id ,orce.create_time, orl.number as or_number,ctp.name as ctpName,
+        csp.name as cspName, cother.name as cotherName
+	    ]]>
+	</sql>
+	
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_order_car_detail (
+	        id  ,
+	        order_id  ,
+	        car_spec_id  ,
+	        car_type_id  ,
+	        car_other_id  ,
+	        create_time  
+        ) VALUES (
+        	#{id, jdbcType=INTEGER} ,
+        	#{orderId, jdbcType=INTEGER} ,
+        	#{carSpecId, jdbcType=INTEGER} ,
+        	#{carTypeId, jdbcType=INTEGER} ,
+        	#{carOtherId, jdbcType=INTEGER} ,
+        	#{createTime, jdbcType=TIMESTAMP} 
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+        UPDATE cl_order_car_detail SET
+	        order_id = #{orderId, jdbcType=INTEGER} ,
+	        car_spec_id = #{carSpecId, jdbcType=INTEGER} ,
+	        car_type_id = #{carTypeId, jdbcType=INTEGER} ,
+	        car_other_id = #{carOtherId, jdbcType=INTEGER} ,
+	        create_time = #{createTime, jdbcType=TIMESTAMP} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_order_car_detail WHERE
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_OrderCarDetailMap">
+	    SELECT *
+	    <![CDATA[
+	        FROM cl_order_car_detail  orce
+	        WHERE 
+		        orce.id = #{id} 
+	    ]]>
+    </select>
+    
+    <select id="getByOrderId" resultMap="CL_OrderCarDetailMap">
+	     SELECT  orce.id , orce.car_spec_id ,orce.car_type_id ,orce.car_other_id ,orce.create_time, ctp.name as ctpName,csp.name as cspName, cother.name as cotherName
+	     FROM   cl_order_car_detail  orce
+         INNER JOIN cl_car_spec csp on csp.id=orce.car_spec_id
+    	 INNER JOIN cl_car_type ctp on ctp.id=orce.car_type_id
+    	 LEFT JOIN cl_car_other cother on cother.id=orce.car_other_id
+	     WHERE  orce.order_id = #{OrderId} 
+    </select>
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(id)">
+			    AND orce.id = #{id}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(orderId)">
+			    AND orce.order_id = #{orderId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(carSpecId)">
+			    AND orce.car_spec_id = #{carSpecId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(carTypeId)">
+			    AND orce.car_type_id = #{carTypeId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(carOtherId)">
+			    AND orce.car_other_id = #{carOtherId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeBegin)">
+		   		AND orce.create_time >= #{createTimeBegin}
+		   	</if>
+		   	<if test="@Ognl@isNotEmpty(createTimeEnd)">
+		   		AND orce.create_time &lt; #{createTimeEnd}
+		   	</if>
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+       SELECT count(*) FROM cl_order_car_detail orce 
+         LEFT JOIN cl_order orl on orl.id=orce.order_id
+    	 LEFT JOIN cl_car_spec csp on csp.id=orce.car_spec_id
+    	 LEFT JOIN cl_car_type ctp on ctp.id=orce.car_type_id
+    	 LEFT JOIN cl_car_other cother on cother.id=orce.car_other_id
+        <include refid="findWhere"/>    
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 #offset#,#pageSize#,#lastRows# 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="CL_OrderCarDetailMap">
+    	SELECT <include refid="columns"/> FROM cl_order_car_detail  orce
+    	 LEFT JOIN cl_order orl on orl.id=orce.order_id
+    	 LEFT JOIN cl_car_spec csp on csp.id=orce.car_spec_id
+    	 LEFT JOIN cl_car_type ctp on ctp.id=orce.car_type_id
+    	 LEFT JOIN cl_car_other cother on cother.id=orce.car_other_id
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+
+	
+	<select id="find" resultMap="CL_OrderCarDetailMap">
+	    SELECT <include refid="columns"/> FROM cl_order_car_detail  orce
+    	 LEFT JOIN cl_order orl on orl.id=orce.order_id
+    	 LEFT JOIN cl_car_spec csp on csp.id=orce.car_spec_id
+    	 LEFT JOIN cl_car_type ctp on ctp.id=orce.car_type_id
+    	 LEFT JOIN cl_car_other cother on cother.id=orce.car_other_id
+		<include refid="findWhere"/>
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+	
+</mapper>
+

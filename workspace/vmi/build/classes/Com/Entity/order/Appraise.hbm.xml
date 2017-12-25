@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-11-4 16:21:20 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.order.Appraise" table="t_ord_appraise">
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fbasicappraise" type="java.lang.Integer">
+            <column name="fbasicappraise" />
+        </property>
+        <property name="fdescription" type="string">
+            <column name="fdescription" length="500" />
+        </property>
+        <property name="fappraiseman" type="string">
+            <column name="fappraiseman" length="44" />
+        </property>
+        <property name="fappraisetime" type="date">
+            <column name="fappraisetime" length="0" />
+        </property>
+        <property name="fschemedesignid" type="string">
+            <column name="fschemedesignid" length="44" />
+        </property>
+    </class>
+</hibernate-mapping>

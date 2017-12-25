@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CL_Rule">
+
+    <resultMap id="CL_RuleMap" type="com.pc.model.CL_Rule">
+        <result property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="carSpecId" column="car_spec_id"/>
+        <result property="startKilometre" column="start_kilometre"/>
+        <result property="startPrice" column="start_price"/>
+        <result property="kilometrePrice" column="kilometre_price"/>
+        <result property="kilometre5_20_price" column="kilometre5_20_price"/>
+        <result property="kilometre20_50_price" column="kilometre20_50_price"/>
+        <result property="kilometre50_price" column="kilometre50_price"/>
+        <result property="status" column="status"/>
+        <result property="pubRemark" column="pub_remark"/>
+        <result property="otherType" column="other_type"/>
+        <result property="outPrice" column="out_price"/>
+        <result property="fopint" column="fopint"/>
+        <result property="outfopint" column="out_fopint"/>
+        <result property="fadd_service_1" column="fadd_service_1"/>
+        <result property="fadd_service_2" column="fadd_service_2"/>
+        <result property="fcreator" column="fcreator"/>
+        <result property="foperator" column="foperator"/>
+        <result property="foperate_time" column="foperate_time"/>
+        
+    </resultMap> 
+    
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+        ru.id ,ru.type ,ru.car_spec_id,ru.fopint,ru.out_fopint, ru.start_kilometre ,ru.start_price  ,ru.status ,ru.pub_remark,ru.other_type,ru.out_price,ru.fadd_service_1,ru.fadd_service_2,ru.fcreator,
+        ru.kilometre_price,ru.kilometre5_20_price,ru.kilometre20_50_price,ru.kilometre50_price,ccs.name as carSpecName
+	    ]]>
+	</sql>
+	
+    <insert id="insert" >
+    <![CDATA[
+        INSERT INTO cl_rule (
+	        id  ,
+	        type  ,
+	        car_spec_id  ,
+	        start_kilometre  ,
+	        start_price  ,
+	        kilometre_price ,
+	        kilometre5_20_price  ,
+	        kilometre20_50_price  ,
+	        kilometre50_price  ,
+	        status  ,
+	        pub_remark ,
+	        other_type,
+	        out_price,
+	        fopint,
+	        out_fopint,
+	        fadd_service_1,
+	        fadd_service_2,
+	        fcreator,
+	        foperator,
+	        foperate_time
+        ) VALUES (
+        	#{id, jdbcType=INTEGER} ,
+        	#{type, jdbcType=INTEGER} ,
+        	#{carSpecId, jdbcType=INTEGER} ,
+        	#{startKilometre, jdbcType=DECIMAL} ,
+        	#{startPrice, jdbcType=DECIMAL} ,
+        	#{kilometrePrice, jdbcType=DECIMAL} ,
+        	#{kilometre5_20_price, jdbcType=DECIMAL} ,
+        	#{kilometre20_50_price, jdbcType=DECIMAL} ,
+        	#{kilometre50_price, jdbcType=DECIMAL} ,
+        	#{status, jdbcType=INTEGER} ,
+        	#{pubRemark, jdbcType=VARCHAR},
+        	#{otherType, jdbcType=INTEGER} ,
+        	#{outPrice, jdbcType=DECIMAL} ,
+        	#{fopint, jdbcType=INTEGER} ,
+        	#{outfopint, jdbcType=DECIMAL},
+        	#{fadd_service_1,jdbcType=DECIMAL},
+        	#{fadd_service_2,jdbcType=DECIMAL},
+        	#{fcreator, jdbcType=INTEGER} ,
+        	#{foperator, jdbcType=INTEGER} ,
+        	#{foperate_time, jdbcType=TIMESTAMP} 
+        )
+    ]]>
+    </insert>
+
+    <update id="update" >
+    <![CDATA[
+        UPDATE cl_rule SET
+	        type = #{type, jdbcType=INTEGER} ,
+	        car_spec_id = #{carSpecId, jdbcType=INTEGER} ,
+	        start_kilometre = #{startKilometre, jdbcType=DECIMAL} ,
+	        start_price = #{startPrice, jdbcType=DECIMAL} ,
+	        kilometre_price = #{kilometrePrice, jdbcType=DECIMAL} ,
+	       kilometre5_20_price =  #{kilometre5_20_price, jdbcType=DECIMAL} ,
+        	kilometre20_50_price = #{kilometre20_50_price, jdbcType=DECIMAL} ,
+        	kilometre50_price = #{kilometre50_price, jdbcType=DECIMAL} ,
+	        status = #{status, jdbcType=INTEGER} ,
+	        pub_remark = #{pubRemark, jdbcType=VARCHAR} ,
+	        other_type=#{otherType, jdbcType=INTEGER} ,
+	        out_price=#{outPrice, jdbcType=DECIMAL} ,
+	        fopint=#{fopint, jdbcType=INTEGER} ,
+        	out_fopint=#{outfopint, jdbcType=DECIMAL} ,
+        	fadd_service_1=#{fadd_service_1,jdbcType=DECIMAL},
+        	fadd_service_2=#{fadd_service_2,jdbcType=DECIMAL},
+        	foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    <!-- 跟新整车规则 -->
+     <update id="updateCarLoad" >
+    <![CDATA[
+        UPDATE cl_rule SET
+	        start_kilometre = #{startKilometre, jdbcType=DECIMAL} ,
+	        start_price = #{startPrice, jdbcType=DECIMAL} ,
+	        kilometre_price = #{kilometrePrice, jdbcType=DECIMAL} ,
+	       kilometre5_20_price =  #{kilometre5_20_price, jdbcType=DECIMAL} ,
+        	kilometre20_50_price = #{kilometre20_50_price, jdbcType=DECIMAL} ,
+        	kilometre50_price = #{kilometre50_price, jdbcType=DECIMAL} ,
+	        pub_remark = #{pubRemark, jdbcType=VARCHAR}, 
+	        fopint=#{fopint, jdbcType=INTEGER} ,
+        	out_fopint=#{outfopint, jdbcType=DECIMAL} ,
+        	fadd_service_1=#{fadd_service_1,jdbcType=DECIMAL},
+        	fadd_service_2=#{fadd_service_2,jdbcType=DECIMAL},
+        	foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+    
+    <!-- 更新零担规则-->
+    <update id="updateLessRole" >
+    <![CDATA[
+        UPDATE cl_rule SET
+            start_price = #{startPrice, jdbcType=DECIMAL} ,
+	        pub_remark = #{pubRemark, jdbcType=VARCHAR} ,
+	        out_price=#{outPrice, jdbcType=DECIMAL},
+            start_kilometre = #{startKilometre, jdbcType=DECIMAL} ,
+            fopint=#{fopint, jdbcType=INTEGER} ,
+        	out_fopint=#{outfopint, jdbcType=DECIMAL} ,
+        	fadd_service_1=#{fadd_service_1,jdbcType=DECIMAL},
+        	fadd_service_2=#{fadd_service_2,jdbcType=DECIMAL},
+        	foperate_time = #{foperate_time,jdbcType=TIMESTAMP},
+			foperator = #{foperator,jdbcType=INTEGER}
+        WHERE 
+	        id = #{id} 
+    ]]>
+    </update>
+    
+ 
+    
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM cl_rule WHERE
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="getById" resultMap="CL_RuleMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_rule  ru
+	    left join cl_car_spec ccs on ccs.id=ru.car_spec_id
+	        WHERE 
+		        ru.id = #{id} 
+	    ]]>
+    </select>
+    
+    <!--  根据车厢获取有效的规则-->
+    <select id="getZhengche" resultMap="CL_RuleMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_rule  ru
+	    	LEFT JOIN cl_car_spec ccs on ccs.id=ru.car_spec_id
+	        WHERE  ru.car_spec_id = #{specId}  AND ru.type =1 AND  ru.status=1
+	    ]]>
+    </select>
+    
+    
+     <!--  获取零担中体积有效的规则-->
+    <select id="getLingdanForVolume" resultMap="CL_RuleMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_rule  ru
+	    	LEFT JOIN cl_car_spec ccs on ccs.id=ru.car_spec_id
+	        WHERE ru.type =2 AND  ru.status=1 AND ru.other_type =1
+	    ]]>
+    </select>
+    
+     <!--  获取零担中重量有效的规则-->     
+    <select id="getLingdanForWeight" resultMap="CL_RuleMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM cl_rule  ru
+	    	LEFT JOIN cl_car_spec ccs on ccs.id=ru.car_spec_id
+	        WHERE ru.type =2 AND  ru.status=1 AND ru.other_type =2
+	    ]]>
+    </select>
+    
+    <select id="getOneByType" resultMap="CL_RuleMap">
+	    SELECT <include refid="columns"/>
+	    <![CDATA[
+	        FROM CL_RULE  ru
+	    	LEFT JOIN cl_car_spec ccs on ccs.id=ru.car_spec_id
+	        WHERE  ru.car_spec_id = #{specId} and ru.type = 3  AND ru.status =1
+	    ]]>
+    </select>
+    
+    
+    
+    
+    <select id="getAll" resultMap="CL_RuleMap">
+     SELECT * FROM cl_rule  WHERE status=#{status} and type=#{type} and car_spec_id=#{carSpecId}  
+    </select>
+    
+	<sql id="findWhere">
+	    <where>
+		   	<if test="@Ognl@isNotEmpty(id)">
+			    AND ru.id = #{id}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(type)">
+			    AND ru.type = #{type}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(carSpecId)">
+			    AND ru.car_spec_id = #{carSpecId}
+			</if>
+		   	<if test="@Ognl@isNotEmpty(status)">
+			    AND ru.status = #{status}
+			</if>
+			<if test="@Ognl@isNotEmpty(otherType)">
+			    AND ru.other_type = #{otherType}
+			</if>
+			<if test="@Ognl@isNotEmpty(sortColumns)">
+				and ${sortColumns}
+			</if>
+	    </where>
+	</sql>
+	 
+    <select id="findPageCount" resultType="long">
+        SELECT count(*) FROM cl_rule ru
+        left join cl_car_spec ccs on ccs.id=ru.car_spec_id
+         <include refid="findWhere"/>   
+    </select>
+    
+    <select id="findPage" resultMap="CL_RuleMap">
+    	SELECT <include refid="columns"/> FROM cl_rule ru
+        left join cl_car_spec ccs on ccs.id=ru.car_spec_id
+		<include refid="findWhere"/>
+    </select>
+
+	
+	<select id="find" resultMap="CL_RuleMap">
+	    SELECT <include refid="columns"/> FROM cl_rule ru
+        left join cl_car_spec ccs on ccs.id=ru.car_spec_id
+		<include refid="findWhere"/>
+    </select>
+	
+	<select id="getBySpec" resultMap="CL_RuleMap">
+		select id,fadd_service_1,fadd_service_2 from cl_rule where car_spec_id=#{specId} and status=1 and type in (1,2)
+	</select>
+	
+	<select id="getDriverBySpec" resultMap="CL_RuleMap">
+		select id from cl_rule where car_spec_id=#{specId} and status=1 and type=3
+	</select>
+</mapper>
+

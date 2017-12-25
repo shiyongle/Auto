@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-9-3 9:22:02 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.Oqa.QualityCheck" table="t_oqa_qualitycheck">
+        <id name="fid" type="string">
+            <column name="FID" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fcreatorid" type="string">
+            <column name="FCREATORID" length="36" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="FCREATETIME" length="0" />
+        </property>
+        <property name="flastupdateuserid" type="string">
+            <column name="FLASTUPDATEUSERID" length="36" />
+        </property>
+        <property name="flastupdatetime" type="timestamp">
+            <column name="FLASTUPDATETIME" length="0" />
+        </property>
+        <property name="fdeliverid" type="string">
+            <column name="FDELIVERID" length="44" />
+        </property>
+        <property name="fsaleorderid" type="string">
+            <column name="FSALEORDERID" length="44" />
+        </property>
+        <property name="fcheckresult" type="int">
+            <column name="FCHECKRESULT" not-null="true" />
+        </property>
+        <property name="fquestdescription" type="string">
+            <column name="FQUESTDESCRIPTION" />
+        </property>
+        <property name="fnumber" type="string">
+            <column name="FNUMBER" length="80" />
+        </property>
+    </class>
+</hibernate-mapping>

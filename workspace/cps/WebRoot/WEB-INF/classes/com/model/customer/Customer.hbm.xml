@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2015-6-13 19:39:12 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.model.customer">
+    <class name="Customer" table="t_bd_customer">
+        <id name="fid" type="string">
+            <column name="fid" length="44" />
+            <generator class="assigned" />
+        </id>
+        <property name="fname" type="string">
+            <column name="FNAME" length="80" />
+        </property>
+        <property name="fnumber" type="string">
+            <column name="FNUMBER" length="80" not-null="true" />
+        </property>
+        <property name="fdescription" type="string">
+            <column name="FDESCRIPTION" length="80" />
+        </property>
+        <property name="fcreatorid" type="string">
+            <column name="FCREATORID" length="36" />
+        </property>
+        <property name="fcreatetime" type="timestamp">
+            <column name="FCREATETIME" length="0" />
+        </property>
+        <property name="flastupdateuserid" type="string">
+            <column name="FLASTUPDATEUSERID" length="36" />
+        </property>
+        <property name="flastupdatetime" type="timestamp">
+            <column name="FLASTUPDATETIME" length="0" />
+        </property>
+        <property name="fcountryid" type="string">
+            <column name="FCOUNTRYID" length="44" />
+        </property>
+        <property name="fcityid" type="string">
+            <column name="FCITYID" length="44" />
+        </property>
+        <property name="fprovince" type="string">
+            <column name="FPROVINCE" length="44" />
+        </property>
+        <property name="fregionid" type="string">
+            <column name="FREGIONID" length="44" />
+        </property>
+        <property name="findustryid" type="string">
+            <column name="FINDUSTRYID" length="44" />
+        </property>
+        <property name="fartificialperson" type="string">
+            <column name="FARTIFICIALPERSON" length="80" />
+        </property>
+        <property name="fbizregisterno" type="string">
+            <column name="FBIZREGISTERNO" length="80" />
+        </property>
+        <property name="fisinternalcompany" type="java.lang.Integer">
+            <column name="FISINTERNALCOMPANY" />
+        </property>
+        <property name="ftxregisterno" type="string">
+            <column name="FTXREGISTERNO" length="80" />
+        </property>
+        <property name="fbarcode" type="string">
+            <column name="FBARCODE" length="80" />
+        </property>
+        <property name="fmnemoniccode" type="string">
+            <column name="FMNEMONICCODE" length="80" />
+        </property>
+        <property name="fbusilicence" type="string">
+            <column name="FBUSILICENCE" length="80" />
+        </property>
+        <property name="fbusiexequatur" type="string">
+            <column name="FBUSIEXEQUATUR" length="80" />
+        </property>
+        <property name="fgspauthentication" type="string">
+            <column name="FGSPAUTHENTICATION" length="80" />
+        </property>
+        <property name="fforeignname" type="string">
+            <column name="FFOREIGNNAME" length="60" />
+        </property>
+        <property name="faddress" type="string">
+            <column name="FADDRESS" />
+        </property>
+        <property name="fusedstatus" type="java.lang.Integer">
+            <column name="FUSEDSTATUS" />
+        </property>
+        <property name="fsimplename" type="string">
+            <column name="FSIMPLENAME" length="80" />
+        </property>
+        <property name="fschemedesign" type="java.lang.Integer">
+            <column name="fschemedesign">
+                <comment>&#200;&#183;&#200;&#207;&#183;&#189;&#176;&#184;</comment>
+            </column>
+        </property>
+        <property name="fphone" type="string">
+            <column name="fphone" length="20">
+                <comment>&#193;&#170;&#207;&#181;&#181;&#231;&#187;&#176;</comment>
+            </column>
+        </property>
+        <property name="fpacktotal" type="java.lang.Long">
+            <column name="fpacktotal" precision="10" scale="0">
+                <comment>&#176;&#252;&#215;&#176;&#215;&#220;&#211;&#195;&#193;&#191;</comment>
+            </column>
+        </property>
+        <property name="fpackbuyamount" type="java.lang.Long">
+            <column name="fpackbuyamount" precision="10" scale="0">
+                <comment>&#176;&#252;&#215;&#176;&#178;&#201;&#185;&#186;&#193;&#191;</comment>
+            </column>
+        </property>
+        <property name="fartificialpersonphone" type="string">
+            <column name="fartificialpersonphone" length="15">
+                <comment>&#183;&#168;&#200;&#203;&#180;&#250;&#177;&#237;&#193;&#170;&#207;&#181;&#181;&#231;&#187;&#176;</comment>
+            </column>
+        </property>
+        <property name="flinkman" type="string">
+            <column name="flinkman" length="40">
+                <comment>&#193;&#170;&#207;&#181;&#200;&#203;</comment>
+            </column>
+        </property>
+          <property name="fisinvited" type="java.lang.Integer">
+            <column name="fisinvited" />
+        </property>
+         <property name="finvitetime" type="timestamp">
+            <column name="finvitetime" length="0" />
+        </property>
+        <property name="ffax" type="string">
+            <column name="ffax" length="40"/>
+        </property>
+    </class>
+</hibernate-mapping>

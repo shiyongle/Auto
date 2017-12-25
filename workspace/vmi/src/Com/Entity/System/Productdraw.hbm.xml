@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-3-31 10:40:42 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="Com.Entity.System.Productdraw" table="t_pdt_productdraw">
+        <id name="fid" type="string">
+            <column name="fid" length="36" />
+            <generator class="assigned" />
+        </id>
+        <property name="fproductId" type="string">
+            <column name="fproductID" length="36" />
+        </property>
+        <property name="fimagePath" type="string">
+            <column name="fimagePath" length="36" />
+        </property>
+        <property name="fdrawnNo" type="string">
+            <column name="fdrawnNo" length="36" />
+        </property>
+        <property name="fversion" type="string">
+            <column name="fversion" length="36" />
+        </property>
+    </class>
+</hibernate-mapping>

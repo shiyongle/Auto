@@ -1,0 +1,136 @@
+body{
+	font-size:25px;
+	font-family:微软雅黑;
+	color:#444;
+}
+*
+{
+	margin:0;
+	padding:0;
+}
+.banner{
+	width:1920px;
+	height:410px;
+}
+/*小于1025px*/
+@media screen and (max-width: 1025px) {
+	.banner 
+	{
+	    width: 1024px!important;
+	    height: 410px!important;
+	}
+	.content
+	{
+		width:980px;
+		margin:auto;	
+	}
+	.tit1 hr
+	{
+		width:330px; 
+		height:2px;
+		background:#d1d1d1 ;
+		border:none;
+	}
+	.tit2 hr
+	{
+		width:260px; 
+		height:2px;
+		background:#d1d1d1 ;
+		border:none;
+	}
+}
+/*大于1026px*/
+@media screen and (min-width: 1026px) {
+	.content
+	{
+		width:1300px;
+		margin:auto;;	
+	}
+	.tit1 hr
+	{
+		width:490px; 
+		height:2px;
+		background:#d1d1d1 ;
+		border:none;
+	}
+	.tit2 hr
+	{
+		width:420px; 
+		height:2px;
+		background:#d1d1d1 ;
+		border:none;
+	}
+}
+
+.tit1{
+	padding:20px 0;
+	width:100%;
+}
+.tit1 img{
+	margin-top:-2px;
+}
+.tit1 span{
+	width:302px; 
+	float:left;
+	margin-top:-15px;
+	text-align:center;
+	color:#952018;
+	font-size:35px;
+}
+.content1 p{
+	width:100%;
+	padding:20px 0;
+	line-height:45px;
+}
+.content1 img{
+	margin:80px auto;
+	display: block;
+}
+
+.tit2{
+	padding:20px 0;
+	width:100%;
+}
+.tit2 img{
+	margin-top:-2px;
+}
+.tit2 span{
+	width:442px; 
+	float:left;
+	margin-top:-15px;
+	text-align:center;
+	color:#952018;
+	font-size:35px;
+}
+.content2 ul{	
+	width:100%;
+	height:60px;
+	padding:100px 0;
+	line-height:60px;	
+
+}
+.content2 ul li{
+	width:20%;
+	float:left;
+	list-style: inside url('../../css/images/spot1.png')
+}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

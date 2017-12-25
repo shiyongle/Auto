@@ -1,0 +1,47 @@
+@charset "utf-8";
+/* CSS Document */
+/* --------------------初始-------------------- */
+*{margin:0px auto;padding:0px;}
+li{list-style:none;}
+img{border:none;}
+a{text-decoration: none;color:#000;font-size:12px;font-family:宋体;}
+body{font-size:14px;background:#f1f1f1;font-family:微软雅黑;}
+.clear{clear:both;}
+/* --------------------开头导航------------------ */
+#header{background:#f0f0f0;width:1070px;height:36px;}
+#header p{line-height:36px;padding-left:12px;}
+
+/* --------------------主体-------------------- */
+#main{width:1070px;font-family:微软雅黑;background:#fff;padding-top:79px;padding-bottom:200px;}
+/*-----------状态-----------*/
+.status{width:790px;background:#fff url(images/status.gif) no-repeat center 4px;margin-bottom:75px;}
+.status li{width:122px;float:left;margin-right:100px;padding-top:34px;color:#919090;}
+.status li.last{margin-right:0;}
+.status em{display:block;font-style:normal;text-align:center;line-height:18px;}
+.status span{display:none;}
+li.done{background:transparent url(images/status_dot.png) no-repeat center top;color:#f76350;}
+.done span{display:inline;}
+/*-----------内容-----------*/
+#main h3{border-bottom:1px solid #ccc;font-size:22px;height:45px;line-height:52px;margin-bottom:11px;font-weight:normal;}
+
+
+.content1{width:994px;min-height:340px;padding:0 16px;border:1px solid #ccc;}
+/*详情*/
+
+.detail{height:256px;float:left;border:1px solid #e1e1e1;font-family:宋体;}
+.detailtopul{float:left;border-bottom:1px solid #e1e1e1;margin-bottom:15px;width:992px;padding-top:18px;padding-bottom:8px;}
+li.detail_last{float:left;line-height:25px;box-sizing:border-box;}
+li.detail_htop{float:left;line-height:25px;box-sizing:border-box;min-width:17%;}
+.detailul{float:left;width:60%;}
+.detail li{color:#919090;padding-left:14px;padding-right:14px;word-break:break-all;}
+li.detail_top{float:left;line-height:25px;box-sizing:border-box;min-width:50%;min-width\0:45%;}
+.detail span{color:#545454;}
+
+
+
+
+.content2{margin-top:49px;width:994px;padding:0 16px 46px 16px;border:1px solid #ccc;}
+.content2 p{line-height:24px;color:#919090;font-family:宋体;word-break:break-all;}
+.content2 p span{color:#545454;}
+
+.retBtn{width:172px;line-height:60px;background:#e03d46;color:#fff;font-size:18px;display:block;text-align:center;margin-top:39px;font-family:微软雅黑;}

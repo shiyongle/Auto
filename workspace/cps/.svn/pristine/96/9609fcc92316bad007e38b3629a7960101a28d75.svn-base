@@ -1,0 +1,184 @@
+@CHARSET "UTF-8";
+*{
+	margin:0px;
+	padding:0px;
+}
+.title{
+	padding:10px 10px 10px 0px;
+	background-color:#f1f1f1;
+	font:12px 宋体;
+}
+.conterDiv{
+	width:1070px;
+	height:auto;
+}
+.queryfilter{
+	padding:0px 10px 0px 10px;
+	background-color:#fff;
+}
+.queryfilter input[type=text]{
+	width:235px;
+	height:24px;
+	line-height:24px;
+	float:left;
+	padding-left:5px;
+	border: 1px solid lightgray;
+	font:12px 宋体;
+    outline: none;
+}
+._submit{
+	float:left;
+    border: 1px solid lightgray;
+    border-left:none;
+	cursor: pointer;
+    width: 27px;
+    height: 27px;
+    line-height: 27px;
+	background:url(images/fdj1.png) white 5px 5px no-repeat;
+	outline: none;
+}
+.shopButton{
+	width:110px;
+	height:30px;
+	color:#fff;
+	background-color:#d80c18;
+	outline:none;
+	border:none;
+	cursor: pointer;
+	float:right;
+	margin-right:15px;
+	font:12px 宋体;
+	margin-top:-5px;
+}
+.table{
+	margin:0px 15px 10px 10px;
+	text-align:center;
+	border-collapse:collapse;
+	font:12px 宋体;
+}
+.titleTR{
+	height:30px;
+	background-color:#f0f0f0;
+}
+.tdBorder{
+	border-left:1px solid lightgray;
+	border-right:1px solid lightgray;
+}
+.tableButton{
+	text-align:left;
+	height:47px;
+}
+.tableButton a:hover{
+	background-color:#d80c18;
+	color:#fff;
+}
+.tableButton a{
+    display: inline-table;
+    text-decoration: none;
+    float: left;
+    height: 20px;
+    width: 78px;
+    border: 1px solid lightgray;
+    color: black;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+    margin-right:10px;
+}
+.supplierTR{
+	height:30px;
+	text-align:left;
+	background-color:#f0f0f0;
+	color:black;
+	border:1px solid #bfbfbf;
+}
+.supplierTR span{
+	margin-right:65px;
+	padding-left:5px;
+}
+.conterTR{
+	height:100px;
+	border:1px solid #bfbfbf;
+}
+.buttonTR a{
+	display: inline-table;
+    text-decoration: none;
+  	height: 20px;
+    width: 80px;
+    border: 1px solid lightgray;
+    color: black;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+    margin:4px;
+}
+.buttonTR a:hover{
+	color:#fff;
+	background-color:#d80c18;
+}
+.boarddetails{
+	float:right;
+	cursor: pointer;
+	color:#00e;
+}
+.boarddetails:hover{
+	color:#00e;
+}
+#fstate{
+	float:left;
+	width:235px;
+	height:24px;
+	line-height:24px;
+	border: 1px solid lightgray;
+}
+.conterDiv #kkpager_btn_go {
+    width: 44px;
+    height: 20px;
+    line-height: 20px;
+    padding: 0px;
+    font-family: arial,宋体,sans-serif;
+    text-align: center;
+    border: 0px;
+    background-color: #bfbfbf;
+    color: #FFF;
+    position: absolute;
+    left: 0px;
+    top: -1px;
+    display: none;
+    cursor: pointer;
+}
+/*分页层*/
+#kkpager{
+	height:160px;
+	width:1050px;
+	line-height:100px;
+	text-align:right;
+	}
+	
+	
+/* 2016/03/17 以下是hss 更改状态选项栏css	 */
+#tbl1{
+	font-size:12px;
+	text-align:center;
+	border-collapse:collapse;
+	clear:both;
+	margin-left:10px;
+	}
+a{
+	text-decoration: none;
+}
+#fstate1{
+	float: left;
+	}
+#fstate1 a{
+	float: left;
+	padding: 4px 10px;
+	color: #3a3a3a;
+	border-radius: 2px 2px 0 0;
+	font-size: 17px;
+	font-family: 微软雅黑;
+}
+#fstate1 .active{
+	color: #fff;
+	background: #f76350;	
+}

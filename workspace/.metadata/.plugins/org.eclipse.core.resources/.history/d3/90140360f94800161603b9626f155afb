@@ -1,0 +1,301 @@
+package com.pc.appInterface.coupons;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.org.rapid_framework.page.Page;
+
+import com.pc.controller.BaseController;
+import com.pc.dao.coupons.ICouponsDao;
+import com.pc.dao.couponsDetail.ICouponsDetailDao;
+import com.pc.dao.message.ImessageDao;
+import com.pc.model.CL_Coupons;
+import com.pc.model.CL_CouponsDetail;
+import com.pc.model.CL_Message;
+import com.pc.query.coupons.CL_CouponsQuery;
+import com.pc.query.couponsDetail.CL_CouponsDetailQuery;
+import com.pc.util.CsclPushUtil;
+import com.pc.util.JSONUtil;
+
+@Controller
+public class AppCouponsController extends BaseController {
+	@Resource
+	private ICouponsDao couponsDao;
+	@Resource
+	private ImessageDao messageDao;
+	@Resource
+	private ICouponsDetailDao couponsDetailDao;
+	
+	private CL_CouponsQuery couponsQuery;
+	private CL_CouponsDetailQuery couponsDetailQuery;
+	
+	public CL_CouponsDetailQuery getCouponsDetailQuery() {
+		return couponsDetailQuery;
+	}
+
+
+	public void setCouponsDetailQuery(CL_CouponsDetailQuery couponsDetailQuery) {
+		this.couponsDetailQuery = couponsDetailQuery;
+	}
+
+	public CL_CouponsQuery getCouponsQuery() {
+		return couponsQuery;
+	}
+
+
+	public void setCouponsQuery(CL_CouponsQuery couponsQuery) {
+		this.couponsQuery = couponsQuery;
+	}
+
+
+	/***扫一扫二维码兑换码*/
+	@RequestMapping("/app/coupons/sweepQRcode")
+	@Transactional
+	public String sweepQRcode(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		String qrcode ;
+		Integer userroleid;
+		if(request.getParameter("qrcode")==null || "".equals(request.getParameter("qrcode"))){
+	    	map.put("success", "false");
+			map.put("msg","请先登录");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	qrcode = request.getParameter("qrcode");
+	    }
+		if(request.getParameter("userroleid")==null || "".equals(request.getParameter("userroleid"))){
+	    	map.put("success", "false");
+			map.put("msg","请先登录");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	userroleid =Integer.parseInt(request.getParameter("userroleid"));
+	    }
+		List<CL_Coupons> coupons =this.couponsDao.getByRedeemCode(qrcode);
+		CL_Coupons cps =this.couponsDao.getByRedeemCodeForACTIVE(qrcode);
+		if(coupons.size()>0){
+			CL_CouponsDetail dl = this.couponsDetailDao.getByCouponsId(coupons.get(0).getId());
+			 if(coupons.get(0).getIsEffective()==0){
+				 map.put("success", "false");
+				 map.put("msg","该兑换码已失效！");
+				 return writeAjaxResponse(response, JSONUtil.getJson(map));
+			 }else if(dl!=null){
+				 map.put("success", "false");
+				 map.put("msg","该兑换码已领取！");
+				 return writeAjaxResponse(response, JSONUtil.getJson(map));
+			 }else if(cps !=null){
+				 CL_CouponsDetail newdetail = new CL_CouponsDetail();
+					 newdetail.setCouponsId(cps.getId());
+					 newdetail.setCreator(userroleid);
+					 newdetail.setIsUse(0);
+					 newdetail.setUserRoleId(userroleid);
+					 newdetail.setCreateTime(new Date());
+					 newdetail.setIsOverdue(0);//未过期
+				 this.couponsDetailDao.save(newdetail);
+				 CL_Message message = new CL_Message();
+					message.setReceiver(userroleid);
+					message.setTitle("新好运券消息");
+					message.setContent("您通过扫取二维码的方式,获取到了一张面额为："+cps.getDollars()+"好运券,请注意查收并使用!");
+					message.setType(1);//货主
+					message.setCreator(userroleid.toString());
+					message.setCreateTime(new Date());
+				 this.messageDao.save(message);
+				 CsclPushUtil.SendPushToAllSound(userroleid.toString(), "CPS:您通过扫取二维码的方式,获取到了一张面额为："+cps.getDollars()+"好运券,请注意查收并使用!");
+				 map.put("success", "true");
+				 map.put("msg","领取成功!");
+			 }else{
+				 map.put("success", "false");
+				 map.put("msg","该兑换码已过期！");
+				 return writeAjaxResponse(response, JSONUtil.getJson(map));
+			 }
+		}else{
+			map.put("success", "false");
+			map.put("msg","无效兑换码！");
+		}
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+	
+	
+	/***好运券列表*/
+	@RequestMapping("/app/coupons/load")
+	@Transactional
+	public String load(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Integer userroleid,pageNum ,pageSize;
+		if(request.getParameter("userroleid")==null || "".equals(request.getParameter("userroleid"))){
+	    	map.put("success", "false");
+			map.put("msg","请先登录");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	userroleid =Integer.parseInt(request.getParameter("userroleid"));
+	    }
+		if(request.getParameter("pagenum")==null || "".equals(request.getParameter("pagenum"))){
+	    	map.put("success", "false");
+			map.put("msg","无法获知第几页");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	pageNum = Integer.valueOf(request.getParameter("pagenum"));
+	    }
+		if(request.getParameter("pagesize")==null || "".equals(request.getParameter("pagesize"))){
+	    	map.put("success", "false");
+			map.put("msg","无法获知每页显示多少条");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	pageSize = Integer.valueOf(request.getParameter("pagesize"));
+	    }
+		if (couponsDetailQuery == null) {
+			couponsDetailQuery = newQuery(CL_CouponsDetailQuery.class, null);
+		}
+		if (pageNum != null) {
+			couponsDetailQuery.setPageNumber(pageNum);
+		}
+		if (pageSize != null) {
+			couponsDetailQuery.setPageSize(pageSize);
+		}
+		couponsDetailQuery.setUserRoleId(userroleid);
+		Page<CL_CouponsDetail> page = couponsDetailDao.findPage(couponsDetailQuery);
+			map.put("success", "true");
+			map.put("total", page.getTotalCount());
+			map.put("data", page.getResult());
+			System.out.println(map.get("data"));
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+	
+	/***首页好运券领取列表*/
+	@RequestMapping("/app/coupons/loadIndexCoupons")
+	@Transactional
+	public String loadIndexCoupons(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Integer userroleid,pageNum ,pageSize;
+		if(request.getParameter("userroleid")==null || "".equals(request.getParameter("userroleid"))){
+	    	map.put("success", "false");
+			map.put("msg","请先登录");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	userroleid =Integer.parseInt(request.getParameter("userroleid"));
+	    }
+		if(request.getParameter("pagenum")==null || "".equals(request.getParameter("pagenum"))){
+	    	map.put("success", "false");
+			map.put("msg","无法获知第几页");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	pageNum = Integer.valueOf(request.getParameter("pagenum"));
+	    }
+		if(request.getParameter("pagesize")==null || "".equals(request.getParameter("pagesize"))){
+	    	map.put("success", "false");
+			map.put("msg","无法获知每页显示多少条");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	pageSize = Integer.valueOf(request.getParameter("pagesize"));
+	    }
+		if (couponsQuery == null) {
+			couponsQuery = newQuery(CL_CouponsQuery.class, null);
+		}
+		if (pageNum != null) {
+			couponsQuery.setPageNumber(pageNum);
+		}
+		if (pageSize != null) {
+			couponsQuery.setPageSize(pageSize);
+		}
+		couponsQuery.setType(4);
+		couponsQuery.setIsReceive(userroleid);
+		Page<CL_Coupons> page = couponsDao.singleFindPage(couponsQuery);
+			map.put("success", "true");
+			map.put("total", page.getTotalCount());
+			map.put("data", page.getResult());
+			System.out.println(map.get("data"));
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+	
+	/***首页一键领取好运券*/
+	@RequestMapping("/app/coupons/oneKeyReceive")
+	@Transactional
+	public String oneKeyReceive(HttpServletRequest request,HttpServletResponse response,Integer[] ids) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		Integer userroleid;
+		if(request.getParameter("userroleid")==null || "".equals(request.getParameter("userroleid"))){
+	    	map.put("success", "false");
+			map.put("msg","请先登录");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	userroleid =Integer.parseInt(request.getParameter("userroleid"));
+	    }
+		if(ids.length>0){
+			for(Integer id:ids){
+				//2016-5-18  by lu 用户已领取控制
+				if(couponsDetailDao.getCountByUserCoupon(userroleid, id)>0){
+					continue;
+				}
+				//CL_Coupons c =this.couponsDao.getById(id);
+				CL_CouponsDetail d =new CL_CouponsDetail();
+				d.setCouponsId(id);
+				d.setUserRoleId(userroleid);
+				d.setCreator(userroleid);
+				d.setCreateTime(new Date());
+				d.setIsUse(0);//未使用
+				d.setIsOverdue(0);//未过期
+				this.couponsDetailDao.save(d);
+			}
+			map.put("success", "true");
+			map.put("msg","操作成功！");
+		}else{
+			map.put("success", "false");
+			map.put("msg","没有选中好运券！");
+		}
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+	
+	
+	/**计算选完优惠券的运费**/
+	@RequestMapping("/app/coupons/getYfee")
+	public String getYfee(HttpServletRequest request,HttpServletResponse response) throws IOException{
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		BigDecimal fee;
+		Integer couponsdetatilid ;
+		if(request.getParameter("fee")==null || "".equals(request.getParameter("fee"))){
+	    	map.put("success", "false");
+			map.put("data","没有运费！");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	fee =new BigDecimal(request.getParameter("fee"));
+	    }
+		if(request.getParameter("id")==null || "".equals(request.getParameter("id"))){
+	    	map.put("success", "false");
+			map.put("data","未选取好运券");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+	    }else{
+	    	couponsdetatilid =Integer.parseInt(request.getParameter("id"));
+	    }
+		CL_CouponsDetail detail=this.couponsDetailDao.getById(couponsdetatilid);
+		if(detail.getIsUse()==1){
+			map.put("success", "false");
+			map.put("data","已使用");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else if(detail.getIsOverdue()==1){
+			map.put("success", "false");
+			map.put("data","已过期");
+			return writeAjaxResponse(response, JSONUtil.getJson(map));
+		}else{
+			CL_Coupons cp = this.couponsDao.getById(detail.getCouponsId());
+			if(cp !=null){
+				map.put("success", "true");
+				map.put("data",fee.subtract(cp.getDollars()));
+			}else{
+				map.put("success", "false");
+				map.put("data","不存在对应好运券");
+			}
+		}
+		return writeAjaxResponse(response, JSONUtil.getJson(map));
+	}
+	
+	
+}
