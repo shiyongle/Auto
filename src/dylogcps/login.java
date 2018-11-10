@@ -24,14 +24,14 @@ public class login extends UiAutomatorTestCase {
 							).className("android.widget.TextView").instance(2));
 		assertTrue("There has not be found",login.exists());
 		System.out.println("knowlages power");
-		login.click();						//Æô¶¯
+		login.click();						//ï¿½ï¿½ï¿½ï¿½
 		
-		sleep(5000);						//µÈ´ý
+		sleep(5000);						//ï¿½È´ï¿½
 		
 		UiObject view = new UiObject(new
 					UiSelector().className("android.widget.LinearLayout").index(0));
 		assertTrue("There has not be found",view.exists());
-		System.out.println("knowlages power");             //ÅÐ¶Ï¸¸¼¶¶ÔÏóÊÇ·ñ´æÔÚ
+		System.out.println("knowlages power");             //ï¿½Ð¶Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
 		
 		UiObject edit = view.getChild(new 
 					UiSelector().className("android.widget.EditText").index(1));		
@@ -39,7 +39,7 @@ public class login extends UiAutomatorTestCase {
 		
 		UiObject view1 = new UiObject(new
 					UiSelector().className("android.widget.LinearLayout").index(2));
-		assertTrue("There has not be found",view1.exists());	//ÅÐ¶Ï¸¸¼¶¶ÔÏóÊÇ·ñ´æÔÚ
+		assertTrue("There has not be found",view1.exists());	//ï¿½Ð¶Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
 		
 		UiObject edit1 = view1.getChild(new
 					UiSelector().className("android.widget.EditText").index(1));
@@ -47,20 +47,20 @@ public class login extends UiAutomatorTestCase {
 		
 		UiSelector button = new UiSelector().className("android.widget.Button").index(5);
 		UiObject lg = new UiObject(button);
-		lg.click();							//µÇÂ¼³É¹¦£¬ÖÁÊ×Ò³
+		lg.click();							//ï¿½ï¿½Â¼ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 		
 		sleep(5000);			
 		
 		UiObject menu = new UiObject(new
 					UiSelector().className("android.widget.TabHost").index(2));
 		assertTrue("There has not found",menu.exists());
-		System.out.print("Knowledges powers");		//ÅÐ¶Ï¸¸¼¶¶ÔÏóÊÇ·ñ´æÔÚ
+		System.out.print("Knowledges powers");		//ï¿½Ð¶Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
 		
 		UiObject purse = menu.getChild(new
 					UiSelector().className("android.widget.LinearLayout").index(1));
 		assertTrue("There has not found",purse.exists());
 		System.out.print("Knowledges powers");				
-		purse.click();							//µã»÷Ç®°ü
+		purse.click();							//ï¿½ï¿½ï¿½Ç®ï¿½ï¿½
 		
 		sleep(2000);
 		
@@ -68,54 +68,54 @@ public class login extends UiAutomatorTestCase {
 					UiSelector().className("android.widget.LinearLayout").index(2));
 		assertTrue("There has not found",record.exists());
 		System.out.print("Knowledges powers");
-		record.click();								//µã»÷¼ÇÂ¼
+		record.click();								//ï¿½ï¿½ï¿½ï¿½ï¿½Â¼
 		
 		sleep(2000);
 		
 		UiObject me = menu.getChild(new
 					UiSelector().className("android.widget.LinearLayout").index(3));
 		System.out.print("Knowledges powers");
-		me.click();									//µã»÷ÎÒµÄ
+		me.click();									//ï¿½ï¿½ï¿½ï¿½Òµï¿½
 		
 		sleep(2000);
 		
 		UiObject home = menu.getChild(new
 					UiSelector().className("android.widget.LinearLayout").index(0));
 		System.out.print("Knowledges powers");
-		home.click();								//µã»÷Ê×Ò³
+		home.click();								//ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 		
 		sleep(2000);
 		
 		UiObject order = new UiObject(new
 					UiSelector().className("android.widget.FrameLayout").index(1));
 		assertTrue("There has not be found",order.exists());
-		System.out.println("knowldges powers");			//ÅÐ¶Ï¸¸¶ÔÏóÊÇ·ñ´æÔÚ£¬ÆôÓÃË÷Òý
+		System.out.println("knowldges powers");			//ï¿½Ð¶Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		
 		UiObject order1 = order.getChild(new
 					UiSelector().className("android.widget.LinearLayout").index(1)); 
 		assertTrue("There has not be found",order1.exists());
 		System.out.println("knowldges powers");
-		order1.click();									//µã»÷½øÈë¡®Ð­ÒéÏÂµ¥¡¯
+		order1.click();									//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¡®Ð­ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½
 		
 		sleep(5000);
 		
 		UiObject select = new UiObject(new
 					UiSelector().className("android.widget.RelativeLayout").index(2));
-		assertTrue("There has not be found",select.exists()); 		//ÅÐ¶Ï¸¸¶ÔÏóÊÇ·ñ´æÔÚ
+		assertTrue("There has not be found",select.exists()); 		//ï¿½Ð¶Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
 		
 		UiObject select1 = select.getChild(new
 					UiSelector().className("android.widget.LinearLayout").index(1));
 		assertTrue("There has not be found",select1.exists());
 		System.out.println("knowldges powers");
-		select1.click();								//µã»÷ÏÂµ¥ ¡®4.2Ã×°üÌìµ¥¡¯
+		select1.click();								//ï¿½ï¿½ï¿½ï¿½Âµï¿½ ï¿½ï¿½4.2ï¿½×°ï¿½ï¿½ìµ¥ï¿½ï¿½
 		
 		sleep(3000);
 		
-		/*=========================Ñ¡ÔñÊ±¼ä¶Î===============================================*/
+		/*=========================Ñ¡ï¿½ï¿½Ê±ï¿½ï¿½ï¿½===============================================*/
 		
 		UiObject data = new UiObject(new
 					UiSelector().className("android.widget.ScrollView").index(2));
-		assertTrue("There has not be found",data.exists());			//ÅÐ¶Ï¸¸¶ÔÏóÊÇ·ñ´æÔÚ
+		assertTrue("There has not be found",data.exists());			//ï¿½Ð¶Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
 		
 		UiObject data1 = data.getChild(new
 					UiSelector().className("android.widget.LinearLayout").instance(1));
@@ -125,7 +125,7 @@ public class login extends UiAutomatorTestCase {
 					UiSelector().className("android.widget.ImageView").index(3));
 		assertTrue("There has not be found",data2.exists());
 		System.out.println("knowldges powers");
-		data2.click();												//µã»÷½øÈë¡®Ê±¼äÑ¡Ôñ¿ò¡¯
+		data2.click();												//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¡®Ê±ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½
 		
 		sleep(3000);
 		
@@ -142,7 +142,7 @@ public class login extends UiAutomatorTestCase {
 					UiSelector().className("android.widget.TextView").index(2));
 		assertTrue("There has not be found",hour2.exists());
 		System.out.println("knowldges powers");
-		hour2.click();										//Ñ¡ÔñÊ±¼ä
+		hour2.click();										//Ñ¡ï¿½ï¿½Ê±ï¿½ï¿½
 	/*-----------------------------------------------------------------*/
 		UiObject affirm = new UiObject(new
 					UiSelector().className("android.widget.RelativeLayout").instance(1));
@@ -151,8 +151,8 @@ public class login extends UiAutomatorTestCase {
 		UiObject affirm1 = affirm.getChild(new
 					UiSelector().className("android.widget.Button").index(1));
 		assertTrue("There has not be found",affirm1.exists());
-		affirm1.click();									//È·¶¨Ê±¼ä
-	/*============================Ñ¡ÔñµØÖ·¶Î=========================================*/	
+		affirm1.click();									//È·ï¿½ï¿½Ê±ï¿½ï¿½
+	/*============================Ñ¡ï¿½ï¿½ï¿½Ö·ï¿½ï¿½=========================================*/	
 		
 		UiObject address = new UiObject(new
 					UiSelector().className("android.widget.ScrollView").index(2));
@@ -162,9 +162,9 @@ public class login extends UiAutomatorTestCase {
 				UiSelector().className("android.widget.LinearLayout").instance(2));
 		assertTrue("There has not be found",address1.exists());
 		System.out.println("knowldges powers");
-		address1.click();								//Ìá»õµØÖ·
+		address1.click();								//ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
 		
-		
+		//æ³¨é‡Š
 		}
 }
 			
